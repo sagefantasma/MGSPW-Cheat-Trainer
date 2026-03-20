@@ -15,6 +15,102 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <TextBlock Text="{Binding Greeting}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="Options"> 
+                <MenuItem Header="Modify Config" x:Name="ModifyConfigMenuItem" Click="ModifyConfigMenuItem_OnClickClick"/>
+            </MenuItem>
+            <MenuItem Header="Help"> 
+                <MenuItem Header="View Logs" x:Name="ViewLogsMenuItem" Click="ViewLogsMenuItem_OnClick"/>
+                <MenuItem Header="Join our Discord" x:Name="JoinDiscordMenuItem" Click="JoinDiscordMenuItem_OnClick"/>
+            </MenuItem>
+        </Menu>
+        
+        <Border DockPanel.Dock="Bottom"
+                BorderThickness="0,1,0,0"
+                BorderBrush = "{DynamicResource SystemControlForgeroundBaseMediumLowBrush}"
+                Padding="6,3">
+            <TextBlock x:Name="StatusLabel" Text="Ready"/>
+        </Border>
+        
+        <TabControl x:Name="MainTabControl"
+                    SelectionChanged="MainTabControl_OnSelectionChanged">
+            
+            <TabItem Header="R&amp;D Weapons">
+                <Panel>
+                    <Image Source = "/Assets/rnd mock bg.png" Stretch="UniformToFill"/>
+                    <TabControl x:Name="WeaponTabControl"
+                                SelectionChanged="WeaponTabControl_OnSelectionChanged">
+                        <TabItem x:Name="HandgunsTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/handgun icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                            <Grid x:Name="WeaponGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                <Label x:Name="HandgunLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="HANDGUNS" 
+                                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" BorderBrush="Black">
+                                <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
+                                    <Image Source="/Assets/mk22 icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
+                                    <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
+                                    <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
+                                    <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
+                                </Grid>
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        
+                        <TabItem x:Name="ShotgunsTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/shotgun icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="RifleTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/rifle icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="SmgTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/smg icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="SniperTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/sniper icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="LmgTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/lmg icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="LauncherTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/launcher icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="GrenadeTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/grenades icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                        </TabItem>
+                        <TabItem x:Name="ExplosivesTab">
+                            <TabItem.Header>
+                                <Image Source="/Assets/placed explosive icon.png" Height="48" Width="48"/>
+                            </TabItem.Header>
+                        </TabItem>
+                    </TabControl>
+                </Panel>
+            </TabItem>
+            
+            <TabItem Header="R&amp;D Items">
+                
+            </TabItem>
+            
+            <TabItem Header="R&amp;D Other">
+                
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 
 </Window>
