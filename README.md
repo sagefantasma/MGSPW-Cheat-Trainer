@@ -1,0 +1,1 @@
+﻿Just a simple cross-platform Cheat Trainer utilizing .NET and Avalonia.
