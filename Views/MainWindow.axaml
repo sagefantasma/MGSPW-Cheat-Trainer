@@ -3,11 +3,15 @@
         xmlns:vm="using:MGSPW_MC_Cheat_Trainer.ViewModels"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:views="clr-namespace:MGSPW_MC_Cheat_Trainer.Views"
+        xmlns:mgspwMcCheatTrainer="clr-namespace:MGSPW_MC_Cheat_Trainer"
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         x:Class="MGSPW_MC_Cheat_Trainer.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="MGSPW_MC_Cheat_Trainer">
+        Title="MGSPW_MC_Cheat_Trainer"
+        MinHeight="520"
+        MinWidth="1120">
 
     <Design.DataContext>
         <!-- This only sets the DataContext for the previewer in an IDE,
@@ -15,223 +19,328 @@
         <vm:MainWindowViewModel/>
     </Design.DataContext>
 
-    <DockPanel>
-        <Menu DockPanel.Dock="Top">
-            <MenuItem Header="Options"> 
-                <MenuItem Header="Modify Config" x:Name="ModifyConfigMenuItem" Click="ModifyConfigMenuItem_OnClickClick"/>
-            </MenuItem>
-            <MenuItem Header="Help"> 
-                <MenuItem Header="View Logs" x:Name="ViewLogsMenuItem" Click="ViewLogsMenuItem_OnClick"/>
-                <MenuItem Header="Join our Discord" x:Name="JoinDiscordMenuItem" Click="JoinDiscordMenuItem_OnClick"/>
-            </MenuItem>
-        </Menu>
-        
-        <Border DockPanel.Dock="Bottom"
-                BorderThickness="0,1,0,0"
-                BorderBrush = "{DynamicResource SystemControlForgeroundBaseMediumLowBrush}"
-                Padding="6,3">
-            <TextBlock x:Name="StatusLabel" Text="Ready"/>
-        </Border>
-        
-        <TabControl x:Name="MainTabControl"
-                    SelectionChanged="MainTabControl_OnSelectionChanged">
+    <Panel>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Options"> 
+                    <MenuItem Header="Modify Config" x:Name="ModifyConfigMenuItem" Click="ModifyConfigMenuItem_OnClickClick"/>
+                </MenuItem>
+                <MenuItem Header="Help"> 
+                    <MenuItem Header="View Logs" x:Name="ViewLogsMenuItem" Click="ViewLogsMenuItem_OnClick"/>
+                    <MenuItem Header="Join our Discord" x:Name="JoinDiscordMenuItem" Click="JoinDiscordMenuItem_OnClick"/>
+                </MenuItem>
+            </Menu>
             
-            <TabItem Header="R&amp;D Weapons">
-                <Panel>
-                    <Image Source = "/Assets/rnd mock bg.png" Stretch="UniformToFill"/>
-                    <TabControl x:Name="WeaponTabControl"
-                                SelectionChanged="WeaponTabControl_OnSelectionChanged">
-                        <TabItem x:Name="HandgunsTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/handgun icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                            <Grid x:Name="WeaponGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
-                                <Label x:Name="HandgunLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="HANDGUNS" 
-                                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
-                                <Border Grid.Row="1" Grid.Column="0" BorderThickness="2" BorderBrush="Black">
-                                <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                    <Image Source="/Assets/mk22 icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                    <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                    <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="1" Grid.Column="1" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/ezgun LR icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="1" Grid.Column="2" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/ezgun PR icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="1" Grid.Column="3" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/c96 icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="1" Grid.Column="4" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/kpistol icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="2" Grid.Column="0" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/m19 icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="2" Grid.Column="1" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/m1911a1 icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="2" Grid.Column="2" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/m1911a1 custom icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="2" Grid.Column="3" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/pb6p9 icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="2" Grid.Column="4" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/pm icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="3" Grid.Column="0" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/supply marker icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                                
-                                <Border Grid.Row="3" Grid.Column="1" BorderThickness="2" BorderBrush="Black">
-                                    <Grid ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-                                        <!--
-                                        <Image Source="/Assets/strike marker icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0"/>
-                                        -->
-                                        <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="0" Content="Level up" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                        <Button Grid.Row="1" Grid.Column="1" Content="Max Ammo" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="Black"/>
-                                    </Grid>
-                                </Border>
-                            </Grid>
-                        </TabItem>
-                        
-                        <TabItem x:Name="ShotgunsTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/shotgun icon.png" Height="48" Width="48"/>
+            <Border DockPanel.Dock="Bottom"
+                    BorderThickness="0,1,0,0"
+                    BorderBrush = "{DynamicResource SystemControlForegroundBaseMediumLowBrush}"
+                    Padding="6,3">
+                <TextBlock x:Name="StatusLabel" Text="Ready"/>
+            </Border>
+            
+            <TabControl x:Name="MainTabControl"
+                        SelectionChanged="MainTabControl_OnSelectionChanged">
+                
+                <TabItem Header="R&amp;D Weapons">
+                    <Panel>
+                        <Image Source = "/Assets/rnd mock bg.png" Stretch="UniformToFill"/>
+                        <TabControl x:Name="WeaponTabControl"
+                                    SelectionChanged="WeaponTabControl_OnSelectionChanged">
+                            <TabItem x:Name="HandgunsTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/handgun icon.png" Height="48" Width="48"/>
                                 </TabItem.Header>
-                        </TabItem>
-                        <TabItem x:Name="RifleTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/rifle icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                        </TabItem>
-                        <TabItem x:Name="SmgTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/smg icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                        </TabItem>
-                        <TabItem x:Name="SniperTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/sniper icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                        </TabItem>
-                        <TabItem x:Name="LmgTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/lmg icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                        </TabItem>
-                        <TabItem x:Name="LauncherTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/launcher icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                        </TabItem>
-                        <TabItem x:Name="GrenadeTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/grenades icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                        </TabItem>
-                        <TabItem x:Name="ExplosivesTab">
-                            <TabItem.Header>
-                                <Image Source="/Assets/placed explosive icon.png" Height="48" Width="48"/>
-                            </TabItem.Header>
-                        </TabItem>
-                    </TabControl>
-                </Panel>
-            </TabItem>
-            
-            <TabItem Header="R&amp;D Items">
+                                <Grid x:Name="HandgunGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="HandgunLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="HANDGUNS" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Mk22DetailView" Grid.Row="1" Grid.Column="0" EntityImage="/Assets/mk22 icon.png"/>
+                                    
+                                    <views:WeaponDetailView x:Name="EzGunLrDetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="EzGunPrDetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="C96DetailView" Grid.Row="1" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="KPistolDetailView" Grid.Row="1" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M19DetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M1911A1DetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M1911A1CustomDetailView" Grid.Row="2" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Pb6P9DetailView" Grid.Row="2" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="PmDetailView" Grid.Row="2" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SupplyMarkerDetailView" Grid.Row="3" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="StrikeMarkerDetailView" Grid.Row="3" Grid.Column="1"/>
+                                </Grid>
+                            </TabItem>
+                            
+                            <TabItem x:Name="ShotgunsTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/shotgun icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="ShotgunGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="ShotgunLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="SHOTGUNS" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="CawDetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M37DetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M37AcmDetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Spas12DetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="TwinBarrelDetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="TwinBarrelRubberDetailView" Grid.Row="2" Grid.Column="2"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem x:Name="RifleTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/rifle icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="RifleGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.225*,.225*,.225*,.225*">
+                                    <Label x:Name="RifleLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="RIFLES" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    <!--19 of these-->
+                                    <views:WeaponDetailView x:Name="Adm63DetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Adm65DetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="G11AcmDetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="FalDetailView" Grid.Row="1" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M16A1DetailView" Grid.Row="1" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M16A1ShotgunDetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M16A1GrenadeDetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M16A1SmokeDetailView" Grid.Row="2" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M653DetailView" Grid.Row="2" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M653GrenadeDetailView" Grid.Row="2" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M653ShotgunDetailView" Grid.Row="3" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M653SmokeDetailView" Grid.Row="3" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Rk47DetailView" Grid.Row="3" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Rk47GrenadeDetailView" Grid.Row="3" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Rk47SmokeDetailView" Grid.Row="3" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="RpkDetailView" Grid.Row="4" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SugDetailView" Grid.Row="4" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="TanegashimaDetailView" Grid.Row="4" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="PatriotDetailView" Grid.Row="4" Grid.Column="3"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem x:Name="SmgTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/smg icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="SmgGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="SmgLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="SUBMACHINE GUNS" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Mac10DetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Mac10BarrelJacketDetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Mp5A2DetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Mp5Sd2DetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M1928A1DetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Uz61DetailView" Grid.Row="2" Grid.Column="2"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem x:Name="SniperTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/sniper icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="SniperGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="SniperLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="SNIPER RIFLES" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="MosinNagantDetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M1CDetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M1CPsycheDetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M21DetailView" Grid.Row="1" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M700DetailView" Grid.Row="1" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M700LifeDetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Ptrd1941DetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Ptrs1941DetailView" Grid.Row="2" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="RailGunDetailView" Grid.Row="2" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="RailGunDynamoDetailView" Grid.Row="2" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SvdDetailView" Grid.Row="3" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SvdNvDetailView" Grid.Row="3" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="StealthGunDetailView" Grid.Row="3" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Wa2000DetailView" Grid.Row="3" Grid.Column="3"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem x:Name="LmgTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/lmg icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="LmgGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="LmgLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="MACHINE GUNS" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M60DetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M63A1DetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="PkmDetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Mg3DetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="EmwGunDetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M134DetailView" Grid.Row="2" Grid.Column="2"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem x:Name="LauncherTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/launcher icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="LauncherGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="LauncherLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="ROCKET LAUNCHERS" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="LawDetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M202A1DetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="M47DetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Rpg2DetailView" Grid.Row="1" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Rpg7DetailView" Grid.Row="1" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="CarlGustavDetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="CarlGustavMultiDetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="CarlGustavFultonDetailView" Grid.Row="2" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Fim43DetailView" Grid.Row="2" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="Xfim92ADetailView" Grid.Row="2" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SlingPostDetailView" Grid.Row="3" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SlingBandDetailView" Grid.Row="3" Grid.Column="1"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem x:Name="ThrownTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/grenades icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="ThrownGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="ThrownLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="THROWING WEAPONS" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="ChaffDetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="EmptyMagDetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="EmNetDetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="FragGrenadeDetailView" Grid.Row="1" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SleepGasGrenadeDetailView" Grid.Row="1" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SmokeGrenadeDetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="ColoredSmokeGrenadeDetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="StunGrenadeDetailView" Grid.Row="2" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SupportSupplyMarkerDetailView" Grid.Row="2" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SupportStrikeMarkerDetailView" Grid.Row="2" Grid.Column="4"/>
+                                </Grid>
+                            </TabItem>
+                            <TabItem x:Name="PlaceableTab">
+                                <TabItem.Header>
+                                    <Image Source="/Assets/placed explosive icon.png" Height="48" Width="48"/>
+                                </TabItem.Header>
+                                <Grid x:Name="PlaceableGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                                    <Label x:Name="PlaceableLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="PLACEABLE WEAPONS" 
+                                           Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                                    
+                                    <views:WeaponDetailView x:Name="AntiTankMineDetailView" Grid.Row="1" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="AerialMineDetailView" Grid.Row="1" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="C4DetailView" Grid.Row="1" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="ClaymoreDetailView" Grid.Row="1" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="DecoyDetailView" Grid.Row="1" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="FultonMineDetailView" Grid.Row="2" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="MgsBookDetailView" Grid.Row="2" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SolidBookDetailView" Grid.Row="2" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="LiquidBookDetailView" Grid.Row="2" Grid.Column="3"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SolidusBookDetailView" Grid.Row="2" Grid.Column="4"/>
+                                    
+                                    <views:WeaponDetailView x:Name="SuperBookDetailView" Grid.Row="3" Grid.Column="0"/>
+                                    
+                                    <views:WeaponDetailView x:Name="CookbookDetailView" Grid.Row="3" Grid.Column="1"/>
+                                    
+                                    <views:WeaponDetailView x:Name="PlacedSupportSupplyMarkerDetailView" Grid.Row="3" Grid.Column="2"/>
+                                    
+                                    <views:WeaponDetailView x:Name="PlacedSupportStrikeMarkerDetailView" Grid.Row="3" Grid.Column="3"/>
+                                </Grid>
+                            </TabItem>
+                            <!--Need Hand-to-Hand and Other(?) tabs-->
+                        </TabControl>
+                    </Panel>
+                </TabItem>
                 
-            </TabItem>
-            
-            <TabItem Header="R&amp;D Other">
+                <TabItem Header="R&amp;D Items">
+                    
+                </TabItem>
                 
-            </TabItem>
-        </TabControl>
-    </DockPanel>
-
+                <TabItem Header="R&amp;D Other">
+                    
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+        
+        <Panel x:Name="ToastLayer" IsHitTestVisible="False"/>
+    </Panel>
 </Window>
