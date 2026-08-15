@@ -24,29 +24,29 @@ public class LogManager : ILogManager, IDisposable
     public LogManager()
     {
         string userDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        string logDirectory = Path.Combine(userDocuments, "MGS Mod Manager and Trainer", "MGSPW", "MGSPW Logs");
-        _logger = new LoggerConfiguration().WriteTo.File(Path.Combine(logDirectory, "Debuglog.log"), rollOnFileSizeLimit: false).
+        string logDirectory = Path.Combine(userDocuments, "MGS Mod Manager and Trainer", "MGSPW");
+        _logger = new LoggerConfiguration().WriteTo.File(Path.Combine(logDirectory, "MGSPW_MC_CheatTrainer_Log.log"), rollOnFileSizeLimit: false).
             MinimumLevel.Is(LogEventLevel.Verbose).CreateLogger();
         LogInformation("Logger initialized");
     }
 
     public void LogInformation(string message, params object[] args)
-        => _logger.Information(message, args);
+        => _logger?.Information(message, args);
 
     public void LogWarning(string message, params object[] args)
-        => _logger.Warning(message, args);
+        => _logger?.Warning(message, args);
 
     public void LogError(string message, params object[] args)
-        => _logger.Error(message, args);
+        => _logger?.Error(message, args);
 
     public void LogError(Exception ex, string message, params object[] args)
-        => _logger.Error(ex, message, args);
+        => _logger?.Error(ex, message, args);
 
     public void LogDebug(string message, params object[] args)
-        => _logger.Debug(message, args);
+        => _logger?.Debug(message, args);
 
     public void LogFatal(string message, params object[] args)
-        => _logger.Fatal(message, args);
+        => _logger?.Fatal(message, args);
 
     public void Dispose()
     {
