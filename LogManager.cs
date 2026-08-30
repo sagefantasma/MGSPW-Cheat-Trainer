@@ -27,7 +27,7 @@ public class LogManager : ILogManager, IDisposable
         string logDirectory = Path.Combine(userDocuments, "MGS Mod Manager and Trainer", "MGSPW");
         _logger = new LoggerConfiguration().WriteTo.File(Path.Combine(logDirectory, "MGSPW_MC_CheatTrainer_Log.log"), rollOnFileSizeLimit: false).
             MinimumLevel.Is(LogEventLevel.Verbose).CreateLogger();
-        LogInformation("Logger initialized");
+        LogInformation($"Logging started -- Trainver v{Program.AppVersion}");
     }
 
     public void LogInformation(string message, params object[] args)

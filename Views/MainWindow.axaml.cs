@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
+using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using CommunityToolkit.Mvvm.Input;
 using Serilog.Events;
@@ -64,5 +65,15 @@ public partial class MainWindow : Window
     public void UpdateStatusLabel(string newStatus)
     {
         StatusLabel.Text = newStatus;
+    }
+
+    private void OpenInstallLocationMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        
+    }
+
+    private void VisitGithubRepoMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        throw new NotImplementedException();
     }
 }

@@ -18,6 +18,21 @@ public partial class WeaponDetailView : UserControl
         get => ObjectImage?.Source;
         set => ObjectImage?.Source = value;
     }
+    
+    public string? PwObject
+    {
+        get;
+        set
+        {
+            field = value;
+            GroupBox.Header = new TextBlock
+            {
+                Text = $"{PwObject}",
+                Foreground = Brushes.Black,
+                FontWeight = FontWeight.Bold
+            };
+        }
+    }
 
     public WeaponDetailView()
     {

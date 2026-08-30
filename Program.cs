@@ -1,10 +1,14 @@
 ﻿using Avalonia;
 using System;
+using System.Reflection;
 
 namespace MGSPW_MC_Cheat_Trainer;
 
 sealed class Program
 {
+    public static string AppVersion { get; } = Assembly.GetExecutingAssembly()
+        .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion.Split('+')[0] ?? "unknown";
+    
     // Initialization code. Don't use any Avalonia, third-party APIs or any
     // SynchronizationContext-reliant code before AppMain is called: things aren't initialized
     // yet and stuff might break.
