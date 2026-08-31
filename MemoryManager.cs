@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using MGSPW_MC_Cheat_Trainer.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog.Events;
 
 namespace MGSPW_MC_Cheat_Trainer;

@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using MGSPW_MC_Cheat_Trainer.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog.Events;
 

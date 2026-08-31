@@ -352,7 +352,7 @@
                 </TabItem>
                 
                 <TabItem Header="Cheats">
-                    
+                    <views:CheatsTabView/>
                 </TabItem>
             </TabControl>
         </DockPanel>

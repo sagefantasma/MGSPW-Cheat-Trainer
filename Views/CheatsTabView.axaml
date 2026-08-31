@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewModels="clr-namespace:MGSPW_MC_Cheat_Trainer.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MGSPW_MC_Cheat_Trainer.Views.CheatsTabView">
+    <Grid ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".2*,.2*,.2*,.2*,.2*">
+        <GroupBox Grid.Row="0" Grid.Column="0" Grid.RowSpan="5" Grid.ColumnSpan="1" Header="In-Mission Cheats">
+            <ScrollViewer>
+                <StackPanel x:Name="MainGameCheats" Spacing="5" HorizontalAlignment="Center">
+                    <viewModels:CheckboxCheatViewModel x:Name="UnlimitedLifeCheckbox" CheatName="Unlimited Life" Cheat="UnlimitedLife"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="InvulnerableCheckbox" CheatName="Invulnerable" Cheat="Invulnerable" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="NoReloadCheckbox" CheatName="No Reloading Required" Cheat="NoReload"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="UnlimitedAmmoCheckbox" CheatName="Unlimited Ammo" Cheat="UnlimitedAmmo" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="InfiniteSuppressorCheckbox" CheatName="Infinite Suppressor Use" Cheat="InfiniteSuppressor"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="UnlimitedPsycheCheckbox" CheatName="Unlimited Psyche" Cheat="UnlimitedPsyche" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="FreezeAiCheckbox" CheatName="Freeze AI" Cheat="FreezeAi"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="InvisibleToAiCheckbox" CheatName="Invisible to AI" Cheat="InvisibleToAi" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="MaxCamoCheckbox" CheatName="Max Camo" Cheat="MaxCamo"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="UnlimitedEquipmentCheckbox" CheatName="Unlimited Equipment Use" Cheat="UnlimitedEquipment" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="NoTimeLimitCheckbox" CheatName="No Time Limit" Cheat="NoTimeLimit"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="MaxStockOnPickupCheckbox" CheatName="Max Stock on Pickup" Cheat="MaxStockOnPickup" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionTimeCheckbox" CheatName="Freeze Mission Time" Cheat="FreezeMissionTime"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionStatsCheckbox" CheatName="Freeze Mission Stats" Cheat="FreezeMissionStats" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+    </Grid>
+</UserControl>

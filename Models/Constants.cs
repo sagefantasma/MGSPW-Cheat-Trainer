@@ -1,13 +1,21 @@
 ﻿using System.Collections.Generic;
 
-namespace MGSPW_MC_Cheat_Trainer;
+namespace MGSPW_MC_Cheat_Trainer.Models;
 
 public static class Constants
 {
+    public const int MillisecondsInSecond = 1000;
+    
     public interface IPwObject
     {
         public string Name { get; set; }
         public string Shorthand { get; set; }
+    }
+
+    public enum Cheat
+    {
+        UnlimitedLife, Invulnerable, NoReload, UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche, FreezeAi,
+        InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup, FreezeMissionTime, FreezeMissionStats
     }
     
     public class Weapon(string name, string shorthand) : IPwObject
