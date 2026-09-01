@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Avalonia.Controls;
 using Avalonia.Controls.Notifications;
@@ -22,6 +23,7 @@ public partial class MainWindow : Window
             Position = NotificationPosition.BottomRight,
             MaxItems = 3
         };
+        MgsPwMonitor.EnableMonitor(new CancellationToken());
     }
 
     private void ViewLogsMenuItem_OnClick(object? sender, RoutedEventArgs e)

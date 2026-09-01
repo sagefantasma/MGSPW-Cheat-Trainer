@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using MGSPW_MC_Cheat_Trainer.Models;
 using SimplifiedMemoryManager;
 using static MGSPW_MC_Cheat_Trainer.Models.PeaceWalkerApplicationNavigator.PeaceWalkerAoB;
@@ -740,6 +742,102 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
             }
         }
+
+        //private static Task? _vehicleCommanderPeriodicTask;
+        private static CancellationTokenSource _vehicleCommanderCancellationTokenSource = new ();
+        public static void ForceVehicleCommander(bool activate)
+        {
+            //TODO: validate
+            GameCheat activeGameCheat = PeaceWalkerCheat.ForceVehicleCommander;
+            if (activate)
+            {
+                PeriodicTask.Run(() =>
+                {
+                    if (activeGameCheat.CodeLocation == IntPtr.Zero)
+                    {
+                        activeGameCheat.CodeLocation =
+                            BaseActions.ModifySingleByte(EscortCountAoB, EscortCountOffset, 0xFF);
+                        PeaceWalkerCheat.ForceVehicleCommander = activeGameCheat;
+                    }
+                    else
+                    {
+                        BaseActions.ModifySingleByte(activeGameCheat.CodeLocation, EscortCountOffset, 0xFF);
+                    }
+                }, TimeSpan.FromSeconds(.25), _vehicleCommanderCancellationTokenSource.Token);
+            }
+            else
+            {
+                _vehicleCommanderCancellationTokenSource?.Cancel();
+                //_vehicleCommanderPeriodicTask = null;
+                _vehicleCommanderCancellationTokenSource = new CancellationTokenSource(); //Prep for a possible re-run
+            }
+        }
+
+        internal static void WalkThroughWalls(bool activate)
+        {
+            GameCheat activeGameCheat = PeaceWalkerCheat.WalkThroughWalls;
+            if (activate)
+            {
+                if (activeGameCheat.CodeLocation == IntPtr.Zero)
+                {
+                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                        NoClipAoB,
+                        NoClipOffset,
+                        NoClipOffset.Length);
+                    PeaceWalkerCheat.NoClip = activeGameCheat;
+                }
+                else
+                {
+                    BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, NoClipOffset,
+                        NoClipOffset.Length);
+                }
+            }
+            else
+            {
+                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, NoClipOffset,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+            }
+        }
+
+        internal static void MaintainHeight(bool activate)
+        {
+            GameCheat activeGameCheat = PeaceWalkerCheat.MaintainHeight;
+            if (activate)
+            {
+                if (activeGameCheat.CodeLocation == IntPtr.Zero)
+                {
+                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                        HoldYPositionAoB,
+                        HoldYPositionOffset,
+                        HoldYPositionOffset.Length);
+                    PeaceWalkerCheat.MaintainHeight = activeGameCheat;
+                }
+                else
+                {
+                    BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, HoldYPositionOffset,
+                        HoldYPositionOffset.Length);
+                }
+            }
+            else
+            {
+                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, HoldYPositionOffset,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+            }
+        }
+
+        public static void NoClip(bool activate)
+        {
+            if (activate)
+            {
+                MaintainHeight(activate);
+                WalkThroughWalls(activate);
+            }
+            else
+            {
+                WalkThroughWalls(activate);
+                MaintainHeight(activate);
+            }
+        }
     }
 
     public static class PeaceWalkerCheat
@@ -761,9 +859,9 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         public static GameCheat InvisibleToAi { get; internal set; } = new(CheatActions.ToggleInvisibleToAi,
             OriginalVisibleToAiBytes, Constants.Cheat.InvisibleToAi);
         public static GameCheat MaxCamo1 { get; internal set; } = new(CheatActions.ToggleMaxCamoSub1,
-            OriginalCamo1Bytes, Constants.Cheat.MaxCamo);
+            OriginalCamo1Bytes, null);
         public static GameCheat MaxCamo2 { get; internal set; } = new(CheatActions.ToggleMaxCamoSub2,
-            OriginalCamo2Bytes, Constants.Cheat.MaxCamo);
+            OriginalCamo2Bytes, null);
         public static GameCheat MaxCamo { get; internal set; } = new(CheatActions.ToggleMaxCamo,
             null, Constants.Cheat.MaxCamo);
         public static GameCheat UnlimitedEquipment { get; internal set; } = new(CheatActions.ToggleUnlimitedEquipment,
@@ -776,12 +874,20 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             OriginalMissionTimeBytes, Constants.Cheat.FreezeMissionTime);
         public static GameCheat FreezeMissionStats { get; internal set; } = new(CheatActions.ToggleFreezeMissionStats,
             OriginalMissionStatsBytes, Constants.Cheat.FreezeMissionStats);
+        public static GameCheat ForceVehicleCommander { get; internal set; } = new(CheatActions.ForceVehicleCommander,
+            null, Constants.Cheat.ForceVehicleCommander);
+        public static GameCheat WalkThroughWalls { get; internal set; } =
+            new(CheatActions.WalkThroughWalls, OriginalClipBytes, null);
+        public static GameCheat MaintainHeight { get; internal set; } =
+            new(CheatActions.MaintainHeight, OriginalYPositionBytes, null);
+        public static GameCheat NoClip { get; internal set; } =
+            new(CheatActions.NoClip, null, Constants.Cheat.NoClip);
 
         public static readonly List<GameCheat> CheatList =
         [
             UnlimitedLife, Invulnerable, NoReload,UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche,
             FreezeAi, InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup,
-            FreezeMissionTime, FreezeMissionStats
+            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander
         ];
     }
 }

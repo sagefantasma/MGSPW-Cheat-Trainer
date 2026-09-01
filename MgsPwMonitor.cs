@@ -15,7 +15,7 @@ namespace MGSPW_MC_Cheat_Trainer;
 public static class MgsPwMonitor
 {
     #region Members & fields
-    private const string Mgs2ProcessName = "METAL GEAR SOLID PEACE WALKER.exe";
+    private const string MgsPwProcessName = "METAL GEAR SOLID PEACE WALKER.exe";
     private const string DesiredVersion = "2.1.0.0"; //TODO: get real app ver
     private static bool _versionWarned;
 
@@ -61,7 +61,7 @@ public static class MgsPwMonitor
                         Process? process = null;
 
                         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-                            process = Process.GetProcessesByName(Mgs2ProcessName).FirstOrDefault();
+                            process = Process.GetProcessesByName(MgsPwProcessName).FirstOrDefault();
                         else
                         {
                             Process[] processes = Process.GetProcessesByName("METAL");
@@ -70,25 +70,41 @@ public static class MgsPwMonitor
                             else if (processes.Length == 0)
                                 processes = Process.GetProcesses();
 
+                            var test = processes.FirstOrDefault(x => x.MainWindowTitle.Contains("Peace Walker"));
+
                             if (process is null)
                             {
                                 foreach (Process p in processes)
                                 {
-                                    if (!p.ProcessName.Contains("METAL")) continue;
-                                    using SimpleProcessProxy spp = new SimpleProcessProxy(p);
-                                    nint signifyingMemory = 0x72F2E0; //TODO: get real value
-                                    string determinantString = "METAL GEAR SOLID PEACE WALKER"; //TODO: validate
-                                    long bytesToRead = determinantString.Length;
+                                    //if (!p.ProcessName.Contains("METAL")) continue;
                                     try
                                     {
-                                        byte[] memory = spp.ReadProcessOffset(signifyingMemory, bytesToRead);
-                                        string decodedString = Encoding.UTF8.GetString(memory);
-                                        if (determinantString.Equals(decodedString))
-                                            process = p;
+                                        if (p.ProcessName.Contains("region"))
+                                        {
+                                            //For some reason Peacewalker isn't the base module in Linux... Ugh.
+                                            //I think to fix this, I need to add an option to override the process name
+                                            //we're looking for when proxying? If I'm understanding this correctly?
+                                        }
+
+                                        using SimpleProcessProxy spp = new SimpleProcessProxy(p);
+                                        nint signifyingMemory = 0x1591501; //TODO: get real value
+                                        string determinantString = "METAL GEAR SOLID PEACE WALKER"; //TODO: validate
+                                        long bytesToRead = determinantString.Length;
+                                        try
+                                        {
+                                            byte[] memory = spp.ReadProcessOffset(signifyingMemory, bytesToRead);
+                                            string decodedString = Encoding.UTF8.GetString(memory);
+                                            if (determinantString.Equals(decodedString))
+                                                process = p;
+                                        }
+                                        catch(Exception ex)
+                                        {
+                                            // ignored
+                                        }
                                     }
                                     catch
                                     {
-                                        // ignored
+                                        //ignored
                                     }
                                 }
                             }

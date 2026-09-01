@@ -7,7 +7,7 @@
     
     <GroupBox x:Name="GroupBox" BorderBrush="Black">
         <Grid x:Name="ItemGrid" ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-            <Image x:Name="ObjectImage" Source="/Assets/handgun icon.png" Stretch="Uniform" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
+            <Image x:Name="ObjectImage" Source="/Assets/handgun icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
             <Rectangle x:Name="ImageDarkener" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" 
             Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
             <CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" FontWeight="Bold" Foreground="White" Margin="4" Click="Enabled_OnClick"/>

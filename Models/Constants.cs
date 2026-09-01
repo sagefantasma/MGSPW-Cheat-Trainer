@@ -15,7 +15,8 @@ public static class Constants
     public enum Cheat
     {
         UnlimitedLife, Invulnerable, NoReload, UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche, FreezeAi,
-        InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup, FreezeMissionTime, FreezeMissionStats
+        InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup, FreezeMissionTime, FreezeMissionStats,
+        ForceVehicleCommander, NoClip
     }
     
     public class Weapon(string name, string shorthand) : IPwObject

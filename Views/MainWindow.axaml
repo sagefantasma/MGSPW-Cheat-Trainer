@@ -41,12 +41,21 @@
             
             <TabControl x:Name="MainTabControl"
                         SelectionChanged="MainTabControl_OnSelectionChanged">
+                <TabItem Header="Cheats">
+                    <Panel>
+                        <Image Source="/Assets/title_bg.png" Stretch="UniformToFill"/>
+                        <Rectangle Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
+                        <views:CheatsTabView/>
+                    </Panel>
+                </TabItem>
                 
                 <TabItem Header="R&amp;D Weapons">
                     <Panel>
                         <Image Source = "/Assets/rnd mock bg.png" Stretch="UniformToFill"/>
+                        <TextBlock Text="UNDER CONSTRUCTION" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
                         <TabControl x:Name="WeaponTabControl"
-                                    SelectionChanged="WeaponTabControl_OnSelectionChanged">
+                                    SelectionChanged="WeaponTabControl_OnSelectionChanged"
+                                    IsVisible="False">
                             <TabItem x:Name="HandgunsTab">
                                 <TabItem.Header>
                                     <Image Source="/Assets/handgun icon.png" Height="48" Width="48"/>
@@ -341,18 +350,18 @@
                     
                     Radars: Surround indicator, soliton radar
                     -->
+                    <Panel>
+                        <Image Source="/Assets/rnd_items_bg.png" Stretch="UniformToFill"/>
+                        <TextBlock Text="UNDER CONSTRUCTION" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
+                    </Panel>
                 </TabItem>
                 
                 <TabItem Header="R&amp;D Other">
-                    
+                    <TextBlock Text="UNDER CONSTRUCTION" Foreground="DarkGoldenrod" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
                 </TabItem>
                 
-                <TabItem Header="Player Stats">
-                    
-                </TabItem>
-                
-                <TabItem Header="Cheats">
-                    <views:CheatsTabView/>
+                <TabItem Header="Staff">
+                    <TextBlock Text="UNDER CONSTRUCTION" Foreground="DarkGoldenrod" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
                 </TabItem>
             </TabControl>
         </DockPanel>
