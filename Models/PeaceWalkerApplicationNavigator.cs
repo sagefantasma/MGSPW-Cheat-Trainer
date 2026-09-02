@@ -86,7 +86,7 @@ public class PeaceWalkerApplicationNavigator
         [
             0x66, 0x41, 0x3B, 0xF6, 0x66, 0x41, 0x0F, 0x4F, 0xF6, 0x66, 0x44, 0x2B, 0xF6, 0x66, 0x44, 0x89, 0x77, 0x0A
         ];
-        internal static MemoryOffset UnlimitedEquipmentOffset = new(0x0C, 0x10);
+        internal static MemoryOffset UnlimitedEquipmentOffset = new(0x0D, 0x11);
         #endregion
         
         #region No Time Limit
@@ -122,9 +122,11 @@ public class PeaceWalkerApplicationNavigator
         #endregion
 
         #region Force Vehicle Commander
-        internal static string EscortCountAoB =
+        internal static string VehicleBossAoB =
             "0F 48 C3 89 1D ?? ?? ?? ?? 33 C9 89 05 ?? ?? ?? ?? 89 1D ?? ?? ?? ?? E8";
-        internal static MemoryOffset EscortCountOffset = new(0x05);
+        internal static MemoryOffset VehicleBossOffset = new(0x05, 0x09);
+        internal static MemoryOffset EscortCountOffset = new(0x09, 0xD);
+        internal static byte[] ForceVehicleCommanderBytes = [0xFF, 0x00, 0x00, 0x00];
         #endregion
 
         #region No Clip
@@ -137,6 +139,7 @@ public class PeaceWalkerApplicationNavigator
         internal static byte[] OriginalClipBytes =
             [0x0F, 0xBA, 0xE0, 0x14, 0x73, 0x38, 0x0F, 0xBA, 0xE0, 0x0B, 0x73, 0x08];
         internal static MemoryOffset NoClipOffset = new(0x04, 05);
+        internal static byte[] NoClipBytes = [0xEB, 0x38];
         #endregion
         #endregion
 

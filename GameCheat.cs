@@ -17,9 +17,9 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
 
     private static class BaseActions
     {
-        internal static void ReplaceWithOriginalCode(IntPtr memoryLocation, MemoryOffset offset, byte[] bytesToReplace, int startIndexToReplace = 0)
+        internal static void ReplaceWithOriginalCode(IntPtr memoryLocation, byte[] bytesToReplace, MemoryOffset offset, int startIndexToReplace = 0)
         {
-            //TODO: this probably needs to be modified -- this old MGS2 code was essentially reliant on offset always being 0 I think...
+            //NOTE: this is only really usable if the Offset starts with zero because I'm an idiot :)
             if (MgsPwMonitor.MgsPwProcess is null) throw new Exception("Not hooked into game");
             lock (MgsPwMonitor.MgsPwProcess)
             {
@@ -33,7 +33,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         if (memoryLocation != IntPtr.Zero)
                         {
                             byte[] memoryContent = spp.GetMemoryFromPointer(IntPtr.Add(memoryLocation, offset.Start),
-                                offset.Length);
+                                    offset.Length);
 
                             for (int i = startIndexToReplace; i < startIndexToReplace + bytesToReplace.Length; i++)
                             {
@@ -364,6 +364,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
     {
         public static void ToggleUnlimitedLife(bool activate)
         {
+            //Works as intended
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedLife;
             if (activate)
             {
@@ -383,13 +384,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, UnlimitedLifeOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
 
         public static void ToggleInvulnerable(bool activate)
         {
+            //Not quite working as expected, but is fine enough
             GameCheat activeGameCheat = PeaceWalkerCheat.Invulnerable;
             if (activate)
             {
@@ -413,6 +415,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         
         public static void ToggleNoReload(bool activate)
         {
+            //Works as expected
             GameCheat activeGameCheat = PeaceWalkerCheat.NoReload;
             if (activate)
             {
@@ -432,13 +435,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, NoReloadOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
         
         public static void ToggleUnlimitedAmmo(bool activate)
         {
+            //Works as expected
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedAmmo;
             if (activate)
             {
@@ -458,13 +462,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, UnlimitedAmmoOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
         
         public static void ToggleInfiniteSuppressor(bool activate)
         {
+            //Works as expected
             GameCheat activeGameCheat = PeaceWalkerCheat.InfiniteSuppressor;
             if (activate)
             {
@@ -484,13 +489,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, InfiniteSuppressorOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
         
         public static void ToggleUnlimitedPsyche(bool activate)
         {
+            //Doesn't work, but also doesn't matter xdd
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedPsyche;
             if (activate)
             {
@@ -510,13 +516,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, UnlimitedPsycheOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
         
         public static void ToggleFreezeAi(bool activate)
         {
+            //Works as intended
             GameCheat activeGameCheat = PeaceWalkerCheat.FreezeAi;
             if (activate)
             {
@@ -540,6 +547,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         
         public static void ToggleInvisibleToAi(bool activate)
         {
+            //Works as intended, need renaming
             GameCheat activeGameCheat = PeaceWalkerCheat.InvisibleToAi;
             if (activate)
             {
@@ -582,8 +590,8 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, MaxCamo1Offset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
 
@@ -608,19 +616,21 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, MaxCamo2Offset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
         
         public static void ToggleMaxCamo(bool activate)
         {
+            //Appears to work as expected
             ToggleMaxCamoSub1(activate);
             ToggleMaxCamoSub2(activate);
         }
         
         public static void ToggleUnlimitedEquipment(bool activate)
         {
+            //Works as intended
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedEquipment;
             if (activate)
             {
@@ -640,13 +650,15 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, UnlimitedEquipmentOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
         
         public static void ToggleNoTimeLimit(bool activate)
         {
+            //Works on CheatEngine, not in trainer - my issue
+            //Retest, everything looks right between CE <-> trainer
             GameCheat activeGameCheat = PeaceWalkerCheat.NoTimeLimit;
             if (activate)
             {
@@ -670,6 +682,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         
         public static void ToggleMaxStockOnPickup(bool activate)
         {
+            //Works as intended
             GameCheat activeGameCheat = PeaceWalkerCheat.MaxStockOnPickup;
             if (activate)
             {
@@ -693,6 +706,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         
         public static void ToggleFreezeMissionTime(bool activate)
         {
+            //TODO: does not appear to work, need help from Swiss
             GameCheat activeGameCheat = PeaceWalkerCheat.FreezeMissionTime;
             if (activate)
             {
@@ -712,13 +726,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, FreezeMissionTimeOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
         
         public static void ToggleFreezeMissionStats(bool activate)
         {
+            //Inconsistent, need help from Swiss to fix
             GameCheat activeGameCheat = PeaceWalkerCheat.FreezeMissionStats;
             if (activate)
             {
@@ -738,8 +753,8 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, FreezeMissionStatsOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
 
@@ -747,22 +762,27 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         private static CancellationTokenSource _vehicleCommanderCancellationTokenSource = new ();
         public static void ForceVehicleCommander(bool activate)
         {
-            //TODO: validate
+            //TODO: I think I have this working now, but need to try again to check.
             GameCheat activeGameCheat = PeaceWalkerCheat.ForceVehicleCommander;
             if (activate)
             {
+                if (activeGameCheat.CodeLocation == IntPtr.Zero)
+                {
+                    IntPtr location = BaseActions.ReplaceWithSpecificCode(VehicleBossAoB, new byte[0], VehicleBossOffset);
+                    int vehicleBossLocation = BitConverter.ToInt32(BaseActions.ReadMemory(location, VehicleBossOffset));
+                    activeGameCheat.CodeLocation = IntPtr.Add(location, vehicleBossLocation);
+                    BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
+                    PeaceWalkerCheat.ForceVehicleCommander = activeGameCheat;
+                }
+                else
+                {
+                    //BaseActions.ModifySingleByte(activeGameCheat.CodeLocation, EscortCountOffset, 0xFF);
+                    BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
+                }
                 PeriodicTask.Run(() =>
                 {
-                    if (activeGameCheat.CodeLocation == IntPtr.Zero)
-                    {
-                        activeGameCheat.CodeLocation =
-                            BaseActions.ModifySingleByte(EscortCountAoB, EscortCountOffset, 0xFF);
-                        PeaceWalkerCheat.ForceVehicleCommander = activeGameCheat;
-                    }
-                    else
-                    {
-                        BaseActions.ModifySingleByte(activeGameCheat.CodeLocation, EscortCountOffset, 0xFF);
-                    }
+                        //BaseActions.ModifySingleByte(activeGameCheat.CodeLocation, EscortCountOffset, 0xFF);
+                        BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
                 }, TimeSpan.FromSeconds(.25), _vehicleCommanderCancellationTokenSource.Token);
             }
             else
@@ -780,22 +800,22 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             {
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(
                         NoClipAoB,
-                        NoClipOffset,
-                        NoClipOffset.Length);
+                        NoClipBytes,
+                        NoClipOffset);
                     PeaceWalkerCheat.NoClip = activeGameCheat;
                 }
                 else
                 {
-                    BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, NoClipOffset,
-                        NoClipOffset.Length);
+                    BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, NoClipBytes,
+                        NoClipOffset);
                 }
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, NoClipOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
 
@@ -820,13 +840,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
-                BaseActions.ReplaceWithOriginalCode(activeGameCheat.CodeLocation, HoldYPositionOffset,
-                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException());
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
 
         public static void NoClip(bool activate)
         {
+            //Works as intended
             if (activate)
             {
                 MaintainHeight(activate);
@@ -887,7 +908,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         [
             UnlimitedLife, Invulnerable, NoReload,UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche,
             FreezeAi, InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup,
-            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander
+            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander, NoClip
         ];
     }
 }

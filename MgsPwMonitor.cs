@@ -79,16 +79,9 @@ public static class MgsPwMonitor
                                     //if (!p.ProcessName.Contains("METAL")) continue;
                                     try
                                     {
-                                        if (p.ProcessName.Contains("region"))
-                                        {
-                                            //For some reason Peacewalker isn't the base module in Linux... Ugh.
-                                            //I think to fix this, I need to add an option to override the process name
-                                            //we're looking for when proxying? If I'm understanding this correctly?
-                                        }
-
-                                        using SimpleProcessProxy spp = new SimpleProcessProxy(p);
-                                        nint signifyingMemory = 0x1591501; //TODO: get real value
-                                        string determinantString = "METAL GEAR SOLID PEACE WALKER"; //TODO: validate
+                                        using SimpleProcessProxy spp = new SimpleProcessProxy(p, MgsPwProcessName);
+                                        nint signifyingMemory = 0x1591501;
+                                        string determinantString = "METAL GEAR SOLID PEACE WALKER";
                                         long bytesToRead = determinantString.Length;
                                         try
                                         {
