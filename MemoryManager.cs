@@ -1,6 +1,8 @@
 ﻿using System.Text;
+using Avalonia;
 using MGSPW_MC_Cheat_Trainer.Models;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using Serilog.Events;
 using SimplifiedMemoryManager;
 
@@ -8,12 +10,11 @@ namespace MGSPW_MC_Cheat_Trainer;
 
 public class MemoryManager
 {
-    private readonly ILogManager _logger;
+    private static ILogger? Logger => LogManager.Logger;
     private static nint StageLocation = nint.MinValue;
 
     public MemoryManager()
     {
-        _logger = App.Services.GetRequiredService<ILogManager>();
     }
 
     public string GetCurrentStage()
@@ -41,21 +42,21 @@ public class MemoryManager
     public bool ToggleObject(Constants.IPwObject obj)
     {
         //TODO: implement
-        _logger.LogInformation($"Attempting to toggle object {obj.Name}");
+        Logger?.Information($"Attempting to toggle object {obj.Name}");
         return false;
     }
 
     public bool LevelUpObject(Constants.IPwObject obj)
     {
         //TODO: implement
-        _logger.LogInformation($"Attempting to level up object {obj.Name}");
+        Logger?.Information($"Attempting to level up object {obj.Name}");
         return false;
     }
 
     public bool MaxAmmo(Constants.IPwObject obj)
     {
         //TODO: implement
-        _logger.LogInformation($"Attempting to max ammo for {obj.Name}");
+        Logger?.Information($"Attempting to max ammo for {obj.Name}");
         return false;
     }
 }

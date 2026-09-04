@@ -6,51 +6,37 @@ using Serilog.Events;
 
 namespace MGSPW_MC_Cheat_Trainer;
 
-//TODO: for some reason this just *isn't* working. Definitely need to figure this out, but at later date
 
-public interface ILogManager
+public class LogManager
 {
-    void LogInformation(string message, params object[] args);
-    void LogWarning(string message, params object[] args);
-    void LogError(string message, params object[] args);
-    void LogError(Exception ex, string message, params object[] args);
-    void LogDebug(string message, params object[] args);
-    void LogFatal(string message, params object[] args);
-}
-
-public class LogManager : ILogManager, IDisposable
-{
-    private readonly Logger? _logger;
-    public LogManager()
+    private const int KilobyteInBytes = 1000;
+    private const int MegabyteInKilobytes = 1000 * KilobyteInBytes;
+    private const int LogLimitSize = 20 * MegabyteInKilobytes;
+    private const int LogFileCountLimit = 5;
+    public static string? LogLocation { get; private set; }
+    private static LogEventLevel MainLogEventLevel { get; set; } = LogEventLevel.Debug;
+    public static ILogger? Logger;
+    private static readonly string AppLogFolder = "MGS Mod Manager and Trainer";
+    private static readonly string Game = "MGSPW";
+    
+    public static void StartLogger()
     {
-        string userDocuments = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-        string logDirectory = Path.Combine(userDocuments, "MGS Mod Manager and Trainer", "MGSPW");
-        _logger = new LoggerConfiguration().WriteTo.File(Path.Combine(logDirectory, "MGSPW_MC_CheatTrainer_Log.log"), rollOnFileSizeLimit: false).
-            MinimumLevel.Is(LogEventLevel.Verbose).CreateLogger();
-        LogInformation($"Logging started -- Trainer v{Program.AppVersion}");
+        LogLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), AppLogFolder,
+            Game);
+        Logger = InitializeNewLogger("MGS2_MC_Cheat_Trainer_Log.log", MainLogEventLevel);
+        Logger?.Information($"Logging started -- Trainer v{Program.AppVersion}");
     }
 
-    public void LogInformation(string message, params object[] args)
-        => _logger?.Information(message, args);
-
-    public void LogWarning(string message, params object[] args)
-        => _logger?.Warning(message, args);
-
-    public void LogError(string message, params object[] args)
-        => _logger?.Error(message, args);
-
-    public void LogError(Exception ex, string message, params object[] args)
-        => _logger?.Error(ex, message, args);
-
-    public void LogDebug(string message, params object[] args)
-        => _logger?.Debug(message, args);
-
-    public void LogFatal(string message, params object[] args)
-        => _logger?.Fatal(message, args);
-
-    public void Dispose()
+    private static ILogger? InitializeNewLogger(string logFileName, LogEventLevel loggingLevel)
     {
-        // Flush and close all sinks cleanly on shutdown
-        Serilog.Log.CloseAndFlush();
+        if (LogLocation == null) throw new Exception("Failed to initialize logs!");
+        if (!Directory.Exists(LogLocation))
+        {
+            Directory.CreateDirectory(LogLocation);
+        }
+        return new LoggerConfiguration().WriteTo.File(Path.Combine(LogLocation, logFileName),
+                rollOnFileSizeLimit: true, fileSizeLimitBytes: LogLimitSize,
+                retainedFileCountLimit: LogFileCountLimit)
+            .MinimumLevel.Is(loggingLevel).CreateLogger();
     }
 }

@@ -5,12 +5,14 @@ using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using MGSPW_MC_Cheat_Trainer.Models;
+using Serilog;
 
 namespace MGSPW_MC_Cheat_Trainer.ViewModels;
 
 public partial class CheckboxCheatViewModel : UserControl
 {
     public event EventHandler<string>? CheatToggled;
+    private static ILogger? Logger => LogManager.Logger;
     
     public required Constants.Cheat Cheat
     {
@@ -43,20 +45,20 @@ public partial class CheckboxCheatViewModel : UserControl
         try
         {
             GameCheat cheat = GameCheat.PeaceWalkerCheat.CheatList.Find(x => x.CheatType == Cheat);
-            //Logging.Logger?.Information($"Attempting to toggle {CheatName}");
+            Logger?.Information($"Attempting to toggle {CheatName}");
             ToggleCheat($"Attempting to toggle {CheatName}...");
             IsEnabled = false;
 
             bool toggleState = (bool)CheatCheckBox.IsChecked!;
             await Task.Run(() => cheat.CheatAction(toggleState));
             IsEnabled = true;
-            //Logging.Logger?.Information($"{CheatName} 'successfully' toggled.");
+            Logger?.Information($"{CheatName} 'successfully' toggled.");
             ToggleCheat($"Finished attempting to toggle {CheatName}. Results not guaranteed.");
         }
         catch (Exception ex)
         {
             string errorBrief = $"Failed to toggle {CheatName}";
-            //Logging.Logger?.Error($"{errorBrief}: {ex.Message}");
+            Logger?.Error($"{errorBrief}: {ex.Message}");
             ToggleCheat(errorBrief);
         }
     }

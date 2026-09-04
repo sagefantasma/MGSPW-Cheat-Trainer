@@ -23,7 +23,7 @@ public static class MgsPwMonitor
 
     private static CancellationToken MonitorCancellationToken { get; set; }
     private static CancellationTokenSource MgsPwCancellationTokenSource { get; } = new ();
-    //private static ILogger? Logger => Logging.Logger;
+    private static ILogger? Logger => LogManager.Logger;
     private static Thread? ScanningThread { get; set; }
         
     public static event EventHandler<bool>? OnGameHooked;
@@ -80,7 +80,7 @@ public static class MgsPwMonitor
                                     try
                                     {
                                         using SimpleProcessProxy spp = new SimpleProcessProxy(p, MgsPwProcessName);
-                                        nint signifyingMemory = 0x1591501;
+                                        nint signifyingMemory = 0x1595501;
                                         string determinantString = "METAL GEAR SOLID PEACE WALKER";
                                         long bytesToRead = determinantString.Length;
                                         try
@@ -105,7 +105,6 @@ public static class MgsPwMonitor
 
                         if (process != null)
                         {
-                            // Bug fix: only update if process actually changed
                             if (MgsPwProcess?.Id != process.Id)
                             {
                                 MgsPwProcess = process;
@@ -127,7 +126,7 @@ public static class MgsPwMonitor
                                         fileVersionString = "UNKNOWN!";
                                 }
 
-                                //Logger?.Information($"MGSPW found and hooked, game version: {fileVersionString}");
+                                Logger?.Information($"MGSPW found and hooked, game version: {fileVersionString}");
 
                                 if (string.Compare(fileVersionString, DesiredVersion,
                                         StringComparison.InvariantCultureIgnoreCase) != 0
@@ -152,7 +151,7 @@ public static class MgsPwMonitor
                 }
                 catch (Exception e)
                 {
-                    //Logger?.Error($"Something went wrong in ScanningThread: {e}");
+                    Logger?.Error($"Something went wrong in ScanningThread: {e}");
                 }
             }
         }
@@ -240,7 +239,7 @@ public static class MgsPwMonitor
     #region Constructor & Process Encapsulator
     static MgsPwMonitor()
     {
-        //Logger?.Information($"MGSPW Monitor initialized...");
+        Logger?.Information($"MGSPW Monitor initialized...");
     }
 
     public static Process? MgsPwProcess
@@ -283,7 +282,7 @@ public static class MgsPwMonitor
     {
         MonitorCancellationToken = cancellationToken;
         MonitorCancellationToken.Register(TearDownMonitor);
-        //Logger?.Information("Starting MGSPW scanning thread...");
+        Logger?.Information("Starting MGSPW scanning thread...");
         Task.Run(ScanForMgsPw, cancellationToken);
     }
     #endregion

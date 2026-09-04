@@ -365,7 +365,5 @@
                 </TabItem>
             </TabControl>
         </DockPanel>
-        
-        <Panel x:Name="ToastLayer" IsHitTestVisible="False"/>
     </Panel>
 </Window>

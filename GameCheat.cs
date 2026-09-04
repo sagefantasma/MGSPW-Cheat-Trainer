@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using MGSPW_MC_Cheat_Trainer.Models;
+using Serilog;
 using SimplifiedMemoryManager;
 using static MGSPW_MC_Cheat_Trainer.Models.PeaceWalkerApplicationNavigator.PeaceWalkerAoB;
 
@@ -14,6 +15,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
     private byte[]? OriginalBytes { get; set; } = originalBytes;
     private IntPtr CodeLocation { get; set; } = IntPtr.Zero;
     public Constants.Cheat? CheatType { get; set; } = cheatType;
+    private static ILogger? Logger => LogManager.Logger;
 
     private static class BaseActions
     {
@@ -374,6 +376,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         UnlimitedLifeAoB,
                         UnlimitedLifeOffset,
                         UnlimitedLifeOffset.Length);
+                    Logger?.Debug($"Unlimited life AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.UnlimitedLife = activeGameCheat;
                 }
                 else
@@ -399,6 +402,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(InvulnerableAoB,
                         InvulnerableBytes, InvulnerableOffset);
+                    Logger?.Debug($"Invulnerability AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.Invulnerable = activeGameCheat;
                 }
                 else
@@ -425,6 +429,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         NoReloadAoB,
                         NoReloadOffset,
                         NoReloadOffset.Length);
+                    Logger?.Debug($"No Reload AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.NoReload = activeGameCheat;
                 }
                 else
@@ -452,6 +457,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         UnlimitedAmmoAoB,
                         UnlimitedAmmoOffset,
                         UnlimitedAmmoOffset.Length);
+                    Logger?.Debug($"Unlimited ammo AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.UnlimitedAmmo = activeGameCheat;
                 }
                 else
@@ -479,6 +485,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         InfiniteSuppressorAoB,
                         InfiniteSuppressorOffset,
                         InfiniteSuppressorOffset.Length);
+                    Logger?.Debug($"Infinite suppressor AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.InfiniteSuppressor = activeGameCheat;
                 }
                 else
@@ -506,6 +513,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         UnlimitedPsycheAoB,
                         UnlimitedPsycheOffset,
                         UnlimitedPsycheOffset.Length);
+                    Logger?.Debug($"Unlimited psyche AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.UnlimitedPsyche = activeGameCheat;
                 }
                 else
@@ -531,6 +539,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(FreezeAiAoB,
                         FreezeAiBytes, FreezeAiOffset);
+                    Logger?.Debug($"Freeze AI AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.FreezeAi = activeGameCheat;
                 }
                 else
@@ -555,6 +564,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(InvisibleToAiAoB,
                         InvisibleToAiBytes, InvisibleToAiOffset);
+                    Logger?.Debug($"Invisible to AI AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.InvisibleToAi = activeGameCheat;
                 }
                 else
@@ -580,6 +590,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         MaxCamo1AoB,
                         MaxCamo1Offset,
                         MaxCamo1Offset.Length);
+                    Logger?.Debug($"Max Camo 1 AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.MaxCamo1 = activeGameCheat;
                 }
                 else
@@ -606,6 +617,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         MaxCamo2AoB,
                         MaxCamo2Offset,
                         MaxCamo2Offset.Length);
+                    Logger?.Debug($"Max Camo 2 AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.MaxCamo2 = activeGameCheat;
                 }
                 else
@@ -640,6 +652,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         UnlimitedEquipmentAoB,
                         UnlimitedEquipmentOffset,
                         UnlimitedEquipmentOffset.Length);
+                    Logger?.Debug($"Unlimited equipment AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.UnlimitedEquipment = activeGameCheat;
                 }
                 else
@@ -666,6 +679,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(NoTimeLimitAoB,
                         NoTimeLimitBytes, NoTimeLimitOffset);
+                    Logger?.Debug($"No time limit AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.NoTimeLimit = activeGameCheat;
                 }
                 else
@@ -690,6 +704,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(MaxStockOnPickupAoB,
                         MaxStockOnPickupBytes, MaxStockOnPickupOffset);
+                    Logger?.Debug($"Max stock on pickup AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.MaxStockOnPickup = activeGameCheat;
                 }
                 else
@@ -716,6 +731,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         FreezeMissionTimeAoB,
                         FreezeMissionTimeOffset,
                         FreezeMissionTimeOffset.Length);
+                    Logger?.Debug($"Freeze mission time AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.FreezeMissionTime = activeGameCheat;
                 }
                 else
@@ -743,6 +759,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         FreezeMissionStatsAoB,
                         FreezeMissionStatsOffset,
                         FreezeMissionStatsOffset.Length);
+                    Logger?.Debug($"Freeze mission stats AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.FreezeMissionStats = activeGameCheat;
                 }
                 else
@@ -762,7 +779,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         private static CancellationTokenSource _vehicleCommanderCancellationTokenSource = new ();
         public static void ForceVehicleCommander(bool activate)
         {
-            //TODO: I think I have this working now, but need to try again to check.
+            //Working as expected
             GameCheat activeGameCheat = PeaceWalkerCheat.ForceVehicleCommander;
             if (activate)
             {
@@ -771,24 +788,22 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                     IntPtr location = BaseActions.ReplaceWithSpecificCode(VehicleBossAoB, new byte[0], VehicleBossOffset);
                     int vehicleBossLocation = BitConverter.ToInt32(BaseActions.ReadMemory(location, VehicleBossOffset));
                     activeGameCheat.CodeLocation = IntPtr.Add(location, vehicleBossLocation);
+                    Logger?.Debug($"Force Vehicle Commander location found at: {activeGameCheat.CodeLocation}");
                     BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
                     PeaceWalkerCheat.ForceVehicleCommander = activeGameCheat;
                 }
                 else
                 {
-                    //BaseActions.ModifySingleByte(activeGameCheat.CodeLocation, EscortCountOffset, 0xFF);
                     BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
                 }
                 PeriodicTask.Run(() =>
                 {
-                        //BaseActions.ModifySingleByte(activeGameCheat.CodeLocation, EscortCountOffset, 0xFF);
                         BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
                 }, TimeSpan.FromSeconds(.25), _vehicleCommanderCancellationTokenSource.Token);
             }
             else
             {
                 _vehicleCommanderCancellationTokenSource?.Cancel();
-                //_vehicleCommanderPeriodicTask = null;
                 _vehicleCommanderCancellationTokenSource = new CancellationTokenSource(); //Prep for a possible re-run
             }
         }
@@ -804,6 +819,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         NoClipAoB,
                         NoClipBytes,
                         NoClipOffset);
+                    Logger?.Debug($"Walk through walls AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.NoClip = activeGameCheat;
                 }
                 else
@@ -830,6 +846,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                         HoldYPositionAoB,
                         HoldYPositionOffset,
                         HoldYPositionOffset.Length);
+                    Logger?.Debug($"Maintain height AoB found at: {activeGameCheat.CodeLocation}");
                     PeaceWalkerCheat.MaintainHeight = activeGameCheat;
                 }
                 else

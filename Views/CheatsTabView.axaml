@@ -8,7 +8,7 @@
     <Grid ColumnDefinitions=".125*,.125*,.125*,.125*,.125*,.125*" RowDefinitions=".2*,.2*,.2*,.2*,.2*">
         <GroupBox Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Header="Player">
             <ScrollViewer>
-                <StackPanel Spacing="5" HorizontalAlignment="Center">
+                <StackPanel x:Name="PlayerCheats" Spacing="5" HorizontalAlignment="Center">
                     <viewModels:CheckboxCheatViewModel x:Name="UnlimitedLifeCheckbox" CheatName="Unlimited Life" Cheat="UnlimitedLife"/>
                     <viewModels:CheckboxCheatViewModel x:Name="InvulnerableCheckbox" CheatName="Invulnerable" Cheat="Invulnerable" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
                     <viewModels:CheckboxCheatViewModel x:Name="MaxCamoCheckbox" CheatName="Max Camo" Cheat="MaxCamo"/>
@@ -20,7 +20,7 @@
         </GroupBox>
         <GroupBox Grid.Row="1" Grid.Column="2" Grid.RowSpan="3" Header="Equipment">
             <ScrollViewer>
-                <StackPanel Spacing="5" HorizontalAlignment="Center">
+                <StackPanel x:Name="EquipmentCheats"  Spacing="5" HorizontalAlignment="Center">
                     <viewModels:CheckboxCheatViewModel x:Name="MaxStockOnPickupCheckbox" CheatName="Max Stock on Pickup" Cheat="MaxStockOnPickup" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
                     <viewModels:CheckboxCheatViewModel x:Name="NoReloadCheckbox" CheatName="No Reloading Required" Cheat="NoReload"/>
                     <viewModels:CheckboxCheatViewModel x:Name="UnlimitedAmmoCheckbox" CheatName="Unlimited Ammo" Cheat="UnlimitedAmmo" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
@@ -31,7 +31,7 @@
         </GroupBox>
         <GroupBox Grid.Row="1" Grid.Column="3" Grid.RowSpan="3" Header="Enemy">
             <ScrollViewer>
-                <StackPanel Spacing="5" HorizontalAlignment="Center">
+                <StackPanel x:Name="EnemyCheats" Spacing="5" HorizontalAlignment="Center">
                     <viewModels:CheckboxCheatViewModel x:Name="ForceVehicleCommanderCheckbox" CheatName="Force Vehicle Commander Out" Cheat="ForceVehicleCommander"/>
                     <viewModels:CheckboxCheatViewModel x:Name="InvisibleToAiCheckbox" CheatName="Invisible to Guards" Cheat="InvisibleToAi" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
                     <viewModels:CheckboxCheatViewModel x:Name="FreezeAiCheckbox" CheatName="Freeze Guards" Cheat="FreezeAi"/>
@@ -40,7 +40,7 @@
         </GroupBox>
         <GroupBox Grid.Row="1" Grid.Column="4" Grid.RowSpan="3" Header="Mission">
             <ScrollViewer>
-                <StackPanel Spacing="5" HorizontalAlignment="Center">
+                <StackPanel x:Name="MissionCheats" Spacing="5" HorizontalAlignment="Center">
                     <viewModels:CheckboxCheatViewModel x:Name="NoTimeLimitCheckbox" CheatName="Stop Time Limit Timer" Cheat="NoTimeLimit" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
                     <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionStatsCheckbox" CheatName="Freeze Mission Stats" Cheat="FreezeMissionStats" />
                     <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionTimeCheckbox" CheatName="Freeze Mission Time" Cheat="FreezeMissionTime" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>

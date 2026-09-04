@@ -25,7 +25,6 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
         
         ServiceCollection collection = new();
-        collection.AddSingleton<ILogManager>(new LogManager());
         collection.AddSingleton<MemoryManager>();
         
         _services = collection.BuildServiceProvider();
@@ -42,8 +41,6 @@ public partial class App : Application
 
             desktop.Exit += (_, _) =>
             {
-                LogManager logManager = Services.GetRequiredService<LogManager>();
-                logManager?.Dispose();
             };
         }
 
