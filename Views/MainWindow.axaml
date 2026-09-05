@@ -52,10 +52,9 @@
                 <TabItem Header="R&amp;D Weapons">
                     <Panel>
                         <Image Source = "/Assets/rnd mock bg.png" Stretch="UniformToFill"/>
-                        <TextBlock Text="UNDER CONSTRUCTION" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
+                        <!--<TextBlock Text="UNDER CONSTRUCTION" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>-->
                         <TabControl x:Name="WeaponTabControl"
-                                    SelectionChanged="WeaponTabControl_OnSelectionChanged"
-                                    IsVisible="False">
+                                    SelectionChanged="WeaponTabControl_OnSelectionChanged">
                             <TabItem x:Name="HandgunsTab">
                                 <TabItem.Header>
                                     <Image Source="/Assets/handgun icon.png" Height="48" Width="48"/>
@@ -292,9 +291,9 @@
                                     
                                     <views:WeaponDetailView x:Name="StunGrenadeDetailView" Grid.Row="2" Grid.Column="2" PwObject="Stun Grenade" EntityImage="/Assets/stun_grenade.png"/>
                                     
-                                    <views:WeaponDetailView x:Name="SupportSupplyMarkerDetailView" Grid.Row="2" Grid.Column="3"  PwObject="Supply Mk." EntityImage="/Assets/supply_marker_thrown.png"/>
+                                    <views:WeaponDetailView x:Name="SupportSupplyMarkerDetailView" Grid.Row="2" Grid.Column="3"  PwObject="Supply Mk.(thrown)" EntityImage="/Assets/supply_marker_thrown.png"/>
                                     
-                                    <views:WeaponDetailView x:Name="SupportStrikeMarkerDetailView" Grid.Row="2" Grid.Column="4" PwObject="Strike Mk." EntityImage="/Assets/strike_marker_thrown.png"/>
+                                    <views:WeaponDetailView x:Name="SupportStrikeMarkerDetailView" Grid.Row="2" Grid.Column="4" PwObject="Strike Mk.(thrown)" EntityImage="/Assets/strike_marker_thrown.png"/>
                                 </Grid>
                             </TabItem>
                             <TabItem x:Name="PlaceableTab">
@@ -329,12 +328,12 @@
                                     
                                     <views:WeaponDetailView x:Name="CookbookDetailView" Grid.Row="3" Grid.Column="1" PwObject="Cookbook" EntityImage="/Assets/cookbook.png"/>
                                     
-                                    <views:WeaponDetailView x:Name="PlacedSupportSupplyMarkerDetailView" Grid.Row="3" Grid.Column="2"  PwObject="Supply Mk." EntityImage="/Assets/supply_marker_placed.png"/>
+                                    <views:WeaponDetailView x:Name="PlacedSupportSupplyMarkerDetailView" Grid.Row="3" Grid.Column="2"  PwObject="Supply Mk.(placed)" EntityImage="/Assets/supply_marker_placed.png"/>
                                     
-                                    <views:WeaponDetailView x:Name="PlacedSupportStrikeMarkerDetailView" Grid.Row="3" Grid.Column="3" PwObject="Strike Mk." EntityImage="/Assets/strike_marker_placed.png"/>
+                                    <views:WeaponDetailView x:Name="PlacedSupportStrikeMarkerDetailView" Grid.Row="3" Grid.Column="3" PwObject="Strike Mk.(placed)" EntityImage="/Assets/strike_marker_placed.png"/>
                                 </Grid>
                             </TabItem>
-                            <!--Need Hand-to-Hand and Other(?) tabs-->
+                            <!--Add Hand-to-Hand tab?-->
                         </TabControl>
                     </Panel>
                 </TabItem>

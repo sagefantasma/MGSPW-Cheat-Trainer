@@ -1,3 +1,5 @@
+using System;
+
 namespace MGSPW_MC_Cheat_Trainer.Models;
 
 public class PeaceWalkerApplicationNavigator
@@ -141,6 +143,11 @@ public class PeaceWalkerApplicationNavigator
         internal static MemoryOffset NoClipOffset = new(0x04, 05);
         internal static byte[] NoClipBytes = [0xEB, 0x38];
         #endregion
+        #endregion
+        
+        #region Weapons, Items & Other R&D
+        public static nint WeaponsPtrLocation = 0x14CC310;
+        public static int WeaponsPtrOffset = 0x04;
         #endregion
 
         public static string StartOfSaveDataBlockAoB = "48 8B 05 ?? ?? ?? ?? 48 05 3C BD 00 00 C3";

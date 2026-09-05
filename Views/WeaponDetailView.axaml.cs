@@ -32,6 +32,7 @@ public partial class WeaponDetailView : UserControl
                 Foreground = Brushes.Black,
                 FontWeight = FontWeight.Bold
             };
+            _weapon = Constants.WeaponsList.Find(x => x.Name == value);
         }
     }
 
@@ -60,14 +61,14 @@ public partial class WeaponDetailView : UserControl
         _memoryManager.ToggleObject(_weapon);
     }
 
-    public void LevelUp_OnClick(object? sender, RoutedEventArgs e)
+    public void UsageUp_OnClick(object? sender, RoutedEventArgs e)
     {
         //TODO: implement
         _weapon ??= DetermineWeapon(Name!);
         _memoryManager.LevelUpObject(_weapon);
     }
 
-    public void MaxAmmo_OnClick(object? sender, RoutedEventArgs e)
+    public void RankUp_OnClick(object? sender, RoutedEventArgs e)
     {
         //TODO: implement
         _weapon ??= DetermineWeapon(Name!);
