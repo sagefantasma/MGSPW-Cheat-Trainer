@@ -146,11 +146,14 @@ public class PeaceWalkerApplicationNavigator
         #endregion
         
         #region Weapons, Items & Other R&D
-        public static nint WeaponsPtrLocation = 0x14CC310;
+        public static nint WeaponsPtrLocation = 0x014CC310;
         public static int WeaponsPtrOffset = 0x04;
         #endregion
 
-        public static string StartOfSaveDataBlockAoB = "48 8B 05 ?? ?? ?? ?? 48 05 3C BD 00 00 C3";
-        public static MemoryOffset CurrentStageOffset = new(0x57);
+        public static nint StagePtrLocation = 0x00EA4860;
+        public static int StagePtrOffset = 0x54;
+
+        public static nint MaxCoopPlayerCountLocation = 0x00FFA038;
+        public static int[] MaxCoopPlayerCountOffsets = [0x28, 0x65];
     }
 }

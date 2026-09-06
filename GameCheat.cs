@@ -17,6 +17,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
     private IntPtr CodeLocation { get; set; } = IntPtr.Zero;
     public Constants.Cheat? CheatType { get; set; } = cheatType;
     private static ILogger? Logger => LogManager.Logger;
+    private static List<GameCheat> ActiveCheats { get; set; } = new();
 
     private static class BaseActions
     {
@@ -363,6 +364,16 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         }
     }
 
+    public static void DeactivateActiveCheats()
+    {
+        //foreach (GameCheat cheat in ActiveCheats)
+        int cheatsToDisable = ActiveCheats.Count;
+        for(int i = 0; i < cheatsToDisable; i++)
+        {
+            ActiveCheats[0].CheatAction(false); //Disabling a cheat removes it from the list, so just deactivate 0 i times.
+        }
+    }
+
     private static class CheatActions
     {
         public static void ToggleUnlimitedLife(bool activate)
@@ -371,13 +382,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedLife;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        UnlimitedLifeAoB,
-                        UnlimitedLifeOffset,
-                        UnlimitedLifeOffset.Length);
-                    Logger?.Debug($"Unlimited life AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            UnlimitedLifeAoB,
+                            UnlimitedLifeOffset,
+                            UnlimitedLifeOffset.Length);
+                        Logger?.Debug($"Unlimited life AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, UnlimitedLifeOffset,
+                                UnlimitedLifeOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleUnlimitedLife(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.UnlimitedLife = activeGameCheat;
                 }
                 else
@@ -388,6 +421,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -399,11 +433,33 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.Invulnerable;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(InvulnerableAoB,
-                        InvulnerableBytes, InvulnerableOffset);
-                    Logger?.Debug($"Invulnerability AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(InvulnerableAoB,
+                            InvulnerableBytes, InvulnerableOffset);
+                        Logger?.Debug($"Invulnerability AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, InvulnerableBytes,
+                                UnlimitedLifeOffset);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleInvulnerable(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.Invulnerable = activeGameCheat;
                 }
                 else
@@ -414,6 +470,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
@@ -424,13 +481,36 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.NoReload;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        NoReloadAoB,
-                        NoReloadOffset,
-                        NoReloadOffset.Length);
-                    Logger?.Debug($"No Reload AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            NoReloadAoB,
+                            NoReloadOffset,
+                            NoReloadOffset.Length);
+                        Logger?.Debug($"No Reload AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!,
+                            activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, NoReloadOffset,
+                                NoReloadOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleNoReload(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.NoReload = activeGameCheat;
                 }
                 else
@@ -441,6 +521,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -452,13 +533,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedAmmo;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        UnlimitedAmmoAoB,
-                        UnlimitedAmmoOffset,
-                        UnlimitedAmmoOffset.Length);
-                    Logger?.Debug($"Unlimited ammo AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            UnlimitedAmmoAoB,
+                            UnlimitedAmmoOffset,
+                            UnlimitedAmmoOffset.Length);
+                        Logger?.Debug($"Unlimited ammo AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, UnlimitedAmmoOffset,
+                                UnlimitedAmmoOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleUnlimitedAmmo(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.UnlimitedAmmo = activeGameCheat;
                 }
                 else
@@ -469,6 +572,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -480,13 +584,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.InfiniteSuppressor;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        InfiniteSuppressorAoB,
-                        InfiniteSuppressorOffset,
-                        InfiniteSuppressorOffset.Length);
-                    Logger?.Debug($"Infinite suppressor AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            InfiniteSuppressorAoB,
+                            InfiniteSuppressorOffset,
+                            InfiniteSuppressorOffset.Length);
+                        Logger?.Debug($"Infinite suppressor AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, InfiniteSuppressorOffset,
+                                InfiniteSuppressorOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleInfiniteSuppressor(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.InfiniteSuppressor = activeGameCheat;
                 }
                 else
@@ -497,6 +623,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -508,13 +635,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedPsyche;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        UnlimitedPsycheAoB,
-                        UnlimitedPsycheOffset,
-                        UnlimitedPsycheOffset.Length);
-                    Logger?.Debug($"Unlimited psyche AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            UnlimitedPsycheAoB,
+                            UnlimitedPsycheOffset,
+                            UnlimitedPsycheOffset.Length);
+                        Logger?.Debug($"Unlimited psyche AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, UnlimitedPsycheOffset,
+                                UnlimitedPsycheOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleUnlimitedPsyche(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.UnlimitedPsyche = activeGameCheat;
                 }
                 else
@@ -525,6 +674,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -536,11 +686,33 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.FreezeAi;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(FreezeAiAoB,
-                        FreezeAiBytes, FreezeAiOffset);
-                    Logger?.Debug($"Freeze AI AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(FreezeAiAoB,
+                            FreezeAiBytes, FreezeAiOffset);
+                        Logger?.Debug($"Freeze AI AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, FreezeAiBytes,
+                                FreezeAiOffset);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleFreezeAi(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.FreezeAi = activeGameCheat;
                 }
                 else
@@ -551,6 +723,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
@@ -561,11 +734,33 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.InvisibleToAi;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(InvisibleToAiAoB,
-                        InvisibleToAiBytes, InvisibleToAiOffset);
-                    Logger?.Debug($"Invisible to AI AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(InvisibleToAiAoB,
+                            InvisibleToAiBytes, InvisibleToAiOffset);
+                        Logger?.Debug($"Invisible to AI AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, InvisibleToAiBytes,
+                                InvisibleToAiOffset);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleInvisibleToAi(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.InvisibleToAi = activeGameCheat;
                 }
                 else
@@ -576,6 +771,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
@@ -585,13 +781,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.MaxCamo1;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        MaxCamo1AoB,
-                        MaxCamo1Offset,
-                        MaxCamo1Offset.Length);
-                    Logger?.Debug($"Max Camo 1 AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            MaxCamo1AoB,
+                            MaxCamo1Offset,
+                            MaxCamo1Offset.Length);
+                        Logger?.Debug($"Max Camo 1 AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, MaxCamo1Offset,
+                                MaxCamo1Offset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleMaxCamoSub1(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.MaxCamo1 = activeGameCheat;
                 }
                 else
@@ -602,6 +820,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -612,13 +831,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.MaxCamo2;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        MaxCamo2AoB,
-                        MaxCamo2Offset,
-                        MaxCamo2Offset.Length);
-                    Logger?.Debug($"Max Camo 2 AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            MaxCamo2AoB,
+                            MaxCamo2Offset,
+                            MaxCamo2Offset.Length);
+                        Logger?.Debug($"Max Camo 2 AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, MaxCamo2Offset,
+                                MaxCamo2Offset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleMaxCamoSub2(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.MaxCamo2 = activeGameCheat;
                 }
                 else
@@ -629,6 +870,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -647,13 +889,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.UnlimitedEquipment;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        UnlimitedEquipmentAoB,
-                        UnlimitedEquipmentOffset,
-                        UnlimitedEquipmentOffset.Length);
-                    Logger?.Debug($"Unlimited equipment AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            UnlimitedEquipmentAoB,
+                            UnlimitedEquipmentOffset,
+                            UnlimitedEquipmentOffset.Length);
+                        Logger?.Debug($"Unlimited equipment AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, UnlimitedEquipmentOffset,
+                                UnlimitedEquipmentOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleUnlimitedEquipment(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.UnlimitedEquipment = activeGameCheat;
                 }
                 else
@@ -664,6 +928,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -676,11 +941,33 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.NoTimeLimit;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(NoTimeLimitAoB,
-                        NoTimeLimitBytes, NoTimeLimitOffset);
-                    Logger?.Debug($"No time limit AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(NoTimeLimitAoB,
+                            NoTimeLimitBytes, NoTimeLimitOffset);
+                        Logger?.Debug($"No time limit AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, NoTimeLimitOffset,
+                                NoTimeLimitOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleNoTimeLimit(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.NoTimeLimit = activeGameCheat;
                 }
                 else
@@ -691,6 +978,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
@@ -701,11 +989,33 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.MaxStockOnPickup;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(MaxStockOnPickupAoB,
-                        MaxStockOnPickupBytes, MaxStockOnPickupOffset);
-                    Logger?.Debug($"Max stock on pickup AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(MaxStockOnPickupAoB,
+                            MaxStockOnPickupBytes, MaxStockOnPickupOffset);
+                        Logger?.Debug($"Max stock on pickup AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, MaxStockOnPickupBytes,
+                                MaxStockOnPickupOffset);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleMaxStockOnPickup(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.MaxStockOnPickup = activeGameCheat;
                 }
                 else
@@ -716,6 +1026,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
@@ -726,13 +1037,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.FreezeMissionTime;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        FreezeMissionTimeAoB,
-                        FreezeMissionTimeOffset,
-                        FreezeMissionTimeOffset.Length);
-                    Logger?.Debug($"Freeze mission time AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            FreezeMissionTimeAoB,
+                            FreezeMissionTimeOffset,
+                            FreezeMissionTimeOffset.Length);
+                        Logger?.Debug($"Freeze mission time AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, FreezeMissionTimeOffset,
+                                FreezeMissionTimeOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleFreezeMissionTime(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.FreezeMissionTime = activeGameCheat;
                 }
                 else
@@ -743,6 +1076,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -754,13 +1088,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.FreezeMissionStats;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        FreezeMissionStatsAoB,
-                        FreezeMissionStatsOffset,
-                        FreezeMissionStatsOffset.Length);
-                    Logger?.Debug($"Freeze mission stats AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            FreezeMissionStatsAoB,
+                            FreezeMissionStatsOffset,
+                            FreezeMissionStatsOffset.Length);
+                        Logger?.Debug($"Freeze mission stats AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, FreezeMissionStatsOffset,
+                                FreezeMissionStatsOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleFreezeMissionStats(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.FreezeMissionStats = activeGameCheat;
                 }
                 else
@@ -771,6 +1127,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
                     activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(), new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
@@ -784,13 +1141,35 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             GameCheat activeGameCheat = PeaceWalkerCheat.ForceVehicleCommander;
             if (activate)
             {
+                ActiveCheats.Add(activeGameCheat);
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    IntPtr location = BaseActions.ReplaceWithSpecificCode(VehicleBossAoB, new byte[0], VehicleBossOffset);
-                    int vehicleBossLocation = BitConverter.ToInt32(BaseActions.ReadMemory(location, VehicleBossOffset));
-                    activeGameCheat.CodeLocation = IntPtr.Add(location, vehicleBossLocation);
-                    Logger?.Debug($"Force Vehicle Commander location found at: {activeGameCheat.CodeLocation}");
-                    BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        IntPtr location = BaseActions.ReplaceWithSpecificCode(VehicleBossAoB, new byte[0], VehicleBossOffset);
+                        int vehicleBossLocation = BitConverter.ToInt32(BaseActions.ReadMemory(location, VehicleBossOffset));
+                        activeGameCheat.CodeLocation = IntPtr.Add(location, vehicleBossLocation);
+                        Logger?.Debug($"Force Vehicle Commander location found at: {activeGameCheat.CodeLocation}");
+                        BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes, EscortCountOffset);
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, ForceVehicleCommanderBytes,
+                                EscortCountOffset);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ForceVehicleCommander(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.ForceVehicleCommander = activeGameCheat;
                 }
                 else
@@ -804,6 +1183,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             }
             else
             {
+                ActiveCheats.Remove(activeGameCheat);
                 _vehicleCommanderCancellationTokenSource?.Cancel();
                 _vehicleCommanderCancellationTokenSource = new CancellationTokenSource(); //Prep for a possible re-run
             }
@@ -816,11 +1196,32 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             {
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(
-                        NoClipAoB,
-                        NoClipBytes,
-                        NoClipOffset);
-                    Logger?.Debug($"Walk through walls AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithSpecificCode(
+                            NoClipAoB,
+                            NoClipBytes,
+                            NoClipOffset);
+                        Logger?.Debug($"Walk through walls AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation, NoClipBytes,
+                                NoClipOffset);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            WalkThroughWalls(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.NoClip = activeGameCheat;
                 }
                 else
@@ -843,11 +1244,32 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             {
                 if (activeGameCheat.CodeLocation == IntPtr.Zero)
                 {
-                    activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
-                        HoldYPositionAoB,
-                        HoldYPositionOffset,
-                        HoldYPositionOffset.Length);
-                    Logger?.Debug($"Maintain height AoB found at: {activeGameCheat.CodeLocation}");
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            HoldYPositionAoB,
+                            HoldYPositionOffset,
+                            HoldYPositionOffset.Length);
+                        Logger?.Debug($"Maintain height AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, HoldYPositionOffset,
+                                HoldYPositionOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            MaintainHeight(activate);
+                            return;
+                        }
+                    }
                     PeaceWalkerCheat.MaintainHeight = activeGameCheat;
                 }
                 else
@@ -868,11 +1290,13 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             //Works as intended
             if (activate)
             {
+                ActiveCheats.Add(PeaceWalkerCheat.NoClip);
                 MaintainHeight(activate);
                 WalkThroughWalls(activate);
             }
             else
             {
+                ActiveCheats.Remove(PeaceWalkerCheat.NoClip);
                 WalkThroughWalls(activate);
                 MaintainHeight(activate);
             }

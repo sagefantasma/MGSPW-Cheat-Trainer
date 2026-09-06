@@ -93,7 +93,6 @@ public class MemoryManager
 
     public string GetCurrentStage()
     {
-        //TODO: validate
         if (MgsPwMonitor.MgsPwProcess == null)
             return null;
         lock (MgsPwMonitor.MgsPwProcess)
@@ -102,13 +101,14 @@ public class MemoryManager
             {
                 if (_stageLocation == nint.MinValue)
                 {
-                    SimpleProcessProxy.SimpleMemory result = spp.ScanMemoryForUniquePatternAsync(
-                            new SimplePattern(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.StartOfSaveDataBlockAoB))
-                        .Result;
-                    _stageLocation = result.Offset;
+                    nint ptrLocation =
+                        spp.FollowPointer(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.StagePtrLocation, true);
+
+                    _stageLocation = IntPtr.Add(ptrLocation,
+                        PeaceWalkerApplicationNavigator.PeaceWalkerAoB.StagePtrOffset);
                 }
 
-                return Encoding.UTF8.GetString(spp.ReadProcessOffset(_stageLocation, 18));
+                return Encoding.UTF8.GetString(spp.GetMemoryFromPointer(_stageLocation, 18));
             }
         }
     }
@@ -222,6 +222,23 @@ public class MemoryManager
         catch (Exception e)
         {
             string baseMessage = $"Failed to update stock for {weapon.Name}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+    
+    private bool UpdateWeaponStock(int weapon, uint stock)
+    {
+        //TODO: validate
+        //Set 0x0C in the array to desired value
+        try
+        {
+            return SetMemoryAtPointer(
+                IntPtr.Add(WeaponsArrayLocation, 0x1C * (weapon - 1) + (int)Constants.WeaponMemory.Stock), BitConverter.GetBytes(stock));
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to update stock for weapon index {weapon}";
             Logger?.Error($"{baseMessage}: {e}");
             throw new AggregateException(baseMessage, e);
         }

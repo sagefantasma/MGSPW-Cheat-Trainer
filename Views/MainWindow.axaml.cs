@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -10,11 +11,15 @@ using Avalonia.Input.Platform;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
+using MGSPW_MC_Cheat_Trainer.Models;
+using MGSPW_MC_Cheat_Trainer.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using MsBox.Avalonia;
 using MsBox.Avalonia.Base;
 using MsBox.Avalonia.Enums;
 using Serilog;
 using Serilog.Events;
+using SimplifiedMemoryManager;
 
 namespace MGSPW_MC_Cheat_Trainer.Views;
 
@@ -31,6 +36,7 @@ public partial class MainWindow : Window
 {
     public static event EventHandler<Tab>? TabActivated;
     private static ILogger? Logger => LogManager.Logger;
+    private readonly MemoryManager _memoryManager;
     
     public MainWindow()
     {
@@ -47,21 +53,123 @@ public partial class MainWindow : Window
                 $"We tried to start a debuglog, but something went wrong. Is {LogManager.LogLocation} a valid directory on your PC?");
             msgBox.ShowAsync();
         }
-        //TODO: add a background task to stop active cheats if going into co-op / pvp
+        _memoryManager = App.Services.GetRequiredService<MemoryManager>();
         StatusLabel.Text = "Searching for active Peace Walker instance...";
         MgsPwMonitor.EnableMonitor(new CancellationToken());
         MgsPwMonitor.OnGameHooked += OnGameHooked;
         MgsPwMonitor.OnInvalidVersionDetected += OnInvalidVersionDetected;
         WeaponsTabView.UpdateStatusBar += OnUpdateStatusBar;
         CheatsTabView.UpdateStatusBar += OnUpdateStatusBar;
+        this.Closing += OnClosing;
         Task.Run(CheckForUpdates);
+        PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(1));
     }
-    
+
+    private void OnClosing(object? sender, WindowClosingEventArgs e)
+    {
+        //Turn off any and all active cheats
+        GameCheat.DeactivateActiveCheats();
+    }
+
+    private void DeactivateAllCheats()
+    {
+        foreach (var control in VisibleCheatsTabView.PlayerCheats.Children)
+        {
+            (control as CheckboxCheatViewModel)?.CheatCheckBox.IsChecked = false;
+            control.IsEnabled = false;
+        }
+        foreach (var control in VisibleCheatsTabView.EquipmentCheats.Children)
+        {
+            (control as CheckboxCheatViewModel)?.CheatCheckBox.IsChecked = false;
+            control.IsEnabled = false;
+        }
+        foreach (var control in VisibleCheatsTabView.EnemyCheats.Children)
+        {
+            (control as CheckboxCheatViewModel)?.CheatCheckBox.IsChecked = false;
+            control.IsEnabled = false;
+        }
+        foreach (var control in VisibleCheatsTabView.MissionCheats.Children)
+        {
+            (control as CheckboxCheatViewModel)?.CheatCheckBox.IsChecked = false;
+            control.IsEnabled = false;
+        }
+    }
+
+    private void EnableCheatUse()
+    {
+        foreach (var control in VisibleCheatsTabView.PlayerCheats.Children)
+        {
+            control.IsEnabled = true;
+        }
+        foreach (var control in VisibleCheatsTabView.EquipmentCheats.Children)
+        {
+            control.IsEnabled = true;
+        }
+        foreach (var control in VisibleCheatsTabView.EnemyCheats.Children)
+        {
+            control.IsEnabled = true;
+        }
+        foreach (var control in VisibleCheatsTabView.MissionCheats.Children)
+        {
+            control.IsEnabled = true;
+        }
+    }
+
     private static Window? GetMainWindow()
     {
         if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
             return desktop.MainWindow;
         return null;
+    }
+
+    private void ScanForMultiplayer()
+    {
+        try
+        {
+            string currentStage = _memoryManager.GetCurrentStage();
+            if (currentStage.Contains("vs_lobby"))
+            {
+                //Turn off all cheats and disable their use
+                DeactivateAllCheats();
+                return;
+            }
+
+            if (MgsPwMonitor.MgsPwProcess == null)
+                return;
+            lock (MgsPwMonitor.MgsPwProcess)
+            {
+                using SimpleProcessProxy spp =
+                    new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
+                var startingLocation =
+                    spp.FollowPointer(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.MaxCoopPlayerCountLocation,
+                        true);
+                foreach (var offset in PeaceWalkerApplicationNavigator.PeaceWalkerAoB.MaxCoopPlayerCountOffsets)
+                {
+                    if (offset == PeaceWalkerApplicationNavigator.PeaceWalkerAoB.MaxCoopPlayerCountOffsets.Last())
+                        break;
+                    startingLocation =
+                        new nint(BitConverter.ToInt64(
+                            spp.GetMemoryFromPointer(IntPtr.Add(startingLocation, offset), 8)));
+                }
+
+                if (spp.GetMemoryFromPointer(
+                        IntPtr.Add(startingLocation,
+                            PeaceWalkerApplicationNavigator.PeaceWalkerAoB.MaxCoopPlayerCountOffsets.Last()),
+                        1)[0] != 0x01)
+                {
+                    //Turn off all cheats and disable their use
+                    DeactivateAllCheats();
+                    return;
+                }
+            }
+            
+            //If not in versus or co-op, enable cheats
+            EnableCheatUse();
+        }
+        catch
+        {
+            //Fail silently.
+        }
     }
     
     private void CheckForUpdates()

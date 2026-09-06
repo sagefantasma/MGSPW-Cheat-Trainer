@@ -45,7 +45,7 @@
                     <Panel>
                         <Image Source="/Assets/title_bg.png" Stretch="UniformToFill"/>
                         <Rectangle Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
-                        <views:CheatsTabView/>
+                        <views:CheatsTabView x:Name="VisibleCheatsTabView"/>
                     </Panel>
                 </TabItem>
                 
