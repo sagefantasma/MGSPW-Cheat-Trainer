@@ -18,9 +18,18 @@ using Serilog.Events;
 
 namespace MGSPW_MC_Cheat_Trainer.Views;
 
+public enum Tab
+{
+    Cheats,
+    Weapons,
+    Items,
+    Other,
+    Staff
+}
+
 public partial class MainWindow : Window
 {
-    private WindowNotificationManager _notificationManager;
+    public static event EventHandler<Tab>? TabActivated;
     private static ILogger? Logger => LogManager.Logger;
     
     public MainWindow()
@@ -38,14 +47,12 @@ public partial class MainWindow : Window
                 $"We tried to start a debuglog, but something went wrong. Is {LogManager.LogLocation} a valid directory on your PC?");
             msgBox.ShowAsync();
         }
-        _notificationManager = new WindowNotificationManager(GetTopLevel(this))
-        {
-            Position = NotificationPosition.BottomRight,
-            MaxItems = 3
-        };
+        //TODO: add a background task to stop active cheats if going into co-op / pvp
+        StatusLabel.Text = "Searching for active Peace Walker instance...";
         MgsPwMonitor.EnableMonitor(new CancellationToken());
         MgsPwMonitor.OnGameHooked += OnGameHooked;
         MgsPwMonitor.OnInvalidVersionDetected += OnInvalidVersionDetected;
+        WeaponsTabView.UpdateStatusBar += OnUpdateStatusBar;
         CheatsTabView.UpdateStatusBar += OnUpdateStatusBar;
         Task.Run(CheckForUpdates);
     }
@@ -59,6 +66,7 @@ public partial class MainWindow : Window
     
     private void CheckForUpdates()
     {
+        return; //TODO: Skipping for now as we have no releases yet
         bool newerVersionAvailable = VersionSupport.CheckIfNewUpdateExists(Program.AppVersion);
         if (newerVersionAvailable)
         {
@@ -105,6 +113,7 @@ public partial class MainWindow : Window
     private void OnGameHooked(object? sender, bool hooked)
     {
         //Do stuff here later, if wanted
+        OnUpdateStatusBar(sender, "Peace Walker found and hooked! Ready to go.");
     }
     
     private void OnInvalidVersionDetected(object? sender, string msg)
@@ -154,12 +163,26 @@ public partial class MainWindow : Window
 
     private void MainTabControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        //throw new System.NotImplementedException();
-    }
-
-    private void WeaponTabControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
-    {
-        //throw new System.NotImplementedException();
+        if (MainTabControl?.SelectedItem?.Equals(CheatsTab) == true)
+        {
+            TabActivated?.Invoke(this, Tab.Cheats);
+        }
+        else if (MainTabControl?.SelectedItem?.Equals(WeaponsTab) == true)
+        {
+            TabActivated?.Invoke(this, Tab.Weapons);
+        }
+        else if (MainTabControl?.SelectedItem?.Equals(ItemsTab) == true)
+        {
+            TabActivated?.Invoke(this, Tab.Items);
+        }
+        else if (MainTabControl?.SelectedItem?.Equals(OtherTab) == true)
+        {
+            TabActivated?.Invoke(this, Tab.Other);
+        }
+        else if (MainTabControl?.SelectedItem?.Equals(StaffTab) == true)
+        {
+            TabActivated?.Invoke(this, Tab.Staff);
+        }
     }
 
     private void OpenInstallLocationMenuItem_Click(object? sender, RoutedEventArgs e)

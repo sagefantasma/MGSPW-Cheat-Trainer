@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using MGSPW_MC_Cheat_Trainer.Models;
@@ -31,7 +32,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         if (memoryLocation != IntPtr.Zero)
                         {
                             byte[] memoryContent = spp.GetMemoryFromPointer(IntPtr.Add(memoryLocation, offset.Start),
@@ -71,7 +72,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         SimplePattern pattern = new SimplePattern(aob);
                         IntPtr memoryLocation = spp.ScanMemoryForUniquePatternAsync(pattern).Result.Offset;
 
@@ -117,7 +118,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         if (memoryLocation != IntPtr.Zero)
                         {
                             byte[] memoryContent = spp.GetMemoryFromPointer(IntPtr.Add(memoryLocation, offset.Start),
@@ -156,7 +157,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         SimplePattern pattern = new SimplePattern(patternToScan);
                         IntPtr memoryLocation = spp.ScanMemoryForUniquePatternAsync(pattern).Result.Offset;
 
@@ -201,7 +202,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         if (memoryLocation != IntPtr.Zero)
                         {
                             byte[] memoryContent = spp.GetMemoryFromPointer(IntPtr.Add(memoryLocation, offset.Start),
@@ -240,7 +241,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         SimplePattern pattern = new SimplePattern(aob);
                         IntPtr memoryLocation = spp.ScanMemoryForUniquePatternAsync(pattern).Result.Offset;
 
@@ -277,7 +278,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         if (memoryLocation != IntPtr.Zero)
                         {
                             spp.SetMemoryAtPointer(IntPtr.Add(memoryLocation, offset.Start), [replacementValue]);
@@ -308,7 +309,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         SimplePattern pattern = new SimplePattern(aob);
                         IntPtr memoryLocation = spp.ScanMemoryForUniquePatternAsync(pattern).Result.Offset;
 
@@ -342,7 +343,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 {
                     try
                     {
-                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess);
+                        using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         
                         return spp.GetMemoryFromPointer(IntPtr.Add(memoryLocation, offset.Start),
                             offset.Length);

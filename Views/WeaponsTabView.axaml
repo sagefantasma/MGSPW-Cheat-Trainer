@@ -1,0 +1,289 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:MGSPW_MC_Cheat_Trainer.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MGSPW_MC_Cheat_Trainer.Views.WeaponsTabView">
+    <TabControl x:Name="WeaponTabControl" SelectionChanged="WeaponTabControl_OnSelectionChanged">
+        <TabItem x:Name="HandgunsTab">
+            <TabItem.Header>
+                <Image Source="/Assets/handgun icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="HandgunGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="HandgunLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="HANDGUNS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="Mk22DetailView" Grid.Row="1" Grid.Column="0" PwObject="Mk.22" EntityImage="/Assets/mk22 icon.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="EzGunLrDetailView" Grid.Row="1" Grid.Column="1" PwObject="EZ Gun(LR)" EntityImage="/Assets/ezgun_lr.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="EzGunPrDetailView" Grid.Row="1" Grid.Column="2" PwObject="EZ Gun(PR)" EntityImage="/Assets/ezgun_pr.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="C96DetailView" Grid.Row="1" Grid.Column="3" PwObject="C96" EntityImage="/Assets/c96.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="KPistolDetailView" Grid.Row="1" Grid.Column="4" PwObject="K.Pistol" EntityImage="/Assets/kpistol.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M19DetailView" Grid.Row="2" Grid.Column="0" PwObject="M19" EntityImage="/Assets/m19.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M1911A1DetailView" Grid.Row="2" Grid.Column="1" PwObject="M1911A1" EntityImage="/Assets/m1911a1.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M1911A1CustomDetailView" Grid.Row="2" Grid.Column="2" PwObject="M1911A1(CT)" EntityImage="/Assets/m1911a1_custom.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Pb6P9DetailView" Grid.Row="2" Grid.Column="3" PwObject="PB/6P9" EntityImage="/Assets/pb6p9.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="PmDetailView" Grid.Row="2" Grid.Column="4" PwObject="PM" EntityImage="/Assets/pm.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="SupplyMarkerDetailView" Grid.Row="3" Grid.Column="0" PwObject="Supply Mk." EntityImage="/Assets/supply_marker_handgun.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="StrikeMarkerDetailView" Grid.Row="3" Grid.Column="1" PwObject="Strike Mk." EntityImage="/Assets/strike_marker_handgun.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="BananaDetailView" Grid.Row="3" Grid.Column="2" PwObject="Banana" EntityImage="/Assets/banana.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+            </Grid>
+        </TabItem>
+        
+        <TabItem x:Name="ShotgunsTab">
+            <TabItem.Header>
+                <Image Source="/Assets/shotgun icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="ShotgunGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="ShotgunLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="SHOTGUNS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="CawDetailView" Grid.Row="1" Grid.Column="0" PwObject="CAW" EntityImage="/Assets/caw.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="M37DetailView" Grid.Row="1" Grid.Column="1" PwObject="M37" EntityImage="/Assets/m37.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M37LbDetailView" Grid.Row="1" Grid.Column="2" PwObject="M37(LB/ACM)" EntityImage="/Assets/m37_lb.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Spas12DetailView" Grid.Row="2" Grid.Column="0" PwObject="SPAS-12" EntityImage="/Assets/spas12.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="TwinBarrelDetailView" Grid.Row="2" Grid.Column="1" PwObject="Twin Barrel" EntityImage="/Assets/twin_barrel.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="TwinBarrelRubberDetailView" Grid.Row="2" Grid.Column="2" PwObject="Twin Barrel(RB)" EntityImage="/Assets/twin_barrel_rubberbullets.png" ValueChanged="RequestStatusBarUpdate"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="RifleTab">
+            <TabItem.Header>
+                <Image Source="/Assets/rifle icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="RifleGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.225*,.225*,.225*,.225*">
+                <Label x:Name="RifleLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="RIFLES" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                <!--19 of these-->
+                <views:WeaponDetailView x:Name="Adm63DetailView" Grid.Row="1" Grid.Column="0" PwObject="ADM63" EntityImage="/Assets/adm63.png" CanRankUp="False" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Adm65DetailView" Grid.Row="1" Grid.Column="1" PwObject="ADM65" EntityImage="/Assets/adm65.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="G11AcmDetailView" Grid.Row="1" Grid.Column="2" PwObject="G11" EntityImage="/Assets/g11.png" CanRankUp="False" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="FalDetailView" Grid.Row="1" Grid.Column="3" PwObject="FAL" EntityImage="/Assets/fal.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M16A1DetailView" Grid.Row="1" Grid.Column="4" PwObject="M16A1" EntityImage="/Assets/m16a1.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M16A1GrenadeDetailView" Grid.Row="2" Grid.Column="0" PwObject="M16A1(GL)" EntityImage="/Assets/m16a1_gl.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M16A1SmokeDetailView" Grid.Row="2" Grid.Column="1"  PwObject="M16A1(SGL)" EntityImage="/Assets/m16a1_sgl.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M653DetailView" Grid.Row="2" Grid.Column="2"  PwObject="M653" EntityImage="/Assets/m653.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M653ShotgunDetailView" Grid.Row="2" Grid.Column="3"  PwObject="M653(STG)" EntityImage="/Assets/m653_stg.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" />
+                
+                <views:WeaponDetailView x:Name="M653SmokeDetailView" Grid.Row="2" Grid.Column="4"  PwObject="M653(SGL)" EntityImage="/Assets/m653_sgl.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="Rk47DetailView" Grid.Row="3" Grid.Column="0"  PwObject="RK47" EntityImage="/Assets/rk47.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Rk47SmokeDetailView" Grid.Row="3" Grid.Column="1"  PwObject="RK47(SGL)" EntityImage="/Assets/rk47_sgl.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="RpkDetailView" Grid.Row="3" Grid.Column="2" PwObject="RPK" EntityImage="/Assets/rpk.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="SugDetailView" Grid.Row="3" Grid.Column="3" PwObject="SUG" EntityImage="/Assets/sug.png" CanRankUp="False" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="TanegashimaDetailView" Grid.Row="3" Grid.Column="4" PwObject="Musket" EntityImage="/Assets/musket.png" CanRankUp="False" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="PatriotDetailView" Grid.Row="4" Grid.Column="0" PwObject="Patriot" EntityImage="/Assets/patriot.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="SmgTab">
+            <TabItem.Header>
+                <Image Source="/Assets/smg icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="SmgGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="SmgLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="SUBMACHINE GUNS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="Mac10DetailView" Grid.Row="1" Grid.Column="0" PwObject="M10" EntityImage="/Assets/m10.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Mac10BarrelJacketDetailView" Grid.Row="1" Grid.Column="1" PwObject="M10(BJ)" EntityImage="/Assets/m10_bj.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="Mp5A2DetailView" Grid.Row="1" Grid.Column="2" PwObject="MP5A2" EntityImage="/Assets/mp5a2.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Mp5Sd2DetailView" Grid.Row="2" Grid.Column="0" PwObject="MP5SD2" EntityImage="/Assets/mp5sd2.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="M1928A1DetailView" Grid.Row="2" Grid.Column="1" PwObject="M1928A1" EntityImage="/Assets/m1928a1.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Uz61DetailView" Grid.Row="2" Grid.Column="2" PwObject="Uz61" EntityImage="/Assets/uz61.png" ValueChanged="RequestStatusBarUpdate"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="SniperTab">
+            <TabItem.Header>
+                <Image Source="/Assets/sniper icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="SniperGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="SniperLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="SNIPER RIFLES" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="MosinNagantDetailView" Grid.Row="1" Grid.Column="0" PwObject="Mosin-Nagant" EntityImage="/Assets/mosin.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M1CDetailView" Grid.Row="1" Grid.Column="1" PwObject="M1C" EntityImage="/Assets/m1c.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M1CPsycheDetailView" Grid.Row="1" Grid.Column="2" PwObject="M1C(Psyche)" EntityImage="/Assets/m1c_pr.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M21DetailView" Grid.Row="1" Grid.Column="3" PwObject="M21" EntityImage="/Assets/m21.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M700DetailView" Grid.Row="1" Grid.Column="4" PwObject="M700" EntityImage="/Assets/m700.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M700LifeDetailView" Grid.Row="2" Grid.Column="0" PwObject="M700(Life Rec.)" EntityImage="/Assets/m700_lr.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Ptrd1941DetailView" Grid.Row="2" Grid.Column="1"  PwObject="PTRD1941" EntityImage="/Assets/ptrd1941.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Ptrs1941DetailView" Grid.Row="2" Grid.Column="2"  PwObject="PTRS1941" EntityImage="/Assets/ptrs1941.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="RailGunDetailView" Grid.Row="2" Grid.Column="3"  PwObject="Railgun" EntityImage="/Assets/railgun.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="RailGunDynamoDetailView" Grid.Row="2" Grid.Column="4"  PwObject="Railgun Dynamo" EntityImage="/Assets/railgun_dynamo.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="SvdDetailView" Grid.Row="3" Grid.Column="0"  PwObject="SVD" EntityImage="/Assets/svd.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="SvdNvDetailView" Grid.Row="3" Grid.Column="1"  PwObject="SVD(NV)" EntityImage="/Assets/svd_nv.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="StealthGunDetailView" Grid.Row="3" Grid.Column="2"  PwObject="Stealth Gun" EntityImage="/Assets/stealth_gun.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Wa2000DetailView" Grid.Row="3" Grid.Column="3"  PwObject="WA2000" EntityImage="/Assets/wa2000.png" ValueChanged="RequestStatusBarUpdate"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="LmgTab">
+            <TabItem.Header>
+                <Image Source="/Assets/lmg icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="LmgGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="LmgLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="MACHINE GUNS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="M60DetailView" Grid.Row="1" Grid.Column="0"  PwObject="M60" EntityImage="/Assets/m60.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="M60ApDetailView" Grid.Row="1" Grid.Column="1"  PwObject="M60(AP/SB)" EntityImage="/Assets/m60_ap.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M63A1DetailView" Grid.Row="1" Grid.Column="2"  PwObject="M63A1" EntityImage="/Assets/m63a1.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="PkmDetailView" Grid.Row="2" Grid.Column="0" PwObject="PKM" EntityImage="/Assets/pkm.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Mg3DetailView" Grid.Row="2" Grid.Column="1" PwObject="MG3" EntityImage="/Assets/mg3.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="EmwGunDetailView" Grid.Row="2" Grid.Column="2" PwObject="EM Wave Gun" EntityImage="/Assets/emw_gun.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="M134DetailView" Grid.Row="3" Grid.Column="0" PwObject="M134" EntityImage="/Assets/m134.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="LauncherTab">
+            <TabItem.Header>
+                <Image Source="/Assets/launcher icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="LauncherGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="LauncherLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="ROCKET LAUNCHERS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="LawDetailView" Grid.Row="1" Grid.Column="0" PwObject="LAW" EntityImage="/Assets/law.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M202A1DetailView" Grid.Row="1" Grid.Column="1" PwObject="M202A1" EntityImage="/Assets/m202a1.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="M47DetailView" Grid.Row="1" Grid.Column="2" PwObject="M47" EntityImage="/Assets/m47.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="Rpg2DetailView" Grid.Row="1" Grid.Column="3" PwObject="RPG2" EntityImage="/Assets/rpg2.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="Rpg7DetailView" Grid.Row="1" Grid.Column="4" PwObject="RPG7" EntityImage="/Assets/rpg7.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="CarlGustavDetailView" Grid.Row="2" Grid.Column="0"  PwObject="C. Gustav" EntityImage="/Assets/c_gustav.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="CarlGustavMultiDetailView" Grid.Row="2" Grid.Column="1"  PwObject="C. Gustav(MP)" EntityImage="/Assets/c_gustav_mp.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="CarlGustavFultonDetailView" Grid.Row="2" Grid.Column="2"  PwObject="C. Gustav(FR)" EntityImage="/Assets/c_gustav_fr.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="Fim43DetailView" Grid.Row="2" Grid.Column="3"  PwObject="FIM-43" EntityImage="/Assets/fim43.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="Xfim92ADetailView" Grid.Row="2" Grid.Column="4"  PwObject="XFIM-92A" EntityImage="/Assets/xfim_92a.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="SlingPostDetailView" Grid.Row="3" Grid.Column="0" PwObject="Sling Post" EntityImage="/Assets/sling_post.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="SlingBandDetailView" Grid.Row="3" Grid.Column="1" PwObject="Sling Band" EntityImage="/Assets/sling_band.png" ValueChanged="RequestStatusBarUpdate"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="ThrownTab">
+            <TabItem.Header>
+                <Image Source="/Assets/grenades icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="ThrownGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="ThrownLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="THROWING WEAPONS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="ChaffDetailView" Grid.Row="1" Grid.Column="0" PwObject="Chaff Grenade" EntityImage="/Assets/chaff_grenade.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="EmptyMagDetailView" Grid.Row="1" Grid.Column="1" PwObject="Empty Magazine" EntityImage="/Assets/empty_mag.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="EmNetDetailView" Grid.Row="1" Grid.Column="2" PwObject="EM Net" EntityImage="/Assets/em_net.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="FragGrenadeDetailView" Grid.Row="1" Grid.Column="3" PwObject="Grenade" EntityImage="/Assets/grenade.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="SleepGasGrenadeDetailView" Grid.Row="1" Grid.Column="4" PwObject="Sleep Gas Grenade" EntityImage="/Assets/sleep_grenade.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="SmokeGrenadeDetailView" Grid.Row="2" Grid.Column="0" PwObject="Smoke Grenade" EntityImage="/Assets/smoke_grenade.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="ColoredSmokeGrenadeDetailView" Grid.Row="2" Grid.Column="1" PwObject="Smoke Grenade(Colored)" EntityImage="/Assets/colored_smoke.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="StunGrenadeDetailView" Grid.Row="2" Grid.Column="2" PwObject="Stun Grenade" EntityImage="/Assets/stun_grenade.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="SupportSupplyMarkerDetailView" Grid.Row="2" Grid.Column="3"  PwObject="Supply Mk.(thrown)" EntityImage="/Assets/supply_marker_thrown.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="SupportStrikeMarkerDetailView" Grid.Row="2" Grid.Column="4" PwObject="Strike Mk.(thrown)" EntityImage="/Assets/strike_marker_thrown.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="PlaceableTab">
+            <TabItem.Header>
+                <Image Source="/Assets/placed explosive icon.png" Height="48" Width="48"/>
+            </TabItem.Header>
+            <Grid x:Name="PlaceableGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="PlaceableLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="PLACEABLE WEAPONS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                
+                <views:WeaponDetailView x:Name="AntiTankMineDetailView" Grid.Row="1" Grid.Column="0"  PwObject="AT Mine" EntityImage="/Assets/at_mine.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="AerialMineDetailView" Grid.Row="1" Grid.Column="1"  PwObject="Aerial Mine" EntityImage="/Assets/aerial_mine.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="C4DetailView" Grid.Row="1" Grid.Column="2" PwObject="C4" EntityImage="/Assets/c4.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="ClaymoreDetailView" Grid.Row="1" Grid.Column="3" PwObject="Claymore" EntityImage="/Assets/claymore.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="DecoyDetailView" Grid.Row="1" Grid.Column="4" PwObject="Decoy" EntityImage="/Assets/decoy.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="FultonMineDetailView" Grid.Row="2" Grid.Column="0" PwObject="Fulton Mine" EntityImage="/Assets/fulton_mine.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="MgsBookDetailView" Grid.Row="2" Grid.Column="1" PwObject="Magazine" EntityImage="/Assets/magazine.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="SolidBookDetailView" Grid.Row="2" Grid.Column="2" PwObject="Solid Mag." EntityImage="/Assets/solid_magazine.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="LiquidBookDetailView" Grid.Row="2" Grid.Column="3" PwObject="Liquid Mag." EntityImage="/Assets/liquid_magazine.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="SolidusBookDetailView" Grid.Row="2" Grid.Column="4" PwObject="Solidus Mag." EntityImage="/Assets/solidus_magazine.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="SuperBookDetailView" Grid.Row="3" Grid.Column="0" PwObject="Super Mag." EntityImage="/Assets/super_magazine.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="CookbookDetailView" Grid.Row="3" Grid.Column="1" PwObject="Cookbook" EntityImage="/Assets/cookbook.png" ValueChanged="RequestStatusBarUpdate"/>
+                
+                <views:WeaponDetailView x:Name="PlacedSupportSupplyMarkerDetailView" Grid.Row="3" Grid.Column="2"  PwObject="Supply Mk.(placed)" EntityImage="/Assets/supply_marker_placed.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+                
+                <views:WeaponDetailView x:Name="PlacedSupportStrikeMarkerDetailView" Grid.Row="3" Grid.Column="3" PwObject="Strike Mk.(placed)" EntityImage="/Assets/strike_marker_placed.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False"/>
+            </Grid>
+        </TabItem>
+        <!--Add Hand-to-Hand tab?-->
+    </TabControl>
+</UserControl>

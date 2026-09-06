@@ -7,12 +7,12 @@
     
     <GroupBox x:Name="GroupBox" BorderBrush="Black">
         <Grid x:Name="ItemGrid" ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
-            <Image x:Name="ObjectImage" Source="/Assets/handgun icon.png" Stretch="UniformToFill" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
+            <Image x:Name="ObjectImage" Source="/Assets/handgun icon.png" Stretch="Uniform" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
             <Rectangle x:Name="ImageDarkener" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" 
             Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
-            <!--<CheckBox Grid.Row="0" Grid.Column="1" Content="Enabled" FontWeight="Bold" Foreground="White" Margin="4" Click="Enabled_OnClick"/>-->
+            <CheckBox x:Name="DevelopCheckbox" Grid.Row="0" Grid.Column="1" Content="Develop" FontWeight="Bold" Foreground="White" Margin="4" Click="Enabled_OnClick"/>
             <Button Grid.Row="1" Grid.Column="0" Content="Usage Up" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="UsageUp_OnClick"/>
-            <Button Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="RankUp_OnClick">
+            <Button x:Name="RankButton" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="RankUp_OnClick">
                 <TextBlock Text="Rank Up" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold"/>
             </Button>
         </Grid>
