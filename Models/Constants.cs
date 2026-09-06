@@ -29,6 +29,8 @@ public static class Constants
         CurrentUsage = 0x14, //short
         UsageLevel = 0x16 //byte
     }
+
+    public static readonly int WeaponSize = 0x1C;
     
     public class Weapon(string name, string shorthand, int index, int[]? upgradeIndices = null) : IPwObject
     {
@@ -37,6 +39,107 @@ public static class Constants
         public int Index { get; set; } = index;
         public int[]? UpgradeIndices { get; set; } = upgradeIndices;
     }
+
+    public enum ItemMemory
+    {
+        Id = 0x0, //uint
+        Research = 0x4, //uint
+        Development = 0x8, //uint
+        Stock = 0xC, //uint
+        CurrentUsage = 0x14 //? Is this even what it is?
+    }
+
+    public static readonly int ItemSize = 0x18;
+
+    public class Item(string name, string shorthand, int index, int[]? upgradeIndices = null) : IPwObject
+    {
+        public string Name { get; set; } = name;
+        public string Shorthand { get; set; } = shorthand;
+        public int Index { get; set; } = index;
+        public int[]? UpgradeIndices { get; set; } = upgradeIndices;
+    }
+
+    public static readonly List<Item> ItemsList =
+    [
+        new Item("Ration", "ration", 0xDC, [0xDD, 0xDE, 0xDF, 0xE0]),
+        new Item("Rare Ration", "r.ration", 0xE1, [0xE2, 0xE3, 0xE4, 0xE5]),
+        new Item("Well-Done Ration", "wd.ration", 0xE6, [0xE7, 0xE8, 0xE9, 0xEA]),
+        new Item("Burnt Ration", "bt.ration", 0xEB, [0xEC, 0xED, 0xEE, 0xEF]),
+        new Item("Spicy Curry", "s.curry", 0xF0, [0xF1]),
+        new Item("Great Curry", "g.curry", 0xF2, [0xF3]),
+        new Item("Future Curry", "f.curry", 0xF4),
+        new Item("Tortilla Chips", "t.chips", 0xF5),
+        new Item("Mate Tea", "mate", 0xF6, [0xF7, 0xF8, 0xF9, 0xFA]),
+        new Item("Lime Soda", "limesoda", 0xFB),
+        new Item("Zero Calorie Soda", "z.c.soda", 0xFC),
+        new Item("Cologne", "cologne", 0xFD),
+        new Item("Fulton System", "fultonsys", 0xFE, [0xFF, 0x100, 0x101, 0x102]),
+        new Item("Analyzer", "analyzer", 0x103, [0x104, 0x105, 0x106, 0x107]),
+        new Item("Shield", "shield", 0x108, [0x109, 0x10A, 0x10B, 0x10C]),
+        new Item("Shield(Colored)", "shld(color)", 0x10D, [0x10E, 0x10F, 0x110, 0x111]),
+        new Item("NVG", "nvg", 0x112, [0x113, 0x114, 0x115, 0x116]),
+        new Item("Sonic Eye", "soniceye", 0x117, [0x118, 0x119, 0x11A, 0x11B]),
+        new Item("Love Box", "lovebox", 0x11C, [0x11D, 0x11E, 0x11F, 0x120]),
+        new Item("Box-Tank", "boxtank", 0x121, [0x122, 0x123, 0x124, 0x125]),
+        new Item("Box-Tank(Stun)", "boxtstn", 0x126, [0x127, 0x128, 0x129]),
+        new Item("Box-Tank(Smoke)", "boxtsmk", 0x12A, [0x12B, 0x12C, 0x12D]),
+        new Item("Box Bomb", "boxbomb", 0x12E, [0x12F, 0x130, 0x131, 0x132]),
+        new Item("Stun Box", "stunbox", 0x133, [0x134, 0x135, 0x136]),
+        new Item("Smoke Box", "smokebox", 0x137, [0x138, 0x139, 0x13A]),
+        new Item("Assassin Box", "assn.box", 0x13B),
+        new Item("Rescue Box", "rescuebox", 0x13C, [0x13D, 0x13E, 0x13F, 0x140]),
+        new Item("Binos", "binos", 0x141),
+        new Item("Camera", "camera", 0x142),
+        new Item("Walkman", "walkman", 0x143, [0x144, 0x145, 0x146]),
+        new Item("ID Card(Huey)", "idcard(h)", 0x147),
+        new Item("Stealth Mat", "stlthmat", 0x148, [0x149]),
+        new Item("Stealth Camo", "stlthcamo", 0x14A),
+        new Item("Bandana", "bandana", 0x14B),
+        new Item("Surround Indicator", "srnd.ind.", 0x14C, [0x14D]),
+        new Item("Soliton Radar", "solitonr.", 0x14E, [0x14F, 0x150, 0x151, 0x152]),
+        new Item("12 Gauge Ammo", "12gauge", 0x153),
+        new Item("14.5x114mm Ammo", "14.5x114mm", 0x154),
+        new Item("19.5x76mm Ammo", "19.5x76mm", 0x155),
+        new Item("32 ACP Ammo", "32acp", 0x156),
+        new Item("357 Magnum Ammo", "357magnum", 0x157),
+        new Item("4.73x33mm Ammo", "4.73x33mm", 0x158),
+        new Item("40mm Grenades", "40mmg.", 0x159),
+        new Item("40mm Grenades (RK)", "40mmg.(r)", 0x15A),
+        new Item("45 ACP Ammo", "45acp", 0x15B),
+        new Item("5.56x45mm Ammo", "5.56x45mm", 0x15C),
+        new Item("7.62x39mm Ammo", "7.62x39mm", 0x15D),
+        new Item("7.62x51mm Ammo", "7.62x51mm", 0x15E),
+        new Item("7.62x54r Ammo", "7.62x54r", 0x15F),
+        new Item("7.62x63mm Ammo", "7.62x63mm", 0x160),
+        new Item("9x19mm Ammo", "9x19mm", 0x161),
+        new Item("9x18mm Ammo", "9x18mm", 0x162),
+        new Item("Heat Ammo", "heat", 0x163),
+        new Item("P.Rcv. Ammo", "p.rcv.", 0x164),
+        new Item("L.Rcv. Ammo", "l.rcv.", 0x165),
+        new Item("Small Anesthetic Ammo", "anest.(s)", 0x166),
+        new Item("12 Gauge Rubber Ammo", "12g.(rbr)", 0x167),
+        new Item("40mm Smoke Ammo", "40smk", 0x168),
+        new Item("40mm Smoke (R) Ammo", "40smk(r)", 0x169),
+        new Item("Strike Marker Ammo", "strikemk.", 0x16A),
+        new Item("Supply Marker Ammo", "supplymk.", 0x16B),
+        new Item("Ball Ammo", "ball", 0x16C),
+        new Item("Large Anesthetic Ammo", "anest.(l)", 0x16D),
+        new Item("7.62x51r Ammo", "7.62x51r", 0x16E),
+        new Item("Rail Ammo", "railammo", 0x16F),
+        new Item("RPG2 Ammo", "rpg2ammo", 0x170),
+        new Item("RPG7 Ammo", "rpg7ammo", 0x171),
+        new Item("CG Ammo", "cgammo", 0x172),
+        new Item("CG Heat Ammo", "cgheat", 0x173),
+        new Item("Combo Ammo", "comboammo", 0x174),
+        new Item("FIM-43 Ammo", "fim43ammo", 0x175),
+        new Item("XFIM-92 Ammo", "xfim92am.", 0x176),
+        new Item("M47 Ammo", "m47ammo", 0x177),
+        new Item("LAW Ammo", "lawammo", 0x178),
+        new Item("M202 Ammo", "m202ammo", 0x179),
+        new Item("CG Fulton Ammo", "cg.fltnam", 0x17A),
+        new Item("5.56x45AP Ammo", "5.56x45ap", 0x17B),
+        new Item("7.62x54AP Ammo", "7.62x54ap", 0x17C)
+    ];
 
     public static readonly List<Weapon> WeaponsList =
     [

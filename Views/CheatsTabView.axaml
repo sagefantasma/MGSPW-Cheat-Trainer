@@ -12,8 +12,8 @@
                     <viewModels:CheckboxCheatViewModel x:Name="UnlimitedLifeCheckbox" CheatName="Unlimited Life" Cheat="UnlimitedLife"/>
                     <viewModels:CheckboxCheatViewModel x:Name="InvulnerableCheckbox" CheatName="Invulnerable" Cheat="Invulnerable" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
                     <viewModels:CheckboxCheatViewModel x:Name="MaxCamoCheckbox" CheatName="Max Camo" Cheat="MaxCamo"/>
-                    <viewModels:CheckboxCheatViewModel x:Name="UnlimitedPsycheCheckbox" CheatName="Unlimited Psyche" Cheat="UnlimitedPsyche" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
-                    <viewModels:CheckboxCheatViewModel x:Name="NoClipCheckbox" CheatName="No Clip" Cheat="NoClip"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="NoClipCheckbox" CheatName="No Clip" Cheat="NoClip" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <!--<viewModels:CheckboxCheatViewModel x:Name="UnlimitedPsycheCheckbox" CheatName="Unlimited Psyche" Cheat="UnlimitedPsyche" />-->
                     
                 </StackPanel>
             </ScrollViewer>
@@ -42,8 +42,8 @@
             <ScrollViewer>
                 <StackPanel x:Name="MissionCheats" Spacing="5" HorizontalAlignment="Center">
                     <viewModels:CheckboxCheatViewModel x:Name="NoTimeLimitCheckbox" CheatName="Stop Time Limit Timer" Cheat="NoTimeLimit" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
-                    <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionStatsCheckbox" CheatName="Freeze Mission Stats" Cheat="FreezeMissionStats" />
-                    <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionTimeCheckbox" CheatName="Freeze Mission Time" Cheat="FreezeMissionTime" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <!--<viewModels:CheckboxCheatViewModel x:Name="FreezeMissionStatsCheckbox" CheatName="Freeze Mission Stats" Cheat="FreezeMissionStats" />
+                    <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionTimeCheckbox" CheatName="Freeze Mission Time" Cheat="FreezeMissionTime" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>-->
                 </StackPanel>
             </ScrollViewer>
         </GroupBox>

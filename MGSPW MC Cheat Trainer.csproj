@@ -38,4 +38,11 @@
         <HintPath>..\..\SimplifiedMemoryManager\Simplified Memory Manager\bin\Debug\netstandard2.0\Simplified Memory Manager.dll</HintPath>
       </Reference>
     </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Views\ItemDetailView.axaml.cs">
+        <DependentUpon>ItemDetailView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
 </Project>

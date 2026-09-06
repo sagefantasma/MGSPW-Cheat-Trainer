@@ -1,0 +1,21 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MGSPW_MC_Cheat_Trainer.Views.ItemDetailView">
+    
+    <GroupBox x:Name="GroupBox" BorderBrush="Black">
+        <Grid x:Name="ItemGrid" ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
+            <Image x:Name="ObjectImage" Source="/Assets/ration.png" Stretch="Uniform" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
+            <Rectangle x:Name="ImageDarkener" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" 
+            Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
+            <CheckBox x:Name="DevelopCheckbox" Grid.Row="0" Grid.Column="1" Content="Develop" FontWeight="Bold" Foreground="White" Margin="4" Click="Enabled_OnClick"/>
+            <Button x:Name="StockButton" Grid.Row="1" Grid.Column="0" Content="Add 100 Stock" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="AddStock_OnClick"/>
+            <Button x:Name="RankButton" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="RankUp_OnClick">
+                <TextBlock Text="Rank Up" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold"/>
+            </Button>
+        </Grid>
+    </GroupBox>
+    
+</UserControl>
