@@ -23,7 +23,7 @@ public class LogManager
     {
         LogLocation = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), AppLogFolder,
             Game);
-        Logger = InitializeNewLogger("MGS2_MC_Cheat_Trainer_Log.log", MainLogEventLevel);
+        Logger = InitializeNewLogger("MGSPW_MC_Cheat_Trainer_Log.log", MainLogEventLevel);
         Logger?.Information($"Logging started -- Trainer v{Program.AppVersion}");
     }
 
