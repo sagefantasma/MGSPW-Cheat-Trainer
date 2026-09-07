@@ -9,7 +9,7 @@
         x:Class="MGSPW_MC_Cheat_Trainer.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/avalonia-logo.ico"
-        Title="MGSPW_MC_Cheat_Trainer"
+        Title="MGSPW MC Cheat Trainer"
         Height="680"
         Width="1240"
         MinHeight="680"

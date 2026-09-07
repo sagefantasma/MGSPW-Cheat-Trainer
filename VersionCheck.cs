@@ -97,7 +97,7 @@ namespace MGSPW_MC_Cheat_Trainer
             {
                 string fileToStart;
                 ProcessStartInfo processStartInfo;
-                string args = "-r MGSPW-Cheat-Trainer -o sagefantasma -a MGSPW MC Cheat Trainer";
+                string args = "-r MGSPW-Cheat-Trainer -o sagefantasma -a 'MGSPW MC Cheat Trainer'";
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
                 {
                     fileToStart = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName,
