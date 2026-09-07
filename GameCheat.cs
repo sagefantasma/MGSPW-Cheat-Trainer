@@ -1322,9 +1322,9 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         public static GameCheat InvisibleToAi { get; internal set; } = new(CheatActions.ToggleInvisibleToAi,
             OriginalVisibleToAiBytes, Constants.Cheat.InvisibleToAi);
         public static GameCheat MaxCamo1 { get; internal set; } = new(CheatActions.ToggleMaxCamoSub1,
-            OriginalCamo1Bytes, null);
+            OriginalCamo1Bytes, Constants.Cheat.MaxCamoSub1);
         public static GameCheat MaxCamo2 { get; internal set; } = new(CheatActions.ToggleMaxCamoSub2,
-            OriginalCamo2Bytes, null);
+            OriginalCamo2Bytes, Constants.Cheat.MaxCamoSub2);
         public static GameCheat MaxCamo { get; internal set; } = new(CheatActions.ToggleMaxCamo,
             null, Constants.Cheat.MaxCamo);
         public static GameCheat UnlimitedEquipment { get; internal set; } = new(CheatActions.ToggleUnlimitedEquipment,
@@ -1340,9 +1340,9 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         public static GameCheat ForceVehicleCommander { get; internal set; } = new(CheatActions.ForceVehicleCommander,
             null, Constants.Cheat.ForceVehicleCommander);
         public static GameCheat WalkThroughWalls { get; internal set; } =
-            new(CheatActions.WalkThroughWalls, OriginalClipBytes, null);
+            new(CheatActions.WalkThroughWalls, OriginalClipBytes, Constants.Cheat.WalkThroughWalls);
         public static GameCheat MaintainHeight { get; internal set; } =
-            new(CheatActions.MaintainHeight, OriginalYPositionBytes, null);
+            new(CheatActions.MaintainHeight, OriginalYPositionBytes, Constants.Cheat.MaintainHeight);
         public static GameCheat NoClip { get; internal set; } =
             new(CheatActions.NoClip, null, Constants.Cheat.NoClip);
 

@@ -15,7 +15,7 @@ namespace MGSPW_MC_Cheat_Trainer;
 public static class MgsPwMonitor
 {
     #region Members & fields
-    public const string MgsPwProcessName = "METAL GEAR SOLID PEACE WALKER.exe";
+    public const string MgsPwProcessName = "METAL GEAR SOLID PEACE WALKER";
     private const string DesiredVersion = "1.3.1.0";
     private static bool _versionWarned;
 
