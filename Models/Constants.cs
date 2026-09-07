@@ -143,6 +143,7 @@ public static class Constants
 
     public static readonly List<Weapon> WeaponsList =
     [
+        new Weapon("Stun Rod", "stunrod", 0x01),
         new Weapon("Mk.22", "mk22", 0x02, [0x03, 0x04, 0x05, 0x06]),
         new Weapon("EZ Gun(LR)", "ezgunlr", 0x07, [0x08, 0x09, 0x0A]),
         new Weapon("EZ Gun(PR)", "ezgunpr", 0xB, [0x0C, 0x0D, 0x0E]),

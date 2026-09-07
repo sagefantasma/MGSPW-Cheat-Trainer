@@ -42,19 +42,19 @@
             
             <TabControl x:Name="MainTabControl"
                         SelectionChanged="MainTabControl_OnSelectionChanged">
-                <TabItem x:Name="CheatsTab" Header="Cheats">
-                    <Panel>
-                        <Image Source="/Assets/title_bg.png" Stretch="UniformToFill"/>
-                        <Rectangle Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
-                        <views:CheatsTabView x:Name="VisibleCheatsTabView"/>
-                    </Panel>
-                </TabItem>
-                
                 <TabItem x:Name="WeaponsTab" Header="R&amp;D Weapons">
                     <Panel>
                         <Image Source = "/Assets/rnd mock bg.png" Stretch="UniformToFill"/>
                         <!--<TextBlock Text="UNDER CONSTRUCTION" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>-->
                         <views:WeaponsTabView/>
+                    </Panel>
+                </TabItem>
+                
+                <TabItem x:Name="CheatsTab" Header="Cheats">
+                    <Panel>
+                        <Image Source="/Assets/title_bg.png" Stretch="UniformToFill"/>
+                        <Rectangle Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
+                        <views:CheatsTabView x:Name="VisibleCheatsTabView"/>
                     </Panel>
                 </TabItem>
                 
