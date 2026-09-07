@@ -27,6 +27,7 @@
                 <MenuItem Header="Help"> 
                     <MenuItem Header="View Logs" x:Name="ViewLogsMenuItem" Click="ViewLogsMenuItem_OnClick"/>
                     <MenuItem Header="Open Install Location" Click="OpenInstallLocationMenuItem_Click"/>
+                    <MenuItem Header="Download AutoUpdater" Click="DownloadAutoUpdaterMenuItem_Click"/>
                     <MenuItem Header="Visit GitHub Repo" Click="VisitGithubRepoMenuItem_Click"/>
                     <MenuItem Header="Join our Discord" x:Name="JoinDiscordMenuItem" Click="JoinDiscordMenuItem_OnClick"/>
                 </MenuItem>

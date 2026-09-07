@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -89,6 +90,40 @@ namespace MGSPW_MC_Cheat_Trainer
             }
 
             return false;
+        }
+
+        public static void DownloadAutoUpdater()
+        {
+            try
+            {
+                GitHubClient gitHubClient = new(new ProductHeaderValue(Repo));
+                Release latestRelease = gitHubClient.Repository.Release.GetAll("sagefantasma", "AutoUpdater").Result[0];
+
+                ReleaseAsset desiredAsset = RuntimeInformation.IsOSPlatform(OSPlatform.Windows)
+                    //Download latest Windows release
+                    ? latestRelease.Assets.First(x => string.Equals(x.Name, "AutoUpdater.exe"))
+                    :
+                    //Download latest Linux release
+                    latestRelease.Assets.First(x => string.Equals(x.Name, "AutoUpdater"));
+
+                HttpClient httpClient = new();
+                byte[] fileBytes = httpClient.GetAsync(desiredAsset.BrowserDownloadUrl).Result.Content
+                    .ReadAsByteArrayAsync().Result;
+                string autoUpdaterLocation = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName,
+                    desiredAsset.Name);
+                File.WriteAllBytes(autoUpdaterLocation, fileBytes);
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
+                {
+                    UnixFileMode currentMode = File.GetUnixFileMode(autoUpdaterLocation);
+                    File.SetUnixFileMode(autoUpdaterLocation, currentMode | UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute);
+                }
+            }
+            catch (Exception e)
+            {
+                string baseMessage = "Failed to download AutoUpdater.";
+                LogManager.Logger?.Error(baseMessage);
+                throw new AggregateException(baseMessage, e);
+            }
         }
 
         public static void StartAutoUpdater()

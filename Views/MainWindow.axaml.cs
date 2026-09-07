@@ -1,5 +1,6 @@
 using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -172,6 +173,19 @@ public partial class MainWindow : Window
             //Fail silently.
         }
     }
+
+    private async Task ManualDownloadPrompt()
+    {
+        IMsBox<ButtonResult> msgBox2 = MessageBoxManager.GetMessageBoxStandard(
+            "Go to GitHub?",
+            "Would you like to view GitHub instead to download it yourself manually?",
+            ButtonEnum.YesNo, windowStartupLocation: WindowStartupLocation);
+        if (await msgBox2.ShowAsPopupAsync(GetMainWindow()) == ButtonResult.Yes)
+        {
+            OnUpdateStatusBar(null, "Opening releases page in your browser...");
+            OpenUrl("https://github.com/sagefantasma/MGSPW-Cheat-Trainer/releases");
+        }
+    }
     
     private void CheckForUpdates()
     {
@@ -179,6 +193,7 @@ public partial class MainWindow : Window
         if (newerVersionAvailable)
         {
             Logger?.Debug("Newer version available, notifying user");
+            OnUpdateStatusBar(null, "Newer version of this trainer is available on GitHub, please consider downloading it for the best experience");
             Dispatcher.UIThread.Post(async void () =>
             {
                 try
@@ -189,15 +204,27 @@ public partial class MainWindow : Window
                         ButtonEnum.YesNo, windowStartupLocation: WindowStartupLocation);
                     if (await msgBox.ShowAsPopupAsync(GetMainWindow()) == ButtonResult.No)
                     {
-                        IMsBox<ButtonResult> msgBox2 = MessageBoxManager.GetMessageBoxStandard(
-                            "Go to GitHub?",
-                            "Would you like to view GitHub instead to download it yourself manually?",
-                            ButtonEnum.YesNo, windowStartupLocation: WindowStartupLocation);
-                        if(await msgBox2.ShowAsPopupAsync(GetMainWindow()) == ButtonResult.Yes)
-                            OpenUrl("https://github.com/sagefantasma/MGSPW-Cheat-Trainer/releases");
+                        await ManualDownloadPrompt();
                     }
                     else
                     {
+                        if (Directory.GetParent(Environment.CurrentDirectory)!.GetFiles("AutoUpdater*").Length == 0)
+                        {
+                            IMsBox<ButtonResult> msgBox2 = MessageBoxManager.GetMessageBoxStandard(
+                                "AutoUpdater not found",
+                                "It looks like AutoUpdater isn't currently installed, do you to install it automatically?",
+                                ButtonEnum.YesNo, windowStartupLocation: WindowStartupLocation);
+                            var result = await msgBox2.ShowAsPopupAsync(GetMainWindow());
+                            if (result == ButtonResult.Yes)
+                            {
+                                DownloadAutoUpdaterMenuItem_Click(null, null);
+                            }
+                            else
+                            {
+                                OnUpdateStatusBar(null, "Cannot auto update without AutoUpdater, cancelling auto update process.");
+                                await ManualDownloadPrompt();
+                            }
+                        }
                         VersionSupport.StartAutoUpdater();
                         Close();
                     }
@@ -236,6 +263,7 @@ public partial class MainWindow : Window
     private void OnInvalidVersionDetected(object? sender, string msg)
     {
         Logger?.Error($"Incompatible game version detected: {msg}");
+        OnUpdateStatusBar(null, "Incompatible game version detected - expect issues if you try to use this trainer.");
         Dispatcher.UIThread.Post(() =>
         {
             try
@@ -254,11 +282,13 @@ public partial class MainWindow : Window
 
     private void ViewLogsMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
+        OnUpdateStatusBar(null, "Opening logs folder in your file manager...");
         OpenUrl(LogManager.LogLocation!);
     }
 
     private void JoinDiscordMenuItem_OnClick(object? sender, RoutedEventArgs e)
     {
+        OnUpdateStatusBar(null, "Opening our Discord server in your browser...");
         OpenUrl("https://discord.gg/XUh58VfqDu");
     }
     
@@ -304,11 +334,27 @@ public partial class MainWindow : Window
 
     private void OpenInstallLocationMenuItem_Click(object? sender, RoutedEventArgs e)
     {
+        OnUpdateStatusBar(null, "Opening install location in your file manager...");
         OpenUrl(AppDomain.CurrentDomain.BaseDirectory);
+    }
+
+    private async void DownloadAutoUpdaterMenuItem_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            OnUpdateStatusBar(null, "Downloading Auto Updater...");
+            await Task.Run(VersionSupport.DownloadAutoUpdater);
+            OnUpdateStatusBar(null, "Auto Updater download complete!");
+        }
+        catch
+        {
+            //Squelch
+        }
     }
 
     private void VisitGithubRepoMenuItem_Click(object? sender, RoutedEventArgs e)
     {
+        OnUpdateStatusBar(null, "Opening GitHub repo in your browser...");
         OpenUrl("https://github.com/sagefantasma/MGSPW-Cheat-Trainer/");
     }
 }
