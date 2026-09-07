@@ -20,6 +20,7 @@ using MsBox.Avalonia.Enums;
 using Serilog;
 using Serilog.Events;
 using SimplifiedMemoryManager;
+using Tmds.DBus.Protocol;
 
 namespace MGSPW_MC_Cheat_Trainer.Views;
 
@@ -174,7 +175,6 @@ public partial class MainWindow : Window
     
     private void CheckForUpdates()
     {
-        return; //TODO: Skipping for now as we have no releases yet
         bool newerVersionAvailable = VersionSupport.CheckIfNewUpdateExists(Program.AppVersion);
         if (newerVersionAvailable)
         {
@@ -185,12 +185,21 @@ public partial class MainWindow : Window
                 {
                     IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
                         "Update available",
-                        "There is an updated version of this trainer available, would you like to view the Releases page?",
+                        "There is an updated version of this trainer available, would you like to automatically download it?",
                         ButtonEnum.YesNo, windowStartupLocation: WindowStartupLocation);
-                    if (await msgBox.ShowAsPopupAsync(GetMainWindow()) ==
-                        ButtonResult.Yes) 
+                    if (await msgBox.ShowAsPopupAsync(GetMainWindow()) == ButtonResult.No)
                     {
-                        OpenUrl("https://github.com/sagefantasma/MGSPW-Cheat-Trainer/releases");
+                        IMsBox<ButtonResult> msgBox2 = MessageBoxManager.GetMessageBoxStandard(
+                            "Go to GitHub?",
+                            "Would you like to view GitHub instead to download it yourself manually?",
+                            ButtonEnum.YesNo, windowStartupLocation: WindowStartupLocation);
+                        if(await msgBox2.ShowAsPopupAsync(GetMainWindow()) == ButtonResult.Yes)
+                            OpenUrl("https://github.com/sagefantasma/MGSPW-Cheat-Trainer/releases");
+                    }
+                    else
+                    {
+                        VersionSupport.StartAutoUpdater();
+                        Close();
                     }
                 }
                 catch (Exception e)

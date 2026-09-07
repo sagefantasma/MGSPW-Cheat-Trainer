@@ -1,6 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Octokit;
@@ -86,6 +89,39 @@ namespace MGSPW_MC_Cheat_Trainer
             }
 
             return false;
+        }
+
+        public static void StartAutoUpdater()
+        {
+            try
+            {
+                string fileToStart;
+                ProcessStartInfo processStartInfo;
+                string args = "-r MGSPW-Cheat-Trainer -o sagefantasma -a MGSPW MC Cheat Trainer";
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    fileToStart = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName,
+                        "AutoUpdater.exe");
+                    processStartInfo = new ProcessStartInfo { FileName = fileToStart, Arguments = args };
+                }
+                else
+                {
+                    fileToStart = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName,
+                        "AutoUpdater");
+                    processStartInfo = new ProcessStartInfo { FileName = "setsid", Arguments = $"\"{fileToStart}\" {args}" };
+                    UnixFileMode currentMode = File.GetUnixFileMode(fileToStart);
+                    File.SetUnixFileMode(fileToStart,
+                        currentMode | UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute);
+                }
+
+                Process.Start(processStartInfo);
+            }
+            catch (Exception e)
+            {
+                string baseMessage = "Auto updater failed, aborting auto-update process.";
+                LogManager.Logger?.Error(baseMessage);
+                throw new AggregateException(baseMessage, e);
+            }
         }
     }
 }
