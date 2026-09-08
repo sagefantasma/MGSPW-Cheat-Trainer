@@ -8,7 +8,7 @@
         mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="680"
         x:Class="MGSPW_MC_Cheat_Trainer.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
-        Icon="/Assets/avalonia-logo.ico"
+        Icon="/Assets/trainer_icon.ico"
         Title="MGSPW MC Cheat Trainer"
         Height="680"
         Width="1240"
@@ -45,8 +45,14 @@
                 <TabItem x:Name="WeaponsTab" Header="R&amp;D Weapons">
                     <Panel>
                         <Image Source = "/Assets/rnd mock bg.png" Stretch="UniformToFill"/>
-                        <!--<TextBlock Text="UNDER CONSTRUCTION" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>-->
                         <views:WeaponsTabView/>
+                    </Panel>
+                </TabItem>
+                
+                <TabItem x:Name="ItemsTab" Header="R&amp;D Items">
+                    <Panel>
+                        <Image Source="/Assets/rnd_items_bg.png" Stretch="UniformToFill"/>
+                        <views:ItemsTabView/>
                     </Panel>
                 </TabItem>
                 
@@ -55,23 +61,6 @@
                         <Image Source="/Assets/title_bg.png" Stretch="UniformToFill"/>
                         <Rectangle Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
                         <views:CheatsTabView x:Name="VisibleCheatsTabView"/>
-                    </Panel>
-                </TabItem>
-                
-                <TabItem x:Name="ItemsTab" Header="R&amp;D Items">
-                    <!--
-                    Recovery items: Ration, Rare Ration, Well-done ration, Burnt ration, Spicy curry, Great curry, future curry, 
-                    tortilla chips, mate, lime soda, zero-calorie soda, cologne
-                    
-                    Equipment: Fulton, analyzer, shield, colored shield, nvg, sonic eye, love box, box-tank, box-tank(stun),
-                    box tank(smoke), box bomb, stun box, smoke box, assassin's box, rescue box, binos, camera, walkman,
-                    id card, stealth mat, stealth camo, bandana
-                    
-                    Radars: Surround indicator, soliton radar
-                    -->
-                    <Panel>
-                        <Image Source="/Assets/rnd_items_bg.png" Stretch="UniformToFill"/>
-                        <TextBlock Text="UNDER CONSTRUCTION" Foreground="Black" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
                     </Panel>
                 </TabItem>
                 

@@ -61,6 +61,8 @@ public partial class MainWindow : Window
         MgsPwMonitor.OnGameHooked += OnGameHooked;
         MgsPwMonitor.OnInvalidVersionDetected += OnInvalidVersionDetected;
         WeaponsTabView.UpdateStatusBar += OnUpdateStatusBar;
+        ItemDetailView.WarnUser += OnWarnUser;
+        ItemsTabView.UpdateStatusBar += OnUpdateStatusBar;
         CheatsTabView.UpdateStatusBar += OnUpdateStatusBar;
         this.Closing += OnClosing;
         Task.Run(CheckForUpdates);
@@ -258,6 +260,25 @@ public partial class MainWindow : Window
     {
         //Do stuff here later, if wanted
         OnUpdateStatusBar(sender, "Peace Walker found and hooked! Ready to go.");
+    }
+
+    private void OnWarnUser(object? sender, string warning)
+    {
+        Logger?.Information("Warning user about enabling specific item");
+        Dispatcher.UIThread.Post(() =>
+        {
+            try
+            {
+                IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
+                    "Achievement Warning!",
+                    warning, ButtonEnum.Ok, windowStartupLocation: WindowStartupLocation);
+                msgBox.ShowAsPopupAsync(GetMainWindow());
+            }
+            catch (Exception e)
+            {
+                Logger?.Error($"Failed to inform user of warning: {e}");
+            }
+        });
     }
     
     private void OnInvalidVersionDetected(object? sender, string msg)

@@ -11,7 +11,7 @@
             <Rectangle x:Name="ImageDarkener" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" 
             Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
             <CheckBox x:Name="DevelopCheckbox" Grid.Row="0" Grid.Column="1" Content="Develop" FontWeight="Bold" Foreground="White" Margin="4" Click="Enabled_OnClick"/>
-            <Button x:Name="StockButton" Grid.Row="1" Grid.Column="0" Content="Add 100 Stock" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="AddStock_OnClick"/>
+            <Button x:Name="StockButton" Grid.Row="1" Grid.Column="0" Content="Add 100" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="AddStock_OnClick"/>
             <Button x:Name="RankButton" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="RankUp_OnClick">
                 <TextBlock Text="Rank Up" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold"/>
             </Button>

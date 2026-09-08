@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <Version>0.8.0.1</Version>
+        <Version>1.0.0.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -37,6 +37,10 @@
     <ItemGroup>
       <Compile Update="Views\ItemDetailView.axaml.cs">
         <DependentUpon>ItemDetailView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\ItemsTabView.axaml.cs">
+        <DependentUpon>ItemsTabView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

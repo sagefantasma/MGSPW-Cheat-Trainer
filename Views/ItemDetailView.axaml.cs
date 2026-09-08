@@ -17,6 +17,8 @@ public partial class ItemDetailView : UserControl
     private Constants.Item? _item;
     private readonly MemoryManager _memoryManager;
     public event EventHandler<string>? ValueChanged;
+    public static event EventHandler<string>? WarnUser;
+    private bool HasBeenWarned;
     
     public IImage? EntityImage
     {
@@ -83,6 +85,13 @@ public partial class ItemDetailView : UserControl
         try
         {
             _item ??= DetermineItem(PwObject!);
+            if ((_item.Name == "Stealth Camo" || _item.Name == "Bandana") && !HasBeenWarned)
+            {
+                WarnUserOfActivity("WARNING: Researching this item this way does NOT count towards the achievement for doing so.\n\nYou will only be warned once.\n\nYou may attempt to research again to ignore this warning.");
+                HasBeenWarned = true;
+                this.DevelopCheckbox.IsChecked = false;
+                return;
+            }
             _memoryManager.ResearchAndDevelopItem(_item!);
             SendStatusUpdate($"Developed {_item.Name}!");
             DevelopCheckbox.IsEnabled = false; //NOTE: disable the development checkbox once developed for now, later update to allow de-development
@@ -142,5 +151,10 @@ public partial class ItemDetailView : UserControl
     private void SendStatusUpdate(string message)
     {
         ValueChanged?.Invoke(null, message);
+    }
+    
+    private static void WarnUserOfActivity(string message)
+    {
+        WarnUser?.Invoke(null, message);
     }
 }

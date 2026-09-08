@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:MGSPW_MC_Cheat_Trainer.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MGSPW_MC_Cheat_Trainer.Views.ItemsTabView">
+    <TabControl x:Name="ItemTabControl" SelectionChanged="ItemTabControl_OnSelectionChanged">
+        <TabItem x:Name="RecoveryTab">
+            <TabItem.Header>
+                <Panel>
+                    <Rectangle x:Name="ImageDarkenerRe" 
+                               Fill="Gray" Opacity="0.7" IsHitTestVisible="False"/>
+                    <Image Source="/Assets/recovery_items icon.png" Height="48" Width="48"/>
+                </Panel>
+            </TabItem.Header>
+            <Grid x:Name="RecoveryGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="RecoveryLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="RECOVERY" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                <views:ItemDetailView x:Name="RationDetailView" Grid.Row="1" Grid.Column="0" PwObject="Ration" EntityImage="/Assets/ration.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="RareRationDetailView" Grid.Row="1" Grid.Column="1" PwObject="Rare Ration" EntityImage="/Assets/rare_ration.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="WellDoneRationDetailView" Grid.Row="1" Grid.Column="2" PwObject="Well-Done Ration" EntityImage="/Assets/welldone_ration.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="BurntRationDetailView" Grid.Row="1" Grid.Column="3" PwObject="Burnt Ration" EntityImage="/Assets/burnt_ration.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="SpicyCurryDetailView" Grid.Row="2" Grid.Column="0" PwObject="Spicy Curry" EntityImage="/Assets/spicy_curry.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="GreatCurryDetailView" Grid.Row="2" Grid.Column="1" PwObject="Great Curry" EntityImage="/Assets/g_curry.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="FutureCurryDetailView" Grid.Row="2" Grid.Column="2" PwObject="Future Curry" EntityImage="/Assets/future_curry.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" />
+                <views:ItemDetailView x:Name="TortillaChipsDetailView" Grid.Row="2" Grid.Column="3" PwObject="Tortilla Chips" EntityImage="/Assets/tortilla_chips.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" />
+                <views:ItemDetailView x:Name="MateTeaDetailView" Grid.Row="3" Grid.Column="0" PwObject="Mate Tea" EntityImage="/Assets/mate.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="LimeSodaDetailView" Grid.Row="3" Grid.Column="1" PwObject="Lime Soda" EntityImage="/Assets/lime_soda.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" />
+                <views:ItemDetailView x:Name="ZeroCalorieSodaDetailView" Grid.Row="3" Grid.Column="2" PwObject="Zero Calorie Soda" EntityImage="/Assets/zero_calorie_soda.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" />
+                <views:ItemDetailView x:Name="CologneDetailView" Grid.Row="3" Grid.Column="3" PwObject="Cologne" EntityImage="/Assets/cologne.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" />
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="EquipmentTab">
+            <TabItem.Header>
+                <Panel>
+                    <Rectangle x:Name="ImageDarkenerEq" 
+                               Fill="Gray" Opacity="0.7" IsHitTestVisible="False"/>
+                    <Image Source="/Assets/equipment icon.png" Height="48" Width="48"/>
+                </Panel>
+            </TabItem.Header>
+            <Grid x:Name="EquipmentGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.18*,.18*,.18*,.18*,.18*">
+                <Label x:Name="EquipmentLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="EQUIPMENT" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                <views:ItemDetailView x:Name="FultonDetailView" Grid.Row="1" Grid.Column="0" PwObject="Fulton System" EntityImage="/Assets/fulton.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="AnalyzerDetailView" Grid.Row="1" Grid.Column="1" PwObject="Analyzer" EntityImage="/Assets/analyzer.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="ShieldDetailView" Grid.Row="1" Grid.Column="2" PwObject="Shield" EntityImage="/Assets/shield.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="ShieldColoredDetailView" Grid.Row="1" Grid.Column="3" PwObject="Shield(Colored)" EntityImage="/Assets/shield_colored.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="NvgDetailView" Grid.Row="1" Grid.Column="4" PwObject="NVG" EntityImage="/Assets/nvg.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="SonicEyeDetailView" Grid.Row="2" Grid.Column="0" PwObject="Sonic Eye" EntityImage="/Assets/sonic_eye.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="LoveBoxDetailView" Grid.Row="2" Grid.Column="1" PwObject="Love Box" EntityImage="/Assets/love_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="BoxTankDetailView" Grid.Row="2" Grid.Column="2" PwObject="Box-Tank" EntityImage="/Assets/box_tank.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="BoxTankStnDetailView" Grid.Row="2" Grid.Column="3" PwObject="Box-Tank(Stun)" EntityImage="/Assets/box_tank_stun.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="BoxTankSmkDetailView" Grid.Row="2" Grid.Column="4" PwObject="Box-Tank(Smoke)" EntityImage="/Assets/box_tank_smoke.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="BoxBombDetailView" Grid.Row="3" Grid.Column="0" PwObject="Box Bomb" EntityImage="/Assets/box_bomb.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="StunBoxDetailView" Grid.Row="3" Grid.Column="1" PwObject="Stun Box" EntityImage="/Assets/stun_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="SmokeBoxDetailView" Grid.Row="3" Grid.Column="2" PwObject="Smoke Box" EntityImage="/Assets/smoke_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="AssassinBoxDetailView" Grid.Row="3" Grid.Column="3" PwObject="Assassin Box" EntityImage="/Assets/assassin_box.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" />
+                <views:ItemDetailView x:Name="RescueBoxDetailView" Grid.Row="3" Grid.Column="4" PwObject="Rescue Box" EntityImage="/Assets/rescue_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="BinosDetailView" Grid.Row="4" Grid.Column="0" PwObject="Binos" EntityImage="/Assets/binos.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="CameraDetailView" Grid.Row="4" Grid.Column="1" PwObject="Camera" EntityImage="/Assets/camera.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="WalkmanDetailView" Grid.Row="4" Grid.Column="2" PwObject="Walkman" EntityImage="/Assets/walkman.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="IdCardHDetailView" Grid.Row="4" Grid.Column="3" PwObject="ID Card(Huey)" EntityImage="/Assets/id_card.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="StealthMatDetailView" Grid.Row="4" Grid.Column="4" PwObject="Stealth Mat" EntityImage="/Assets/stealth_mat.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:ItemDetailView x:Name="StealthCamoDetailView" Grid.Row="5" Grid.Column="0" PwObject="Stealth Camo" EntityImage="/Assets/stealth_camo.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="BandanaDetailView" Grid.Row="5" Grid.Column="1" PwObject="Bandana" EntityImage="/Assets/bandana.png" ValueChanged="RequestStatusBarUpdate" CanRankUp="False" CanStockUp="False"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="RadarsTab">
+            <TabItem.Header>
+                <Panel>
+                    <Rectangle x:Name="ImageDarkenerRa" 
+                               Fill="Gray" Opacity="0.7" IsHitTestVisible="False"/>
+                    <Image Source="/Assets/radars icon.png" Height="48" Width="48"/>
+                </Panel>
+            </TabItem.Header>
+            <Grid x:Name="RadarsGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
+                <Label x:Name="RadarsLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="RADARS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                <views:ItemDetailView x:Name="SrndIndDetailView" Grid.Row="1" Grid.Column="0" PwObject="Surround Indicator" EntityImage="/Assets/surround_indicator.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:ItemDetailView x:Name="SolitonRadarDetailView" Grid.Row="2" Grid.Column="0" PwObject="Soliton Radar" EntityImage="/Assets/soliton_radar.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

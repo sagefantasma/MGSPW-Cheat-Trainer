@@ -80,7 +80,7 @@
                 </Panel>
             </TabItem.Header>
             <Grid x:Name="RifleGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.225*,.225*,.225*,.225*">
-                <Label x:Name="RifleLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="RIFLES" 
+                <Label x:Name="RifleLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="ASSAULT RIFLES" 
                        Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
                 <!--19 of these-->
                 <views:WeaponDetailView x:Name="Adm63DetailView" Grid.Row="1" Grid.Column="0" PwObject="ADM63" EntityImage="/Assets/adm63.png" CanRankUp="False" ValueChanged="RequestStatusBarUpdate"/>
@@ -218,7 +218,7 @@
                 </Panel>
             </TabItem.Header>
             <Grid x:Name="LauncherGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*">
-                <Label x:Name="LauncherLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="ROCKET LAUNCHERS" 
+                <Label x:Name="LauncherLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="MISSILES" 
                        Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
                 
                 <views:WeaponDetailView x:Name="LawDetailView" Grid.Row="1" Grid.Column="0" PwObject="LAW" EntityImage="/Assets/law.png" ValueChanged="RequestStatusBarUpdate"/>
