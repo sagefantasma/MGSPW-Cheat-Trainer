@@ -58,7 +58,7 @@ public static class AoBCacheManager
         var cachedItem = cache.CachedAoBInfos.FirstOrDefault(x => x.Name == key);
         if (cachedItem == null) return;
         cache.CachedAoBInfos.Remove(cachedItem);
-        File.WriteAllText(JsonSerializer.Serialize(cache), AoBCacheLocation);
+        File.WriteAllText(AoBCacheLocation,JsonSerializer.Serialize(cache));
     }
 
     public static long CheckCache(string key)
