@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -46,14 +47,66 @@ public partial class WeaponDetailView : UserControl
         set
         {
             field = value;
-            RankButton.IsVisible = (bool)value!;
+            RankUpButton.IsVisible = (bool)value!;
+            RankDownButton.IsVisible = (bool)value;
         }
     }
+
+    public bool? HasStock
+    {
+        get;
+        set
+        {
+            field = value;
+            StockButton.IsVisible = (bool)value!;
+        }
+    } = false;
 
     public WeaponDetailView()
     {
         InitializeComponent();
         _memoryManager = App.Services.GetRequiredService<MemoryManager>();
+        Loaded += OnLoad;
+    }
+
+    private void OnLoad(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            while (MgsPwMonitor.MgsPwProcess == null)
+            {
+                Task.Delay(100).Wait(); 
+                //TODO: technically doing it this way makes the app not load at all if the game isn't running,
+                //does it make sense to do it another way instead? Piggy-backing off of MgsPwMonitor.OnGameHooked
+                //doesn't do the trick for some reason, even if I want for the IsLoaded bool to get set to true.
+            }
+            _weapon ??= DetermineWeapon(PwObject!);
+            var developed = _memoryManager.CheckWeaponDevelopment(_weapon.Index);
+            if (developed)
+            {
+                DevelopCheckbox.IsChecked = true;
+                StockButton.IsEnabled = true;
+            }
+            else
+            {
+                UsageUpButton.IsEnabled = false;
+                UsageDownButton.IsEnabled = false;
+                RankUpButton.IsEnabled = false;
+                RankDownButton.IsEnabled = false;
+                StockButton.IsEnabled = false;
+                return;
+            }
+            var rank = _memoryManager.GetWeaponRank(_weapon);
+            RankUpButton.IsEnabled = rank != _weapon.UpgradeIndices?.Length;
+            RankDownButton.IsEnabled = rank != 0;
+            var usage = _memoryManager.GetWeaponUsageLevel(_weapon);
+            UsageDownButton.IsEnabled = usage > 1;
+            UsageUpButton.IsEnabled = usage != 3;
+        }
+        catch
+        {
+            //Squelch.
+        }
     }
 
     private static Constants.Weapon DetermineWeapon(string input)
@@ -73,14 +126,15 @@ public partial class WeaponDetailView : UserControl
     {
         try
         {
+            var enabling = (bool)DevelopCheckbox.IsChecked!;
             _weapon ??= DetermineWeapon(PwObject!);
-            _memoryManager.ResearchAndDevelopWeapon(_weapon!);
-            SendStatusUpdate($"Developed {_weapon.Name}!");
-            DevelopCheckbox.IsEnabled = false; //NOTE: disable the development checkbox once developed for now, later update to allow de-development
+            _memoryManager.ResearchAndDevelopWeapon(_weapon!, enabling);
+            SendStatusUpdate(enabling ? $"Developed {_weapon.Name}!" : $"Undeveloped {_weapon.Name}!");
+            OnLoad(null, null);
         }
         catch (Exception ex)
         {
-            string errorBrief = $"Failed to research {Name!}";
+            string errorBrief = $"Failed to change development status of {Name!}";
             LogManager.Logger?.Error($"{errorBrief}: {ex.Message}");
             SendStatusUpdate(errorBrief);
             IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
@@ -90,17 +144,21 @@ public partial class WeaponDetailView : UserControl
         }
     }
 
-    public void UsageUp_OnClick(object? sender, RoutedEventArgs e)
+    public void ChangeUsage_OnClick(object? sender, RoutedEventArgs e)
     {
         try
         {
             _weapon ??= DetermineWeapon(PwObject!);
-            _memoryManager.ChangeWeaponLevel(_weapon!);
-            SendStatusUpdate($"Increased usage level for {_weapon.Name}!");
+            var increasing = (sender as Control)!.Name == "UsageUpButton";
+            _memoryManager.ChangeWeaponUseLevel(_weapon!, increasing);
+            SendStatusUpdate(increasing ? $"Increased usage level for {_weapon.Name}!" : $"Decreased usage level for {_weapon.Name}!");
+            var usageLevel = _memoryManager.GetWeaponUsageLevel(_weapon);
+            UsageDownButton.IsEnabled = usageLevel > 1;
+            UsageUpButton.IsEnabled = usageLevel < 3;
         }
         catch (Exception ex)
         {
-            string errorBrief = $"Failed to increase usage level for {Name!}";
+            string errorBrief = $"Failed to modify usage level for {Name!}";
             LogManager.Logger?.Error($"{errorBrief}: {ex.Message}");
             SendStatusUpdate(errorBrief);
             IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
@@ -115,12 +173,16 @@ public partial class WeaponDetailView : UserControl
         try
         {
             _weapon ??= DetermineWeapon(PwObject!);
-            _memoryManager.ChangeWeaponRank(_weapon!);
-            SendStatusUpdate($"Ranked up {_weapon.Name}!");
+            var increasing = (sender as Control)!.Name == "RankUpButton";
+            _memoryManager.ChangeWeaponRank(_weapon!, increasing);
+            SendStatusUpdate(increasing ? $"Ranked up {_weapon.Name}!" : $"Ranked down {_weapon.Name}!");
+            var currentRank = _memoryManager.GetWeaponRank(_weapon);
+            RankDownButton.IsEnabled = currentRank > 0;
+            RankUpButton.IsEnabled = currentRank < _weapon.UpgradeIndices?.Length;
         }
         catch (Exception ex)
         {
-            string errorBrief = $"Failed to rank up {Name!}";
+            string errorBrief = $"Failed to modify rank of {Name!}";
             LogManager.Logger?.Error($"{errorBrief}: {ex.Message}");
             SendStatusUpdate(errorBrief);
             IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
@@ -133,5 +195,25 @@ public partial class WeaponDetailView : UserControl
     private void SendStatusUpdate(string message)
     {
         ValueChanged?.Invoke(null, message);
+    }
+
+    private void AddStock_OnClick(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            _weapon ??= DetermineWeapon(PwObject!);
+            _memoryManager.ChangeWeaponStock(_weapon!);
+            SendStatusUpdate($"Added 100 {_weapon.Name} to stock!");
+        }
+        catch (Exception ex)
+        {
+            string errorBrief = $"Failed to add stock for {Name!}";
+            LogManager.Logger?.Error($"{errorBrief}: {ex.Message}");
+            SendStatusUpdate(errorBrief);
+            IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
+                errorBrief,
+                ex.Message);
+            msgBox.ShowAsync();
+        }
     }
 }

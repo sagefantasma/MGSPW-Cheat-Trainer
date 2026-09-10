@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
@@ -18,7 +19,7 @@ public partial class ItemDetailView : UserControl
     private readonly MemoryManager _memoryManager;
     public event EventHandler<string>? ValueChanged;
     public static event EventHandler<string>? WarnUser;
-    private bool HasBeenWarned;
+    private bool _hasBeenWarned;
     
     public IImage? EntityImage
     {
@@ -48,7 +49,8 @@ public partial class ItemDetailView : UserControl
         set
         {
             field = value;
-            RankButton.IsVisible = (bool)value!;
+            RankUpButton.IsVisible = (bool)value!;
+            RankDownButton.IsVisible = (bool)value;
         }
     }
 
@@ -66,6 +68,39 @@ public partial class ItemDetailView : UserControl
     {
         InitializeComponent();
         _memoryManager = App.Services.GetRequiredService<MemoryManager>();
+        Loaded += OnLoad;
+    }
+
+    private void OnLoad(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            while (MgsPwMonitor.MgsPwProcess == null)
+            {
+                Task.Delay(100).Wait();
+            }
+            _item ??= DetermineItem(PwObject!);
+            var developed = _memoryManager.CheckItemDevelopment(_item.Index);
+            if (developed)
+            {
+                DevelopCheckbox.IsChecked = true;
+                StockButton.IsEnabled = true;
+            }
+            else
+            {
+                StockButton.IsEnabled = false;
+                RankUpButton.IsEnabled = false;
+                RankDownButton.IsEnabled = false;
+                return;
+            }
+            var rank = _memoryManager.GetItemRank(_item);
+            RankUpButton.IsEnabled = rank != _item.UpgradeIndices?.Length;
+            RankDownButton.IsEnabled = rank != 0;
+        }
+        catch
+        {
+            //Squelch.
+        }
     }
 
     private static Constants.Item DetermineItem(string input)
@@ -84,21 +119,21 @@ public partial class ItemDetailView : UserControl
     {
         try
         {
+            var enabling = (bool)DevelopCheckbox.IsChecked!;
             _item ??= DetermineItem(PwObject!);
-            if ((_item.Name == "Stealth Camo" || _item.Name == "Bandana") && !HasBeenWarned)
+            if ((_item.Name == "Stealth Camo" || _item.Name == "Bandana") && !_hasBeenWarned && enabling)
             {
                 WarnUserOfActivity("WARNING: Researching this item this way does NOT count towards the achievement for doing so.\n\nYou will only be warned once.\n\nYou may attempt to research again to ignore this warning.");
-                HasBeenWarned = true;
+                _hasBeenWarned = true;
                 this.DevelopCheckbox.IsChecked = false;
                 return;
             }
-            _memoryManager.ResearchAndDevelopItem(_item!);
-            SendStatusUpdate($"Developed {_item.Name}!");
-            DevelopCheckbox.IsEnabled = false; //NOTE: disable the development checkbox once developed for now, later update to allow de-development
+            _memoryManager.ResearchAndDevelopItem(_item!, enabling);
+            SendStatusUpdate(enabling ? $"Developed {_item.Name}!" : $"Undeveloped {_item.Name}!");
         }
         catch (Exception ex)
         {
-            string errorBrief = $"Failed to research {Name!}";
+            string errorBrief = $"Failed to change development status of {Name!}";
             LogManager.Logger?.Error($"{errorBrief}: {ex.Message}");
             SendStatusUpdate(errorBrief);
             IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
@@ -128,17 +163,18 @@ public partial class ItemDetailView : UserControl
         }
     }
 
-    public void RankUp_OnClick(object? sender, RoutedEventArgs e)
+    public void ChangeRank_OnClick(object? sender, RoutedEventArgs e)
     {
         try
         {
             _item ??= DetermineItem(PwObject!);
-            _memoryManager.ChangeItemRank(_item!);
-            SendStatusUpdate($"Ranked up {_item.Name}!");
+            var increasing = (sender as Control)!.Name == "RankUpButton";
+            _memoryManager.ChangeItemRank(_item!, increasing);
+            SendStatusUpdate(increasing ? $"Ranked up {_item.Name}!" : $"Ranked down {_item.Name}!");
         }
         catch (Exception ex)
         {
-            string errorBrief = $"Failed to rank up {Name!}";
+            string errorBrief = $"Failed to modify rank of {Name!}";
             LogManager.Logger?.Error($"{errorBrief}: {ex.Message}");
             SendStatusUpdate(errorBrief);
             IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(

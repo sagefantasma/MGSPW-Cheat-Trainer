@@ -251,7 +251,7 @@ public class MemoryManager
         }
     }
     
-    private bool CheckWeaponDevelopment(int index)
+    public bool CheckWeaponDevelopment(int index)
     {
         try
         {
@@ -303,7 +303,7 @@ public class MemoryManager
         }
     }
     
-    private bool CheckItemDevelopment(int index)
+    public bool CheckItemDevelopment(int index)
     {
         try
         {
@@ -319,7 +319,7 @@ public class MemoryManager
         }
     }
     
-    private bool UpdateWeaponStock(Constants.Weapon weapon, uint stock)
+    private bool UpdateWeaponStock(Constants.Weapon weapon, int stock)
     {
         //TODO: validate
         //Set 0x0C in the array to desired value
@@ -338,7 +338,7 @@ public class MemoryManager
         }
     }
     
-    private bool UpdateWeaponStock(int weapon, uint stock)
+    private bool UpdateWeaponStock(int weapon, int stock)
     {
         //TODO: validate
         //Set 0x0C in the array to desired value
@@ -413,6 +413,24 @@ public class MemoryManager
         }
     }
     
+    private int GetWeaponStock(int weapon)
+    {
+        //TODO: validate
+        //Set 0x0C in the array to desired value
+        try
+        {
+            return BitConverter.ToInt32(GetMemoryAtOffset(
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.Stock), 4));
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to get stock for weapon index {weapon}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+    
     private int GetItemStock(int item)
     {
         //TODO: validate
@@ -467,7 +485,7 @@ public class MemoryManager
         }
     }
 
-    private byte GetWeaponUsageLevel(Constants.Weapon weapon)
+    public byte GetWeaponUsageLevel(Constants.Weapon weapon)
     {
         try
         {
@@ -499,7 +517,7 @@ public class MemoryManager
         }
     }
 
-    private int GetWeaponRank(Constants.Weapon weapon)
+    public int GetWeaponRank(Constants.Weapon weapon)
     {
         try
         {
@@ -524,7 +542,7 @@ public class MemoryManager
         }
     }
     
-    private int GetItemRank(Constants.Item item)
+    public int GetItemRank(Constants.Item item)
     {
         try
         {
@@ -553,18 +571,23 @@ public class MemoryManager
     {
         Logger?.Information($"Attempting to {(research ? "research" : "unresearch")} {obj.Name}");
         var weapon = (obj as Constants.Weapon)!;
+        if (research)
+            return ResearchWeapon(weapon, research) && DevelopWeapon(weapon, research) &&
+                   UpdateWeaponUsageLevel(weapon, 1);
         return ResearchWeapon(weapon, research) && DevelopWeapon(weapon, research) &&
-               UpdateWeaponUsageLevel(weapon, research ? (byte)1 : (byte)0);
+               UpdateWeaponUsageLevel(weapon, 0) && ChangeWeaponRank(weapon, research, 0);
     }
 
     public bool ResearchAndDevelopItem(Constants.IPwObject obj, bool research = true)
     {
         Logger?.Information($"Attempting to {(research ? "research" : "unresearch")} {obj.Name}");
         var item = (obj as Constants.Item)!;
-        return ResearchItem(item, research) && DevelopItem(item, research);
+        if (research)
+            return ResearchItem(item, research) && DevelopItem(item, research);
+        return ResearchItem(item, research) && DevelopItem(item, research) && ChangeItemRank(item, research, 0);
     }
 
-    public bool ChangeWeaponLevel(Constants.IPwObject obj, bool increase = true)
+    public bool ChangeWeaponUseLevel(Constants.IPwObject obj, bool increase = true)
     {
         Logger?.Information($"Attempting to level up {obj.Name}");
         Constants.Weapon weapon = (obj as Constants.Weapon)!;
@@ -586,36 +609,84 @@ public class MemoryManager
             {
                 if (currentLevel < 3)
                     UpdateWeaponUsageLevel(index, (byte)(currentLevel + 1));
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 if (currentLevel > 0)
                     UpdateWeaponUsageLevel(index, (byte)(currentLevel - 1));
+                else
+                {
+                    return false;
+                }
             }
         }
 
-        return false;
+        return true;
     }
 
-    public bool ChangeWeaponRank(Constants.IPwObject obj, bool increase = true)
+    public bool ChangeWeaponRank(Constants.IPwObject obj, bool increase = true, int? desiredRank = null)
     {
         Logger?.Information($"Attempting to rank up {obj.Name}");
         Constants.Weapon weapon = (obj as Constants.Weapon)!;
+        
         int currentRank = GetWeaponRank(weapon);
-        if (increase)
+        desiredRank ??= increase ? currentRank + 1 : currentRank - 1;
+        while (currentRank != desiredRank)
         {
-            if (currentRank < weapon.UpgradeIndices?.Length)
-                return ResearchWeapon(weapon.UpgradeIndices[currentRank]) &&
-                       DevelopWeapon(weapon.UpgradeIndices[currentRank]);
-        }
-        else
-        {
-            if (currentRank > 0)
-                return ResearchWeapon(weapon.UpgradeIndices![currentRank], false) &&
-                       DevelopWeapon(weapon.UpgradeIndices[currentRank], false);
+            if (increase)
+            {
+                if (currentRank < weapon.UpgradeIndices?.Length)
+                {
+                    ResearchWeapon(weapon.UpgradeIndices[currentRank]);
+                    DevelopWeapon(weapon.UpgradeIndices[currentRank]);
+                    UpdateWeaponUsageLevel(weapon.UpgradeIndices[currentRank], 1);
+                    currentRank++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                currentRank--;
+                if (currentRank >= 0)
+                {
+                    ResearchWeapon(weapon.UpgradeIndices![currentRank], false);
+                    DevelopWeapon(weapon.UpgradeIndices[currentRank], false);
+                }
+            }
         }
 
-        return false;
+        return true;
+    }
+    
+    public bool ChangeWeaponStock(Constants.IPwObject obj, int delta = 100)
+    {
+        Logger?.Information($"Attempting to adjust stock for {obj.Name} by {delta}");
+        Constants.Weapon weapon = (obj as Constants.Weapon)!;
+        int allItemVersions = 1 + (weapon.UpgradeIndices?.Length ?? 0);
+        int[] indices = new int[allItemVersions];
+        indices[0] = weapon.Index;
+        if (weapon.UpgradeIndices != null)
+        {
+            for(int i = 0; i < weapon.UpgradeIndices.Length; i++)
+            {
+                indices[i+1] = weapon.UpgradeIndices[i];
+            }
+        }
+
+        foreach (int index in indices)
+        {
+            int currentLevel = GetWeaponStock(index);
+            UpdateWeaponStock(index, currentLevel + delta);
+        }
+
+        return true;
     }
 
     public bool ChangeItemStock(Constants.IPwObject obj, int delta = 100)
@@ -642,24 +713,39 @@ public class MemoryManager
         return true;
     }
     
-    public bool ChangeItemRank(Constants.IPwObject obj, bool increase = true)
+    public bool ChangeItemRank(Constants.IPwObject obj, bool increase = true, int? desiredRank = null)
     {
         Logger?.Information($"Attempting to rank up {obj.Name}");
         Constants.Item item = (obj as Constants.Item)!;
+        
         int currentRank = GetItemRank(item);
-        if (increase)
+        desiredRank ??= increase ? currentRank + 1 : currentRank - 1;
+        while (currentRank != desiredRank)
         {
-            if (currentRank < item.UpgradeIndices?.Length)
-                return ResearchItem(item.UpgradeIndices[currentRank]) &&
-                       DevelopItem(item.UpgradeIndices[currentRank]);
-        }
-        else
-        {
-            if (currentRank > 0)
-                return ResearchItem(item.UpgradeIndices![currentRank], false) &&
-                       DevelopItem(item.UpgradeIndices[currentRank], false);
+            if (increase)
+            {
+                if (currentRank < item.UpgradeIndices?.Length)
+                {
+                    ResearchItem(item.UpgradeIndices[currentRank]);
+                    DevelopItem(item.UpgradeIndices[currentRank]);
+                    currentRank++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                currentRank--;
+                if (currentRank >= 0)
+                {
+                    ResearchItem(item.UpgradeIndices![currentRank], false);
+                    DevelopItem(item.UpgradeIndices[currentRank], false);
+                }
+            }
         }
 
-        return false;
+        return true;
     }
 }

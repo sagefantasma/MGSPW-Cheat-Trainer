@@ -6,15 +6,22 @@
              x:Class="MGSPW_MC_Cheat_Trainer.Views.ItemDetailView">
     
     <GroupBox x:Name="GroupBox" BorderBrush="Black">
-        <Grid x:Name="ItemGrid" ColumnDefinitions=".5*,.5*" RowDefinitions=".5*,.5*">
+        <Grid x:Name="ItemGrid" ColumnDefinitions=".55*,.45*" RowDefinitions=".5*,.5*">
             <Image x:Name="ObjectImage" Source="/Assets/ration.png" Stretch="Uniform" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" HorizontalAlignment="Left"/>
             <Rectangle x:Name="ImageDarkener" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" 
             Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
-            <CheckBox x:Name="DevelopCheckbox" Grid.Row="0" Grid.Column="1" Content="Develop" FontWeight="Bold" Foreground="White" Margin="4" Click="Enabled_OnClick"/>
-            <Button x:Name="StockButton" Grid.Row="1" Grid.Column="0" Content="Add 100" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="AddStock_OnClick"/>
-            <Button x:Name="RankButton" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Margin="4" Padding="5,2" Click="RankUp_OnClick">
-                <TextBlock Text="Rank Up" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold"/>
-            </Button>
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+            <CheckBox x:Name="DevelopCheckbox" Grid.Row="0" Grid.Column="0" Content="Develop" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center"  Foreground="White" Click="Enabled_OnClick"/>
+            <Button x:Name="StockButton" Grid.Row="1" Grid.Column="0" Content="Add 100" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Padding="5,2" Click="AddStock_OnClick"/>
+            </StackPanel>
+            <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button x:Name="RankUpButton" Foreground="White" Padding="5,2" Click="ChangeRank_OnClick">
+                    <TextBlock Text="Rank +" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold"/>
+                </Button>
+                <Button x:Name="RankDownButton" Foreground="White" Padding="6, 2, 7,2" Click="ChangeRank_OnClick">
+                    <TextBlock Text="Rank -" TextWrapping="Wrap" TextAlignment="Center" FontWeight="Bold"/>
+                </Button>
+            </StackPanel>
         </Grid>
     </GroupBox>
     
