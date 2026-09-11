@@ -2,7 +2,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             mc:Ignorable="d" d:DesignWidth="240" d:DesignHeight="100"
              x:Class="MGSPW_MC_Cheat_Trainer.Views.WeaponDetailView">
     
     <GroupBox x:Name="GroupBox" BorderBrush="Black">
@@ -11,10 +11,13 @@
             <Rectangle x:Name="ImageDarkener" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Grid.RowSpan="2" 
             Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
             <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                <CheckBox x:Name="DevelopCheckbox" Content="Develop" FontWeight="Bold" Foreground="White" Click="Enabled_OnClick"/>
-                <Button x:Name="UsageUpButton" Content="Usage +" FontWeight="Bold"  Foreground="White"  Padding="5,2" Click="ChangeUsage_OnClick"/>
-                <Button x:Name="UsageDownButton" Content="Usage -" FontWeight="Bold"  Foreground="White" Padding="6, 2,7, 2" Click="ChangeUsage_OnClick"/>
-                <Button x:Name="StockButton" Content="Add 100" FontWeight="Bold" Foreground="White" Padding="5,2,4,2" IsVisible="False" Click="AddStock_OnClick"/>
+                <CheckBox x:Name="DevelopCheckbox" Content="Develop" FontWeight="Bold" Foreground="White" Margin="5,0" Click="Enabled_OnClick"/>
+                <Button x:Name="UsageUpButton" Content="Usage +" FontWeight="Bold"  Foreground="White" Margin="5,0" Padding="5,2" Click="ChangeUsage_OnClick"/>
+                <Button x:Name="UsageDownButton" Content="Usage -" FontWeight="Bold"  Foreground="White" Margin="5,0" Padding="6, 2,7, 2" Click="ChangeUsage_OnClick"/>
+                <StackPanel Orientation="Horizontal">
+                    <NumericUpDown x:Name="StockUpDown" IsVisible="False" ShowButtonSpinner="False" Minimum="1" Value="100" Maximum="9999" FormatString="0" Margin="5"/>
+                    <Button x:Name="StockButton" IsVisible="False" Content="Add" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Padding="5,2" Click="AddStock_OnClick"/>
+                </StackPanel>
             </StackPanel>
             <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button x:Name="RankUpButton"  Foreground="White" Padding="5,2" Click="RankUp_OnClick">

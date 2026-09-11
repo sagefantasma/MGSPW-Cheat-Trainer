@@ -415,7 +415,6 @@ public class MemoryManager
     
     private int GetWeaponStock(int weapon)
     {
-        //TODO: validate
         //Set 0x0C in the array to desired value
         try
         {

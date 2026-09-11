@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -47,6 +48,7 @@ public partial class WeaponDetailView : UserControl
         set
         {
             field = value;
+            ItemGrid.ColumnDefinitions = new ColumnDefinitions("1*, 0");
             RankUpButton.IsVisible = (bool)value!;
             RankDownButton.IsVisible = (bool)value;
         }
@@ -59,6 +61,7 @@ public partial class WeaponDetailView : UserControl
         {
             field = value;
             StockButton.IsVisible = (bool)value!;
+            StockUpDown.IsVisible = (bool)value;
         }
     } = false;
 
@@ -86,6 +89,7 @@ public partial class WeaponDetailView : UserControl
             {
                 DevelopCheckbox.IsChecked = true;
                 StockButton.IsEnabled = true;
+                StockUpDown.IsEnabled = true;
             }
             else
             {
@@ -94,6 +98,7 @@ public partial class WeaponDetailView : UserControl
                 RankUpButton.IsEnabled = false;
                 RankDownButton.IsEnabled = false;
                 StockButton.IsEnabled = false;
+                StockUpDown.IsEnabled = false;
                 return;
             }
             var rank = _memoryManager.GetWeaponRank(_weapon);
@@ -202,8 +207,16 @@ public partial class WeaponDetailView : UserControl
         try
         {
             _weapon ??= DetermineWeapon(PwObject!);
-            _memoryManager.ChangeWeaponStock(_weapon!);
-            SendStatusUpdate($"Added 100 {_weapon.Name} to stock!");
+            if (StockUpDown.Value is not null)
+            {
+                var stockToAdd = (int)StockUpDown.Value;
+                _memoryManager.ChangeWeaponStock(_weapon!, stockToAdd);
+                SendStatusUpdate($"Added {stockToAdd} {_weapon.Name} to stock!");
+            }
+            else
+            {
+                throw new InvalidDataException("You must provide a value greater than zero in the stock box.");
+            }
         }
         catch (Exception ex)
         {
