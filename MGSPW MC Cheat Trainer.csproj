@@ -43,5 +43,13 @@
         <DependentUpon>ItemsTabView.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
+      <Compile Update="Views\OtherDetailView.axaml.cs">
+        <DependentUpon>OtherDetailView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Views\OtherTabView.axaml.cs">
+        <DependentUpon>OtherTabView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
     </ItemGroup>
 </Project>

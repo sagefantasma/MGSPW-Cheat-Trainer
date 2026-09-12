@@ -28,7 +28,11 @@ public class MemoryManager
                 try
                 {
                     if (MgsPwMonitor.MgsPwProcess == null)
-                        throw new NullReferenceException("Not hooked into PW, cannot set memory.");
+                    {
+                        _weaponsArrayLocation = nint.MinValue;
+                        throw new TrainerException();
+                    }
+
                     lock (MgsPwMonitor.MgsPwProcess)
                     {
                         using SimpleProcessProxy spp = new(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
@@ -37,6 +41,10 @@ public class MemoryManager
                         _weaponsArrayLocation = IntPtr.Add(ptrLocation,
                             PeaceWalkerApplicationNavigator.PeaceWalkerAoB.WeaponsPtrOffset);
                     }
+                }
+                catch (TrainerException)
+                {
+                    throw;
                 }
                 catch (Exception e)
                 {
@@ -126,6 +134,10 @@ public class MemoryManager
                 Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Research);
             return SetMemoryAtPointer(desiredPtr, research ? [0x03] : [0x01]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to research {weapon.Name}";
@@ -139,8 +151,13 @@ public class MemoryManager
         try
         {
             return SetMemoryAtPointer(
-                IntPtr.Add(WeaponsArrayLocation, Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research),
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research),
                 research ? [0x03] : [0x01]);
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -159,6 +176,10 @@ public class MemoryManager
                 Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Research);
             return SetMemoryAtPointer(desiredPtr, research ? [0x03] : [0x01]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to research {item.Name}";
@@ -174,6 +195,10 @@ public class MemoryManager
             return SetMemoryAtPointer(
                 IntPtr.Add(ItemsArrayLocation, Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Research),
                 research ? [0x03] : [0x01]);
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -191,6 +216,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research), 1)[0] == 0x03;
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to check research status for weapon index {index}";
@@ -206,6 +235,10 @@ public class MemoryManager
             return GetMemoryAtOffset(
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Research), 1)[0] == 0x03;
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -225,6 +258,10 @@ public class MemoryManager
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Development),
                 develop ? [0x64] : [0x00]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to develop {weapon.Name}";
@@ -243,6 +280,10 @@ public class MemoryManager
                     Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Development),
                 develop ? [0x64] : [0x00]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to develop weapon index {index}";
@@ -258,6 +299,10 @@ public class MemoryManager
             return GetMemoryAtOffset(
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Development), 1)[0] == 0x64;
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -277,6 +322,10 @@ public class MemoryManager
                     Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Development),
                 develop ? [0x64] : [0x00]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to develop {item.Name}";
@@ -295,6 +344,10 @@ public class MemoryManager
                     Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Development),
                 develop ? [0x64] : [0x00]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to develop item index {index}";
@@ -310,6 +363,10 @@ public class MemoryManager
             return GetMemoryAtOffset(
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Development), 1)[0] == 0x64;
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -330,6 +387,10 @@ public class MemoryManager
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Stock),
                 BitConverter.GetBytes(stock));
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update stock for {weapon.Name}";
@@ -348,6 +409,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.Stock),
                 BitConverter.GetBytes(stock));
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -368,6 +433,10 @@ public class MemoryManager
                     Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Stock),
                 BitConverter.GetBytes(stock));
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update stock for {item.Name}";
@@ -387,6 +456,10 @@ public class MemoryManager
                     Constants.ItemSize * (item - 1) + (int)Constants.ItemMemory.Stock),
                 BitConverter.GetBytes(stock));
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update stock for item index {item}";
@@ -405,6 +478,10 @@ public class MemoryManager
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Stock), 4));
         }
+        catch (TrainerException)
+        {
+            return -1;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get stock for {item.Name}";
@@ -421,6 +498,10 @@ public class MemoryManager
             return BitConverter.ToInt32(GetMemoryAtOffset(
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.Stock), 4));
+        }
+        catch (TrainerException)
+        {
+            return -1;
         }
         catch (Exception e)
         {
@@ -440,6 +521,10 @@ public class MemoryManager
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (item - 1) + (int)Constants.ItemMemory.Stock), 4));
         }
+        catch (TrainerException)
+        {
+            return -1;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get stock for item index {item}";
@@ -457,6 +542,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.UsageLevel),
                 [usageLevel]);
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -476,6 +565,10 @@ public class MemoryManager
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.UsageLevel),
                 [usageLevel]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update usage level for weapon index {weapon}";
@@ -492,6 +585,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.UsageLevel), 1)[0];
         }
+        catch (TrainerException)
+        {
+            return 0xFF;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get usage level for {weapon.Name}";
@@ -507,6 +604,10 @@ public class MemoryManager
             return GetMemoryAtOffset(
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.UsageLevel), 1)[0];
+        }
+        catch (TrainerException)
+        {
+            return 0xFF;
         }
         catch (Exception e)
         {
@@ -533,6 +634,10 @@ public class MemoryManager
 
             return i;
         }
+        catch (TrainerException)
+        {
+            return -1;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get rank for {weapon.Name}";
@@ -558,6 +663,10 @@ public class MemoryManager
 
             return i;
         }
+        catch (TrainerException)
+        {
+            return -1;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get rank for {item.Name}";
@@ -568,6 +677,7 @@ public class MemoryManager
     
     public bool ResearchAndDevelopWeapon(Constants.IPwObject obj, bool research = true)
     {
+        //TODO: also set ammo to 9999 if enabling NODDERS 
         Logger?.Information($"Attempting to {(research ? "research" : "unresearch")} {obj.Name}");
         var weapon = (obj as Constants.Weapon)!;
         if (research)
@@ -604,6 +714,8 @@ public class MemoryManager
         foreach (int index in indices)
         {
             byte currentLevel = GetWeaponUsageLevel(index);
+            if (currentLevel == 0xFF)
+                return false;
             if (increase)
             {
                 if (currentLevel < 3)

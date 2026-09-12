@@ -79,6 +79,13 @@ public partial class WeaponDetailView : UserControl
     {
         Dispatcher.UIThread.Post(void () =>
         {
+            if (!string.IsNullOrWhiteSpace(MainWindow.CurrentStage))
+            {
+                if (string.Equals(MainWindow.CurrentStage, "title"))
+                    return;
+            }
+            else
+                return;
             try
             {
                 _weapon ??= DetermineWeapon(PwObject!);
@@ -101,23 +108,24 @@ public partial class WeaponDetailView : UserControl
                 }
 
                 var rank = _memoryManager.GetWeaponRank(_weapon);
-                RankUpButton.IsEnabled = rank != _weapon.UpgradeIndices?.Length;
-                RankDownButton.IsEnabled = rank != 0;
+                if (rank != -1)
+                {
+                    RankUpButton.IsEnabled = rank != _weapon.UpgradeIndices?.Length;
+                    RankDownButton.IsEnabled = rank != 0;
+                }
+
                 var usage = _memoryManager.GetWeaponUsageLevel(_weapon);
-                UsageDownButton.IsEnabled = usage > 1;
-                UsageUpButton.IsEnabled = usage != 3;
+                if (usage != 0xFF)
+                {
+                    UsageDownButton.IsEnabled = usage > 1;
+                    UsageUpButton.IsEnabled = usage != 3;
+                }
             }
             catch
             {
                 //Squelch.
             }
         });
-    }
-
-    private void OnLoad(object? sender, bool e)
-    {
-        //MgsPwMonitor.OnGameHooked += OnHooked;
-        
     }
 
     private static Constants.Weapon DetermineWeapon(string input)
@@ -139,9 +147,16 @@ public partial class WeaponDetailView : UserControl
         {
             var enabling = (bool)DevelopCheckbox.IsChecked!;
             _weapon ??= DetermineWeapon(PwObject!);
-            _memoryManager.ResearchAndDevelopWeapon(_weapon!, enabling);
-            SendStatusUpdate(enabling ? $"Developed {_weapon.Name}!" : $"Undeveloped {_weapon.Name}!");
-            OnLoad(null, true);
+            bool success = _memoryManager.ResearchAndDevelopWeapon(_weapon!, enabling);
+            if (success)
+            {
+                SendStatusUpdate(enabling ? $"Developed {_weapon.Name}!" : $"Undeveloped {_weapon.Name}!");
+                OnHooked(null, true);
+            }
+            else
+            {
+                SendStatusUpdate($"Failed to modify development of {_weapon.Name}");
+            }
         }
         catch (Exception ex)
         {
@@ -161,11 +176,20 @@ public partial class WeaponDetailView : UserControl
         {
             _weapon ??= DetermineWeapon(PwObject!);
             var increasing = (sender as Control)!.Name == "UsageUpButton";
-            _memoryManager.ChangeWeaponUseLevel(_weapon!, increasing);
-            SendStatusUpdate(increasing ? $"Increased usage level for {_weapon.Name}!" : $"Decreased usage level for {_weapon.Name}!");
-            var usageLevel = _memoryManager.GetWeaponUsageLevel(_weapon);
-            UsageDownButton.IsEnabled = usageLevel > 1;
-            UsageUpButton.IsEnabled = usageLevel < 3;
+            bool success = _memoryManager.ChangeWeaponUseLevel(_weapon!, increasing);
+            if (success)
+            {
+                SendStatusUpdate(increasing
+                    ? $"Increased usage level for {_weapon.Name}!"
+                    : $"Decreased usage level for {_weapon.Name}!");
+                var usageLevel = _memoryManager.GetWeaponUsageLevel(_weapon);
+                UsageDownButton.IsEnabled = usageLevel > 1;
+                UsageUpButton.IsEnabled = usageLevel < 3;
+            }
+            else
+            {
+                SendStatusUpdate($"Failed to change usage of {_weapon.Name!}");
+            }
         }
         catch (Exception ex)
         {
@@ -185,11 +209,18 @@ public partial class WeaponDetailView : UserControl
         {
             _weapon ??= DetermineWeapon(PwObject!);
             var increasing = (sender as Control)!.Name == "RankUpButton";
-            _memoryManager.ChangeWeaponRank(_weapon!, increasing);
-            SendStatusUpdate(increasing ? $"Ranked up {_weapon.Name}!" : $"Ranked down {_weapon.Name}!");
-            var currentRank = _memoryManager.GetWeaponRank(_weapon);
-            RankDownButton.IsEnabled = currentRank > 0;
-            RankUpButton.IsEnabled = currentRank < _weapon.UpgradeIndices?.Length;
+            bool success = _memoryManager.ChangeWeaponRank(_weapon!, increasing);
+            if (success)
+            {
+                SendStatusUpdate(increasing ? $"Ranked up {_weapon.Name}!" : $"Ranked down {_weapon.Name}!");
+                var currentRank = _memoryManager.GetWeaponRank(_weapon);
+                RankDownButton.IsEnabled = currentRank > 0;
+                RankUpButton.IsEnabled = currentRank < _weapon.UpgradeIndices?.Length;
+            }
+            else
+            {
+                SendStatusUpdate($"Failed to change rank for {_weapon.Name}");
+            }
         }
         catch (Exception ex)
         {
@@ -216,8 +247,11 @@ public partial class WeaponDetailView : UserControl
             if (StockUpDown.Value is not null)
             {
                 var stockToAdd = (int)StockUpDown.Value;
-                _memoryManager.ChangeWeaponStock(_weapon!, stockToAdd);
-                SendStatusUpdate($"Added {stockToAdd} {_weapon.Name} to stock!");
+                var success = _memoryManager.ChangeWeaponStock(_weapon!, stockToAdd);
+                if(success)
+                    SendStatusUpdate($"Added {stockToAdd} {_weapon.Name} to stock!");
+                else
+                    SendStatusUpdate($"Failed to change stock for {_weapon.Name}");
             }
             else
             {

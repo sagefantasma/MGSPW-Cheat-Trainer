@@ -65,7 +65,10 @@
                 </TabItem>
                 
                 <TabItem x:Name="OtherTab" Header="R&amp;D Other">
-                    <TextBlock Text="UNDER CONSTRUCTION" Foreground="DarkGoldenrod" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
+                    <Panel>
+                        <Image Source="/Assets/rnd other.png" Stretch="UniformToFill"/>
+                        <views:OtherTabView/>
+                    </Panel>
                 </TabItem>
                 
                 <TabItem x:Name="StaffTab" Header="Staff">

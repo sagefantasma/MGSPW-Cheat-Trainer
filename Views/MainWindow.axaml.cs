@@ -41,16 +41,22 @@ public partial class MainWindow : Window
     private static ILogger? Logger => LogManager.Logger;
     private readonly MemoryManager _memoryManager;
 
-    private string? CurrentStage
+    public static string? CurrentStage
     {
         get;
-        set
+        private set
         {
+            if (field == value) return;
             field = value;
-            if (value != null)
+            if (value == null) return;
+            if (value.Contains("my_outer"))
             {
-                if (value.Contains("my_outer"))
-                    OnMyOuterStage?.Invoke(null, true);
+                Logger?.Information("Stage my_outer, invoking OnMyOuterStage");
+                OnMyOuterStage?.Invoke(null, true);
+            }
+            else
+            {
+                Logger?.Verbose($"Current stage: {value}");
             }
         }
     }
@@ -78,6 +84,7 @@ public partial class MainWindow : Window
         WeaponsTabView.UpdateStatusBar += OnUpdateStatusBar;
         ItemDetailView.WarnUser += OnWarnUser;
         ItemsTabView.UpdateStatusBar += OnUpdateStatusBar;
+        OtherTabView.UpdateStatusBar += OnUpdateStatusBar;
         CheatsTabView.UpdateStatusBar += OnUpdateStatusBar;
         this.Closing += OnClosing;
         Task.Run(CheckForUpdates);
@@ -149,6 +156,7 @@ public partial class MainWindow : Window
             if (CurrentStage.Contains("vs_lobby"))
             {
                 //Turn off all cheats and disable their use
+                Logger?.Information("Stage is vs_lobby, disabling cheats.");
                 DeactivateAllCheats();
                 return;
             }
@@ -177,6 +185,7 @@ public partial class MainWindow : Window
                         1)[0] != 0x01)
                 {
                     //Turn off all cheats and disable their use
+                    Logger?.Information("Co-op max player count > 1; disabling cheats.");
                     DeactivateAllCheats();
                     return;
                 }

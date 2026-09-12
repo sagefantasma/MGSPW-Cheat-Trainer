@@ -1,0 +1,205 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:views="clr-namespace:MGSPW_MC_Cheat_Trainer.Views"
+             mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+             x:Class="MGSPW_MC_Cheat_Trainer.Views.OtherTabView">
+    <TabControl x:Name="ItemTabControl" SelectionChanged="ItemTabControl_OnSelectionChanged">
+        <TabItem x:Name="KeyItemsTab">
+            <TabItem.Header>
+                <Panel>
+                    <Rectangle x:Name="ImageDarkenerRe" 
+                               Fill="Gray" Opacity="0.7" IsHitTestVisible="False"/>
+                    <Image Source="/Assets/key_items icon.png" Height="48" Width="48"/>
+                </Panel>
+            </TabItem.Header>
+            <ScrollViewer>
+            <Grid x:Name="KeyItemsGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*,.2*,.2*,.2*,.2*,.2*" RowDefinitions=".1*,.3*,.3*,.3*,.3*,.3*,.3*,.3*,.3*,.3*,.3*,.3*,.3*,.3*">
+                <Label x:Name="KeyItemsLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="KEY ITEMS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                <views:OtherDetailView x:Name="HueyLetterDetailView" Grid.Row="1" Grid.Column="0" PwObject="Huey's Letter" EntityImage="/Assets/letter.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="JigsawDetailView" Grid.Row="1" Grid.Column="1" PwObject="Jigsaw" EntityImage="/Assets/jigsaw.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="IdCardPDetailView" Grid.Row="1" Grid.Column="2" PwObject="ID Card (P)" EntityImage="/Assets/id_card_p.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="EzGunLrDetailView" Grid.Row="1" Grid.Column="3" PwObject="EZ Gun (LR)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="EzGunPrDetailView" Grid.Row="1" Grid.Column="4" PwObject="EZ Gun (PR)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="PmSpecDetailView" Grid.Row="1" Grid.Column="5" PwObject="PM" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Pb6p9DetailView" Grid.Row="1" Grid.Column="6" PwObject="PB/6P9" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False" />
+                <views:OtherDetailView x:Name="M1911A1DetailView" Grid.Row="1" Grid.Column="7" PwObject="M1911A1" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M1911A1CustomDetailView" Grid.Row="1" Grid.Column="8" PwObject="M1911A1 Ct." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="C96DetailView" Grid.Row="1" Grid.Column="9" PwObject="C96" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M19DetailView" Grid.Row="2" Grid.Column="0" PwObject="M19" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate"  CanStockUp="False"/>
+                <views:OtherDetailView x:Name="KampfpistoleView" Grid.Row="2" Grid.Column="1" PwObject="Kampfpistole" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SupportSupplyMarkerView" Grid.Row="2" Grid.Column="2" PwObject="Sprt Sply Mk." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SupportStrikeMarkerView" Grid.Row="2" Grid.Column="3" PwObject="Sprt Strk Mk." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="BananaView" Grid.Row="2" Grid.Column="4" PwObject="Banana" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="TwinBarrelView" Grid.Row="2" Grid.Column="5" PwObject="Twin Barrel" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="TwinBarrelRsView" Grid.Row="2" Grid.Column="6" PwObject="Twin Brrl(RS)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M37View" Grid.Row="2" Grid.Column="7" PwObject="M37" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Spas12View" Grid.Row="2" Grid.Column="8" PwObject="SPAS-12" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CawView" Grid.Row="2" Grid.Column="9" PwObject="CAW" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M16A1StgView" Grid.Row="3" Grid.Column="0" PwObject="M16(STG)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M16A1StgLaserView" Grid.Row="3" Grid.Column="1" PwObject="M16(STG+L)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="PatriotView" Grid.Row="3" Grid.Column="2" PwObject="Patriot" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M16A1GlView" Grid.Row="3" Grid.Column="3" PwObject="M16(GL)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M16A1GlLaserView" Grid.Row="3" Grid.Column="4" PwObject="M16(GL+L)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M16A1SglView" Grid.Row="3" Grid.Column="5" PwObject="M16(SGL)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M16A1SglLaserView" Grid.Row="3" Grid.Column="6" PwObject="M16(SGL+L)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M653View" Grid.Row="3" Grid.Column="7" PwObject="M653" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M653GlView" Grid.Row="3" Grid.Column="8" PwObject="M653(GL)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M653StgView" Grid.Row="3" Grid.Column="9" PwObject="M653(STG)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M653SglView" Grid.Row="4" Grid.Column="0" PwObject="M653(SGL)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Rk47View" Grid.Row="4" Grid.Column="1" PwObject="RK47" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Rk47GlView" Grid.Row="4" Grid.Column="2" PwObject="RK47(GL)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Adm63View" Grid.Row="4" Grid.Column="3" PwObject="ADM63" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Adm65View" Grid.Row="4" Grid.Column="4" PwObject="ADM65" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Rk47SglView" Grid.Row="4" Grid.Column="5" PwObject="RK47(SGL)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="RpkView" Grid.Row="4" Grid.Column="6" PwObject="RPK" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="FalView" Grid.Row="4" Grid.Column="7" PwObject="FAL" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SugView" Grid.Row="4" Grid.Column="8" PwObject="SUG" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="G11View" Grid.Row="4" Grid.Column="9" PwObject="G11" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="MusketView" Grid.Row="5" Grid.Column="0" PwObject="Musket" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M10View" Grid.Row="5" Grid.Column="1" PwObject="M10" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M10BjView" Grid.Row="5" Grid.Column="2" PwObject="M10 (BJ)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Uz61View" Grid.Row="5" Grid.Column="3" PwObject="UZ61" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Mp5A2View" Grid.Row="5" Grid.Column="4" PwObject="MP5A2" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Mp5Sd2View" Grid.Row="5" Grid.Column="5" PwObject="MP5SD2" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M1928A1View" Grid.Row="5" Grid.Column="6" PwObject="M1928A1" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M1CView" Grid.Row="5" Grid.Column="7" PwObject="M1C" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M1CPrView" Grid.Row="5" Grid.Column="8" PwObject="M1C (PR)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M21View" Grid.Row="5" Grid.Column="9" PwObject="M21" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M700View" Grid.Row="6" Grid.Column="0" PwObject="M700" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M700LrView" Grid.Row="6" Grid.Column="1" PwObject="M700 (LR)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="MosinView" Grid.Row="6" Grid.Column="2" PwObject="Mosin" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SvdView" Grid.Row="6" Grid.Column="3" PwObject="SVD" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SvdNvView" Grid.Row="6" Grid.Column="4" PwObject="SVD(NV)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Wa2000View" Grid.Row="6" Grid.Column="5" PwObject="WA2000" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Ptrd1941View" Grid.Row="6" Grid.Column="6" PwObject="PTRD1941" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Ptrs1941View" Grid.Row="6" Grid.Column="7" PwObject="PTRS1941" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="StealthGunView" Grid.Row="6" Grid.Column="8" PwObject="Stealth Gun" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="RailgunView" Grid.Row="6" Grid.Column="9" PwObject="Railgun" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M60View" Grid.Row="7" Grid.Column="0" PwObject="M60" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M60ApView" Grid.Row="7" Grid.Column="1" PwObject="M60 (AP)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M63A1View" Grid.Row="7" Grid.Column="2" PwObject="M63A1" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="PkmView" Grid.Row="7" Grid.Column="3" PwObject="PKM" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Mg3View" Grid.Row="7" Grid.Column="4" PwObject="MG3" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Mg3ApView" Grid.Row="7" Grid.Column="5" PwObject="MG3 (AP)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M134View" Grid.Row="7" Grid.Column="6" PwObject="M134" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="EmWaveView" Grid.Row="7" Grid.Column="7" PwObject="EM Wave" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="LawView" Grid.Row="7" Grid.Column="8" PwObject="LAW" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M202A1View" Grid.Row="7" Grid.Column="9" PwObject="M202A1" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M202A12View" Grid.Row="8" Grid.Column="0" PwObject="M202A1(2)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Rpg2View" Grid.Row="8" Grid.Column="1" PwObject="RPG-2" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Rpg7View" Grid.Row="8" Grid.Column="2" PwObject="RPG-7" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Fim43View" Grid.Row="8" Grid.Column="3" PwObject="FIM-43" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="Xfim92aView" Grid.Row="8" Grid.Column="4" PwObject="XFIM-92A" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CarlGustavM2View" Grid.Row="8" Grid.Column="5" PwObject="C.Gustav" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CarlGustavMpView" Grid.Row="8" Grid.Column="6" PwObject="C.Gustav(M)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CarlGustavFultonView" Grid.Row="8" Grid.Column="7" PwObject="C.Gustav(F)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="M47View" Grid.Row="8" Grid.Column="8" PwObject="M47" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="HumanSlingshotView" Grid.Row="8" Grid.Column="9" PwObject="Slingshot" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="StunGrenadeView" Grid.Row="9" Grid.Column="0" PwObject="Stun G." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SmokeGrenadeView" Grid.Row="9" Grid.Column="1" PwObject="Smoke G." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="ChaffGrenadeView" Grid.Row="9" Grid.Column="2" PwObject="Chaff G." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SmokeGrenadeColoredView" Grid.Row="9" Grid.Column="3" PwObject="Smoke G.(C)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SupportSupplyThrownView" Grid.Row="9" Grid.Column="4" PwObject="Sply(Throw)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SupportStrikeThrownView" Grid.Row="9" Grid.Column="5" PwObject="Strk(Throw)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="EmNetView" Grid.Row="9" Grid.Column="6" PwObject="EM Net" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SleepGasGrenadeView" Grid.Row="9" Grid.Column="7" PwObject="Sleep Gas G." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="C4View" Grid.Row="9" Grid.Column="8" PwObject="C4" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="ClaymoreView" Grid.Row="9" Grid.Column="9" PwObject="Claymore" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="MagazineView" Grid.Row="10" Grid.Column="0" PwObject="Magazine" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="HobbyMagazine1View" Grid.Row="10" Grid.Column="1" PwObject="Hobby Mag1" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="HobbyMagazine2View" Grid.Row="10" Grid.Column="2" PwObject="Hobby Mag2" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="HobbyMagazine3View" Grid.Row="10" Grid.Column="3" PwObject="Hobby Mag3" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="HobbyMagazine4View" Grid.Row="10" Grid.Column="4" PwObject="Hobby Mag4" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="AntiTankMineView" Grid.Row="10" Grid.Column="5" PwObject="AT Mine" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="DecoyView" Grid.Row="10" Grid.Column="6" PwObject="Decoy" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="AerialMineView" Grid.Row="10" Grid.Column="7" PwObject="Aerial Mine" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="FultonSleepGasMineView" Grid.Row="10" Grid.Column="8" PwObject="F.S.G. Mine" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CookbookView" Grid.Row="10" Grid.Column="9" PwObject="Cookbook" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SupportSupplyMkSetView" Grid.Row="11" Grid.Column="0" PwObject="Sply(Set)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SupportStrikeMkSetView" Grid.Row="11" Grid.Column="1" PwObject="Strk(Set)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CurryView" Grid.Row="11" Grid.Column="2" PwObject="Curry" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="StealthMatView" Grid.Row="11" Grid.Column="3" PwObject="Stealth Mat" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="StealthCamoView" Grid.Row="11" Grid.Column="4" PwObject="Stealth Camo" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="LoveBoxView" Grid.Row="11" Grid.Column="5" PwObject="Love Box" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CardboardBoxTankView" Grid.Row="11" Grid.Column="6" PwObject="Box Tank" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="NightVisionGogglesView" Grid.Row="11" Grid.Column="7" PwObject="NVGs" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="BallisticShieldView" Grid.Row="11" Grid.Column="8" PwObject="Shield" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="BallisticShieldColorView" Grid.Row="11" Grid.Column="9" PwObject="Shield(Color)" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="InfinityBandanaView" Grid.Row="12" Grid.Column="0" PwObject="Bandana" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SolitonRadarView" Grid.Row="12" Grid.Column="1" PwObject="Soliton Radar" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SonicEyeView" Grid.Row="12" Grid.Column="2" PwObject="Sonic Eye" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CannedSoftDrinkView" Grid.Row="12" Grid.Column="3" PwObject="Soft Drink" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="TortillaChipsView" Grid.Row="12" Grid.Column="4" PwObject="T.Chips" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="BoxBombView" Grid.Row="12" Grid.Column="5" PwObject="Box Bomb" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="StunBoxView" Grid.Row="12" Grid.Column="6" PwObject="Stun Box" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SmokeBoxView" Grid.Row="12" Grid.Column="7" PwObject="Smoke Box" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="QuestionMarksView" Grid.Row="12" Grid.Column="8" PwObject="???" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="AssassinsStrawBoxView" Grid.Row="12" Grid.Column="9" PwObject="Assn.Box" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="RescueBoxView" Grid.Row="13" Grid.Column="0" PwObject="Rescue Box" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="RareMeatRationView" Grid.Row="13" Grid.Column="1" PwObject="Rare Ration" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="WellDoneRationView" Grid.Row="13" Grid.Column="2" PwObject="W.D. Ration" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="BurntRationView" Grid.Row="13" Grid.Column="3" PwObject="Burnt Ration" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CologneView" Grid.Row="13" Grid.Column="4" PwObject="Cologne" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="RathWingView" Grid.Row="13" Grid.Column="5" PwObject="Rath Wing" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" />
+                <views:OtherDetailView x:Name="TigrexFangView" Grid.Row="13" Grid.Column="6" PwObject="Tgrx Fang" EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" />
+                <views:OtherDetailView x:Name="GearRexMucousView" Grid.Row="13" Grid.Column="7" PwObject="Gear Muc." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" />
+                <views:OtherDetailView x:Name="GearRexConcentrateView" Grid.Row="13" Grid.Column="8" PwObject="Gear Con." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" />
+                <views:OtherDetailView x:Name="GearRexSuperExtractView" Grid.Row="13" Grid.Column="9" PwObject="Gear Sup." EntityImage="/Assets/document.png" ValueChanged="RequestStatusBarUpdate" />
+            </Grid>
+                </ScrollViewer>
+        </TabItem>
+        <TabItem x:Name="BulletsTab">
+            <TabItem.Header>
+                <Panel>
+                    <Rectangle x:Name="ImageDarkenerEq" 
+                               Fill="Gray" Opacity="0.7" IsHitTestVisible="False"/>
+                    <Image Source="/Assets/bullets icon.png" Height="48" Width="48"/>
+                </Panel>
+            </TabItem.Header>
+            <Grid x:Name="BulletsGrid" ColumnDefinitions=".17*,.17*,.17*,.17*,.17*,.17*" RowDefinitions=".05*,.18*,.18*,.18*,.18*">
+                <Label x:Name="BulletsLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="BULLETS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                <views:OtherDetailView x:Name="FultonDetailView" Grid.Row="1" Grid.Column="0" PwObject="Fulton System" EntityImage="/Assets/fulton.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="AnalyzerDetailView" Grid.Row="1" Grid.Column="1" PwObject="Analyzer" EntityImage="/Assets/analyzer.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="ShieldDetailView" Grid.Row="1" Grid.Column="2" PwObject="Shield" EntityImage="/Assets/shield.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="ShieldColoredDetailView" Grid.Row="1" Grid.Column="3" PwObject="Shield(Colored)" EntityImage="/Assets/shield_colored.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="NvgDetailView" Grid.Row="1" Grid.Column="4" PwObject="NVG" EntityImage="/Assets/nvg.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SonicEyeDetailView" Grid.Row="1" Grid.Column="5" PwObject="Sonic Eye" EntityImage="/Assets/sonic_eye.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="LoveBoxDetailView" Grid.Row="2" Grid.Column="0" PwObject="Love Box" EntityImage="/Assets/love_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="BoxTankDetailView" Grid.Row="2" Grid.Column="1" PwObject="Box-Tank" EntityImage="/Assets/box_tank.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="BoxTankStnDetailView" Grid.Row="2" Grid.Column="2" PwObject="Box-Tank(Stun)" EntityImage="/Assets/box_tank_stun.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="BoxTankSmkDetailView" Grid.Row="2" Grid.Column="3" PwObject="Box-Tank(Smoke)" EntityImage="/Assets/box_tank_smoke.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="BoxBombDetailView" Grid.Row="2" Grid.Column="4" PwObject="Box Bomb" EntityImage="/Assets/box_bomb.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="StunBoxDetailView" Grid.Row="2" Grid.Column="5" PwObject="Stun Box" EntityImage="/Assets/stun_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="SmokeBoxDetailView" Grid.Row="3" Grid.Column="0" PwObject="Smoke Box" EntityImage="/Assets/smoke_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="AssassinBoxDetailView" Grid.Row="3" Grid.Column="1" PwObject="Assassin Box" EntityImage="/Assets/assassin_box.png" ValueChanged="RequestStatusBarUpdate" />
+                <views:OtherDetailView x:Name="RescueBoxDetailView" Grid.Row="3" Grid.Column="2" PwObject="Rescue Box" EntityImage="/Assets/rescue_box.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="BinosDetailView" Grid.Row="3" Grid.Column="3" PwObject="Binos" EntityImage="/Assets/binos.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="CameraDetailView" Grid.Row="3" Grid.Column="4" PwObject="Camera" EntityImage="/Assets/camera.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="WalkmanDetailView" Grid.Row="3" Grid.Column="5" PwObject="Walkman" EntityImage="/Assets/walkman.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="IdCardHDetailView" Grid.Row="4" Grid.Column="0" PwObject="ID Card(Huey)" EntityImage="/Assets/id_card.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="StealthMatDetailView" Grid.Row="4" Grid.Column="1" PwObject="Stealth Mat" EntityImage="/Assets/stealth_mat.png" ValueChanged="RequestStatusBarUpdate"/>
+                <views:OtherDetailView x:Name="StealthCamoDetailView" Grid.Row="4" Grid.Column="2" PwObject="Stealth Camo" EntityImage="/Assets/stealth_camo.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="BandanaDetailView" Grid.Row="4" Grid.Column="3" PwObject="Bandana" EntityImage="/Assets/bandana.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+            </Grid>
+        </TabItem>
+        <TabItem x:Name="UniformsTab">
+            <TabItem.Header>
+                <Panel>
+                    <Rectangle x:Name="ImageDarkenerRa" 
+                               Fill="Gray" Opacity="0.7" IsHitTestVisible="False"/>
+                    <Image Source="/Assets/uniforms icon.png" Height="48" Width="48"/>
+                </Panel>
+            </TabItem.Header>
+            <Grid x:Name="UniformsGrid" ColumnDefinitions=".2*,.2*,.2*,.2*,.2*" RowDefinitions=".05*,.3*,.3*,.3*">
+                <Label x:Name="UniformsLabel" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Content="UNIFORMS" 
+                       Foreground="Black" FontWeight="Bold" FontStretch="Expanded"/>
+                <views:OtherDetailView x:Name="SrndIndDetailView" Grid.Row="1" Grid.Column="0" PwObject="Surround Indicator" EntityImage="/Assets/surround_indicator.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+                <views:OtherDetailView x:Name="SolitonRadarDetailView" Grid.Row="2" Grid.Column="0" PwObject="Soliton Radar" EntityImage="/Assets/soliton_radar.png" ValueChanged="RequestStatusBarUpdate" CanStockUp="False"/>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

@@ -31,7 +31,6 @@ public partial class WeaponsTabView : UserControl
     
     private void WeaponTabControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        WeaponsTabActivated?.Invoke(null, true);
-        //throw new System.NotImplementedException();
+        LogManager.Logger?.Information($"Navigated to Weapons subtab: {(e.AddedItems[0] as TabItem)?.Name}");
     }
 }
