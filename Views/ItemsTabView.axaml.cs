@@ -8,6 +8,7 @@ namespace MGSPW_MC_Cheat_Trainer.Views;
 public partial class ItemsTabView : UserControl
 {
     public static event EventHandler<string>? UpdateStatusBar;
+    public static event EventHandler<bool>? ItemsTabActivated;
     
     public ItemsTabView()
     {
@@ -30,6 +31,7 @@ public partial class ItemsTabView : UserControl
     
     private void ItemTabControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        ItemsTabActivated?.Invoke(null, true);
         //throw new System.NotImplementedException();
     }
 }

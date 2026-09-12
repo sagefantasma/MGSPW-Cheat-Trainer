@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using MGSPW_MC_Cheat_Trainer.Models;
 using Microsoft.Extensions.DependencyInjection;
 using MsBox.Avalonia;
@@ -69,49 +70,54 @@ public partial class WeaponDetailView : UserControl
     {
         InitializeComponent();
         _memoryManager = App.Services.GetRequiredService<MemoryManager>();
-        Loaded += OnLoad;
+        MgsPwMonitor.OnGameHooked += OnHooked;
+        MainWindow.OnMyOuterStage += OnHooked;
+        WeaponsTabView.WeaponsTabActivated += OnHooked;
     }
 
-    private void OnLoad(object? sender, RoutedEventArgs e)
+    private void OnHooked(object? sender, bool hooked)
     {
-        try
+        Dispatcher.UIThread.Post(void () =>
         {
-            while (MgsPwMonitor.MgsPwProcess == null)
+            try
             {
-                Task.Delay(100).Wait(); 
-                //TODO: technically doing it this way makes the app not load at all if the game isn't running,
-                //does it make sense to do it another way instead? Piggy-backing off of MgsPwMonitor.OnGameHooked
-                //doesn't do the trick for some reason, even if I want for the IsLoaded bool to get set to true.
+                _weapon ??= DetermineWeapon(PwObject!);
+                var developed = _memoryManager.CheckWeaponDevelopment(_weapon.Index);
+                if (developed)
+                {
+                    DevelopCheckbox.IsChecked = true;
+                    StockButton.IsEnabled = true;
+                    StockUpDown.IsEnabled = true;
+                }
+                else
+                {
+                    UsageUpButton.IsEnabled = false;
+                    UsageDownButton.IsEnabled = false;
+                    RankUpButton.IsEnabled = false;
+                    RankDownButton.IsEnabled = false;
+                    StockButton.IsEnabled = false;
+                    StockUpDown.IsEnabled = false;
+                    return;
+                }
+
+                var rank = _memoryManager.GetWeaponRank(_weapon);
+                RankUpButton.IsEnabled = rank != _weapon.UpgradeIndices?.Length;
+                RankDownButton.IsEnabled = rank != 0;
+                var usage = _memoryManager.GetWeaponUsageLevel(_weapon);
+                UsageDownButton.IsEnabled = usage > 1;
+                UsageUpButton.IsEnabled = usage != 3;
             }
-            _weapon ??= DetermineWeapon(PwObject!);
-            var developed = _memoryManager.CheckWeaponDevelopment(_weapon.Index);
-            if (developed)
+            catch
             {
-                DevelopCheckbox.IsChecked = true;
-                StockButton.IsEnabled = true;
-                StockUpDown.IsEnabled = true;
+                //Squelch.
             }
-            else
-            {
-                UsageUpButton.IsEnabled = false;
-                UsageDownButton.IsEnabled = false;
-                RankUpButton.IsEnabled = false;
-                RankDownButton.IsEnabled = false;
-                StockButton.IsEnabled = false;
-                StockUpDown.IsEnabled = false;
-                return;
-            }
-            var rank = _memoryManager.GetWeaponRank(_weapon);
-            RankUpButton.IsEnabled = rank != _weapon.UpgradeIndices?.Length;
-            RankDownButton.IsEnabled = rank != 0;
-            var usage = _memoryManager.GetWeaponUsageLevel(_weapon);
-            UsageDownButton.IsEnabled = usage > 1;
-            UsageUpButton.IsEnabled = usage != 3;
-        }
-        catch
-        {
-            //Squelch.
-        }
+        });
+    }
+
+    private void OnLoad(object? sender, bool e)
+    {
+        //MgsPwMonitor.OnGameHooked += OnHooked;
+        
     }
 
     private static Constants.Weapon DetermineWeapon(string input)
@@ -135,7 +141,7 @@ public partial class WeaponDetailView : UserControl
             _weapon ??= DetermineWeapon(PwObject!);
             _memoryManager.ResearchAndDevelopWeapon(_weapon!, enabling);
             SendStatusUpdate(enabling ? $"Developed {_weapon.Name}!" : $"Undeveloped {_weapon.Name}!");
-            OnLoad(null, null);
+            OnLoad(null, true);
         }
         catch (Exception ex)
         {

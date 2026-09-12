@@ -23,7 +23,7 @@ public class MemoryManager
     {
         get
         {
-            if(_weaponsArrayLocation == nint.MinValue)
+            if(_weaponsArrayLocation == nint.MinValue || _weaponsArrayLocation == PeaceWalkerApplicationNavigator.PeaceWalkerAoB.WeaponsPtrOffset)
             {
                 try
                 {
@@ -31,7 +31,7 @@ public class MemoryManager
                         throw new NullReferenceException("Not hooked into PW, cannot set memory.");
                     lock (MgsPwMonitor.MgsPwProcess)
                     {
-                        using SimpleProcessProxy spp = new(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName); //I'm fucking something up here, idk what though.
+                        using SimpleProcessProxy spp = new(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         nint ptrLocation =
                             spp.FollowPointer(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.WeaponsPtrLocation, true);
                         _weaponsArrayLocation = IntPtr.Add(ptrLocation,

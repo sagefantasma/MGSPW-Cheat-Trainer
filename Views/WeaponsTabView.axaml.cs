@@ -8,6 +8,7 @@ namespace MGSPW_MC_Cheat_Trainer.Views;
 public partial class WeaponsTabView : UserControl
 {
     public static event EventHandler<string>? UpdateStatusBar;
+    public static event EventHandler<bool>? WeaponsTabActivated;
     
     public WeaponsTabView()
     {
@@ -30,6 +31,7 @@ public partial class WeaponsTabView : UserControl
     
     private void WeaponTabControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
+        WeaponsTabActivated?.Invoke(null, true);
         //throw new System.NotImplementedException();
     }
 }

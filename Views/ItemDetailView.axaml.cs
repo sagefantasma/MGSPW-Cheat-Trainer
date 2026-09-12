@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Threading;
 using MGSPW_MC_Cheat_Trainer.Models;
 using Microsoft.Extensions.DependencyInjection;
 using MsBox.Avalonia;
@@ -71,41 +72,43 @@ public partial class ItemDetailView : UserControl
     {
         InitializeComponent();
         _memoryManager = App.Services.GetRequiredService<MemoryManager>();
-        Loaded += OnLoad;
+        MgsPwMonitor.OnGameHooked += OnHooked;
+        MainWindow.OnMyOuterStage += OnHooked;
+        ItemsTabView.ItemsTabActivated += OnHooked;
     }
 
-    private void OnLoad(object? sender, RoutedEventArgs e)
+    private void OnHooked(object? sender, bool e)
     {
-        try
+        Dispatcher.UIThread.Post(void () =>
         {
-            while (MgsPwMonitor.MgsPwProcess == null)
+            try
             {
-                Task.Delay(100).Wait();
+                _item ??= DetermineItem(PwObject!);
+                var developed = _memoryManager.CheckItemDevelopment(_item.Index);
+                if (developed)
+                {
+                    DevelopCheckbox.IsChecked = true;
+                    StockButton.IsEnabled = true;
+                    StockUpDown.IsEnabled = true;
+                }
+                else
+                {
+                    StockButton.IsEnabled = false;
+                    StockUpDown.IsEnabled = false;
+                    RankUpButton.IsEnabled = false;
+                    RankDownButton.IsEnabled = false;
+                    return;
+                }
+
+                var rank = _memoryManager.GetItemRank(_item);
+                RankUpButton.IsEnabled = rank != _item.UpgradeIndices?.Length;
+                RankDownButton.IsEnabled = rank != 0;
             }
-            _item ??= DetermineItem(PwObject!);
-            var developed = _memoryManager.CheckItemDevelopment(_item.Index);
-            if (developed)
+            catch
             {
-                DevelopCheckbox.IsChecked = true;
-                StockButton.IsEnabled = true;
-                StockUpDown.IsEnabled = true;
+                //Squelch.
             }
-            else
-            {
-                StockButton.IsEnabled = false;
-                StockUpDown.IsEnabled = false;
-                RankUpButton.IsEnabled = false;
-                RankDownButton.IsEnabled = false;
-                return;
-            }
-            var rank = _memoryManager.GetItemRank(_item);
-            RankUpButton.IsEnabled = rank != _item.UpgradeIndices?.Length;
-            RankDownButton.IsEnabled = rank != 0;
-        }
-        catch
-        {
-            //Squelch.
-        }
+        });
     }
 
     private static Constants.Item DetermineItem(string input)

@@ -37,9 +37,24 @@ public enum Tab
 public partial class MainWindow : Window
 {
     public static event EventHandler<Tab>? TabActivated;
+    public static event EventHandler<bool>? OnMyOuterStage;
     private static ILogger? Logger => LogManager.Logger;
     private readonly MemoryManager _memoryManager;
-    
+
+    private string? CurrentStage
+    {
+        get;
+        set
+        {
+            field = value;
+            if (value != null)
+            {
+                if (value.Contains("my_outer"))
+                    OnMyOuterStage?.Invoke(null, true);
+            }
+        }
+    }
+
     public MainWindow()
     {
         InitializeComponent();
@@ -66,7 +81,7 @@ public partial class MainWindow : Window
         CheatsTabView.UpdateStatusBar += OnUpdateStatusBar;
         this.Closing += OnClosing;
         Task.Run(CheckForUpdates);
-        PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(1));
+        PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(5));
     }
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
@@ -130,8 +145,8 @@ public partial class MainWindow : Window
     {
         try
         {
-            string currentStage = _memoryManager.GetCurrentStage();
-            if (currentStage.Contains("vs_lobby"))
+            CurrentStage = _memoryManager.GetCurrentStage();
+            if (CurrentStage.Contains("vs_lobby"))
             {
                 //Turn off all cheats and disable their use
                 DeactivateAllCheats();
