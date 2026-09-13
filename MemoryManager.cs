@@ -248,6 +248,86 @@ public class MemoryManager
         }
     }
     
+    public byte CheckItemResearchValue(int index)
+    {
+        try
+        {
+            return GetMemoryAtOffset(
+                IntPtr.Add(ItemsArrayLocation,
+                    Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Research), 1)[0];
+        }
+        catch (TrainerException)
+        {
+            return 0xFF;
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to check research status for item index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+
+    public void SetItemDevelopmentValue(int index, byte value)
+    {
+        try
+        {
+            SetMemoryAtPointer(
+                IntPtr.Add(ItemsArrayLocation,
+                    Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Development), [value]);
+        }
+        catch (TrainerException)
+        {
+            //Squelch
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to set development status for item index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+    
+    public byte CheckWeaponResearchValue(int index)
+    {
+        try
+        {
+            return GetMemoryAtOffset(
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research), 1)[0];
+        }
+        catch (TrainerException)
+        {
+            return 0xFF;
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to check research status for weapon index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+
+    public void SetWeaponDevelopmentValue(int index, byte value)
+    {
+        try
+        {
+            SetMemoryAtPointer(
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Development), [value]);
+        }
+        catch (TrainerException)
+        {
+            //Squelch
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to set development status for weapon index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+    
     private bool DevelopWeapon(Constants.Weapon weapon, bool develop = true)
     {
         //Set 0x08 in the array to 64

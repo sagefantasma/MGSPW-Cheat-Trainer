@@ -5,7 +5,8 @@
              xmlns:viewModels="clr-namespace:MGSPW_MC_Cheat_Trainer.ViewModels"
              mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
              x:Class="MGSPW_MC_Cheat_Trainer.Views.CheatsTabView">
-    <Grid ColumnDefinitions=".125*,.125*,.125*,.125*,.125*,.125*" RowDefinitions=".2*,.2*,.2*,.2*,.2*">
+    <Grid ColumnDefinitions=".05*,.125*,.125*,.125*,.125*,.125*,.05*" RowDefinitions=".2*,.2*,.2*,.2*,.2*">
+        <TextBlock Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="6" Text="WARNING: All cheats are unstable and may be inconsistent. Crashes may occur when using any cheat. Cheats are always disabled during multiplayer sessions." TextWrapping="Wrap" Foreground="DarkGoldenrod" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center" FontSize="16"></TextBlock>
         <GroupBox Grid.Row="1" Grid.Column="1" Grid.RowSpan="3" Header="Player">
             <ScrollViewer>
                 <StackPanel x:Name="PlayerCheats" Spacing="5" HorizontalAlignment="Center">
@@ -44,6 +45,13 @@
                     <viewModels:CheckboxCheatViewModel x:Name="NoTimeLimitCheckbox" CheatName="Stop Time Limit Timer" Cheat="NoTimeLimit" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
                     <!--<viewModels:CheckboxCheatViewModel x:Name="FreezeMissionStatsCheckbox" CheatName="Freeze Mission Stats" Cheat="FreezeMissionStats" />
                     <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionTimeCheckbox" CheatName="Freeze Mission Time" Cheat="FreezeMissionTime" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>-->
+                </StackPanel>
+            </ScrollViewer>
+        </GroupBox>
+        <GroupBox Grid.Row="1" Grid.Column="5" Grid.RowSpan="3" Header="Mother Base">
+            <ScrollViewer>
+                <StackPanel x:Name="MotherbaseCheats" Spacing="5" HorizontalAlignment="Center">
+                    <viewModels:ButtonCheatViewModel x:Name="InstantRnDButton" CheatName="Set Currently Developing Weapons &amp; Items to 99%" Cheat="InstantRnD"/>
                 </StackPanel>
             </ScrollViewer>
         </GroupBox>

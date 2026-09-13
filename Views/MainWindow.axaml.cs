@@ -156,7 +156,7 @@ public partial class MainWindow : Window
             if (CurrentStage.Contains("vs_lobby"))
             {
                 //Turn off all cheats and disable their use
-                Logger?.Information("Stage is vs_lobby, disabling cheats.");
+                Logger?.Verbose("Stage is vs_lobby, disabling cheats.");
                 DeactivateAllCheats();
                 return;
             }
@@ -185,7 +185,7 @@ public partial class MainWindow : Window
                         1)[0] != 0x01)
                 {
                     //Turn off all cheats and disable their use
-                    Logger?.Information("Co-op max player count > 1; disabling cheats.");
+                    Logger?.Verbose("Co-op max player count > 1; disabling cheats.");
                     DeactivateAllCheats();
                     return;
                 }

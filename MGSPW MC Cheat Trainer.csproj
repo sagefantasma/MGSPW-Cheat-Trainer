@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <PropertyGroup>
-        <Version>1.0.1.0</Version>
+        <Version>1.1.0.0</Version>
     </PropertyGroup>
 
     <ItemGroup>
@@ -49,6 +49,10 @@
       </Compile>
       <Compile Update="Views\OtherTabView.axaml.cs">
         <DependentUpon>OtherTabView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="ViewModels\ButtonCheatViewModel.axaml.cs">
+        <DependentUpon>ButtonCheatViewModel.axaml</DependentUpon>
         <SubType>Code</SubType>
       </Compile>
     </ItemGroup>

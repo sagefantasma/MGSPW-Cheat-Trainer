@@ -17,7 +17,7 @@ public static class Constants
     {
         UnlimitedLife, Invulnerable, NoReload, UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche, FreezeAi,
         InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup, FreezeMissionTime, FreezeMissionStats,
-        ForceVehicleCommander, NoClip, MaxCamoSub1, MaxCamoSub2, MaintainHeight, WalkThroughWalls
+        ForceVehicleCommander, NoClip, MaxCamoSub1, MaxCamoSub2, MaintainHeight, WalkThroughWalls, InstantRnD
     }
 
     public enum WeaponMemory
@@ -43,10 +43,10 @@ public static class Constants
     public enum ItemMemory
     {
         Id = 0x0, //uint
-        Research = 0x4, //uint
+        Research = 0x4, //uint - 1 is nothing, 2 is being researched, 3 is finished research
         Development = 0x8, //uint
         Stock = 0xC, //uint
-        ViewedTag = 0x14 //? Is this even what it is?
+        Notification = 0x12 //? Is this even what it is?
     }
 
     public static readonly int ItemSize = 0x18;
@@ -195,39 +195,39 @@ public static class Constants
 
     public static readonly List<Item> BulletsList =
     [
-        new Item("12 Gauge Ammo", "12gauge", 0x153),
-        new Item("14.5x114mm Ammo", "14.5x114mm", 0x154),
-        new Item("19.5x76mm Ammo", "19.5x76mm", 0x155),
-        new Item("32 ACP Ammo", "32acp", 0x156),
-        new Item("357 Magnum Ammo", "357magnum", 0x157),
-        new Item("4.73x33mm Ammo", "4.73x33mm", 0x158),
-        new Item("40mm Grenades", "40mmg.", 0x159),
-        new Item("40mm Grenades (RK)", "40mmg.(r)", 0x15A),
-        new Item("45 ACP Ammo", "45acp", 0x15B),
-        new Item("5.56x45mm Ammo", "5.56x45mm", 0x15C),
-        new Item("7.62x39mm Ammo", "7.62x39mm", 0x15D),
-        new Item("7.62x51mm Ammo", "7.62x51mm", 0x15E),
-        new Item("7.62x54r Ammo", "7.62x54r", 0x15F),
-        new Item("7.62x63mm Ammo", "7.62x63mm", 0x160),
-        new Item("9x19mm Ammo", "9x19mm", 0x161),
-        new Item("9x18mm Ammo", "9x18mm", 0x162),
-        new Item("Heat Ammo", "heat", 0x163),
-        new Item("P.Rcv. Ammo", "p.rcv.", 0x164),
-        new Item("L.Rcv. Ammo", "l.rcv.", 0x165),
-        new Item("Small Anesthetic Ammo", "anest.(s)", 0x166),
-        new Item("12 Gauge Rubber Ammo", "12g.(rbr)", 0x167),
-        new Item("40mm Smoke Ammo", "40smk", 0x168),
-        new Item("40mm Smoke (R) Ammo", "40smk(r)", 0x169),
-        new Item("Strike Marker Ammo", "strikemk.", 0x16A),
-        new Item("Supply Marker Ammo", "supplymk.", 0x16B),
-        new Item("Ball Ammo", "ball", 0x16C),
-        new Item("Large Anesthetic Ammo", "anest.(l)", 0x16D),
-        new Item("7.62x51r Ammo", "7.62x51r", 0x16E),
+        new Item("12 Gauge", "12gauge", 0x153),
+        new Item("14.5x114mm", "14.5x114mm", 0x154),
+        new Item("19.5x76mm", "19.5x76mm", 0x155),
+        new Item("32 ACP", "32acp", 0x156),
+        new Item("357 Magnum", "357magnum", 0x157),
+        new Item("4.73x33mm", "4.73x33mm", 0x158),
+        new Item("40mm Grenade", "40mmg.", 0x159),
+        new Item("40mm Grenade(R)", "40mmg.(r)", 0x15A),
+        new Item("45 ACP", "45acp", 0x15B),
+        new Item("5.56x45mm", "5.56x45mm", 0x15C),
+        new Item("7.62x39mm", "7.62x39mm", 0x15D),
+        new Item("7.62x51mm", "7.62x51mm", 0x15E),
+        new Item("7.62x54R", "7.62x54r", 0x15F),
+        new Item("7.62x63mm", "7.62x63mm", 0x160),
+        new Item("9x19mm", "9x19mm", 0x161),
+        new Item("9x18mm", "9x18mm", 0x162),
+        new Item("HEAT Ammo", "heat", 0x163),
+        new Item("P.Rcv.", "p.rcv.", 0x164),
+        new Item("L.Rcv.", "l.rcv.", 0x165),
+        new Item("Small Anesthetic", "anest.(s)", 0x166),
+        new Item("12 Gauge Rubber", "12g.(rbr)", 0x167),
+        new Item("40mm Smoke", "40smk", 0x168),
+        new Item("40mm Smoke(R)", "40smk(r)", 0x169),
+        new Item("Strike Marker", "strikemk.", 0x16A),
+        new Item("Supply Marker", "supplymk.", 0x16B),
+        new Item("Ball", "ball", 0x16C),
+        new Item("Large Anesthetic", "anest.(l)", 0x16D),
+        new Item("7.62x51AP", "7.62x51r", 0x16E),
         new Item("Rail Ammo", "railammo", 0x16F),
         new Item("RPG2 Ammo", "rpg2ammo", 0x170),
         new Item("RPG7 Ammo", "rpg7ammo", 0x171),
         new Item("CG Ammo", "cgammo", 0x172),
-        new Item("CG Heat Ammo", "cgheat", 0x173),
+        new Item("CG HEAT Ammo", "cgheat", 0x173),
         new Item("Combo Ammo", "comboammo", 0x174),
         new Item("FIM-43 Ammo", "fim43ammo", 0x175),
         new Item("XFIM-92 Ammo", "xfim92am.", 0x176),
@@ -235,13 +235,13 @@ public static class Constants
         new Item("LAW Ammo", "lawammo", 0x178),
         new Item("M202 Ammo", "m202ammo", 0x179),
         new Item("CG Fulton Ammo", "cg.fltnam", 0x17A),
-        new Item("5.56x45AP Ammo", "5.56x45ap", 0x17B),
-        new Item("7.62x54AP Ammo", "7.62x54ap", 0x17C)
+        new Item("5.56x45AP", "5.56x45ap", 0x17B),
+        new Item("7.62x54AP", "7.62x54ap", 0x17C)
     ];
     
     public static readonly List<Item> UniformsList = 
     [
-        new Item("Jungle Fatigues", "", 0x83),
+        new Item("Jungle F.", "", 0x83),
         new Item("Leaf", "", 0x84),
         new Item("Tiger Stripe", "", 0x85),
         new Item("Choco Chip", "", 0x86),
@@ -256,14 +256,14 @@ public static class Constants
         new Item("Gear Rex", "", 0x8F),
         new Item("Sneaking", "", 0x90),
         new Item("Battle", "", 0x91),
-        new Item("Battle Dress (with Helmet)", "", 0x92),
+        new Item("Battle(Hlmt)", "", 0x92),
         new Item("Naked", "", 0x93),
         new Item("Naked(Leaf)", "", 0x94),
         new Item("Naked(Tiger)", "", 0x95),
-        new Item("Naked(Choco)", "", 0x96),
+        new Item("Naked(Choc)", "", 0x96),
         new Item("Naked(Ausy)", "", 0x97),
-        new Item("Naked(Squares)", "", 0x98),
-        new Item("Naked(Splitter)", "", 0x99),
+        new Item("Naked(Sqrs)", "", 0x98),
+        new Item("Naked(Splttr)", "", 0x99),
         new Item("Naked(Snake)", "", 0x9A),
         new Item("Tuxedo", "", 0x9B),
         new Item("Miller", "", 0x9C),
@@ -275,17 +275,17 @@ public static class Constants
         new Item("UT(N425B)", "", 0xA2),
         new Item("UT(N425C)", "", 0xA3),
         new Item("UT(N425D)", "", 0xA4),
-        new Item("UT(N425E White)", "", 0xA5),
-        new Item("UT(N425E Black)", "", 0xA6),
+        new Item("UT(N425EW)", "", 0xA5),
+        new Item("UT(N425EB)", "", 0xA6),
         new Item("UT(N425F)", "", 0xA7),
-        new Item("UT(N425G Gray)", "", 0xA8),
-        new Item("UT(N425H White)", "", 0xA9),
-        new Item("UT(N425H Black)", "", 0xAA),
+        new Item("UT(N425GG)", "", 0xA8),
+        new Item("UT(N425HW)", "", 0xA9),
+        new Item("UT(N425HB)", "", 0xAA),
         new Item("UT(N425J)", "", 0xAB),
         new Item("UT(N425L)", "", 0xAC),
         new Item("UT(LOGO)", "", 0xAD),
-        new Item("UT(N425D Gray)", "", 0xAE),
-        new Item("UT(N425G White)", "", 0xAF),
+        new Item("UT(N425DG)", "", 0xAE),
+        new Item("UT(N425GW)", "", 0xAF),
         new Item("Glitched Camo 1", "", 0xB0),
         new Item("Glitched Camo 2", "", 0xB1),
         new Item("Glitched Camo 3", "", 0xB2),
@@ -308,20 +308,20 @@ public static class Constants
         new Item("Tree Bark", "", 0xC3),
         new Item("DPM", "", 0xC4),
         new Item("Comrade", "", 0xC5),
-        new Item("G&J", "", 0xC6),
+        new Item("GnJ", "", 0xC6),
         new Item("Naked(Black)", "", 0xC7),
         new Item("Naked(Khaki)", "", 0xC8),
-        new Item("Naked(Navy Blue)", "", 0xC9),
+        new Item("Naked(NvyB.)", "", 0xC9),
         new Item("Naked(White)", "", 0xCA),
         new Item("Naked(Red)", "", 0xCB),
-        new Item("Naked(Yellow)", "", 0xCC),
+        new Item("Naked(Yllw)", "", 0xCC),
         new Item("Naked(Pink)", "", 0xCD),
-        new Item("Naked(Green)", "", 0xCE),
-        new Item("Naked(Water)", "", 0xCF),
-        new Item("Naked(Tree Bark)", "", 0xD0),
+        new Item("Naked(Grn)", "", 0xCE),
+        new Item("Naked(Wtr)", "", 0xCF),
+        new Item("Naked(TreeB.)", "", 0xD0),
         new Item("Naked(DPM)", "", 0xD1),
-        new Item("Russian Commando", "", 0xD2),
-        new Item("Russian Soldier", "", 0xD3),
+        new Item("R.Commando", "", 0xD2),
+        new Item("R.Soldier", "", 0xD3),
         new Item("Scout", "", 0xD4),
         new Item("Guard", "", 0xD5),
         new Item("Commando", "", 0xD6),
@@ -329,7 +329,8 @@ public static class Constants
         new Item("Patrolman", "", 0xD8),
         new Item("Female POW", "", 0xD9),
         new Item("Mechanic", "", 0xDA),
-        new Item("Escort", "", 0xDB),]; 
+        new Item("Escort", "", 0xDB)
+    ]; 
 
     public static readonly List<Item> ItemsList =
     [
