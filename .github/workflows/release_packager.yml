@@ -100,9 +100,10 @@ jobs:
             --notes "Automatic release for version $VERSION."
 
       - name: Publish Windows to NexusMods
+        if: steps.check-release.outputs.exists == 'false'
         uses: Nexus-Mods/upload-action@v1.0.0-beta.10
         with:
-          api_key: ${{github.secret_source.Actions.NEXUS_API_KEY}}
+          api_key: ${{secrets.NEXUS_API_SECRET}}
           file_id: 7929339
           display_name: "MGSPW CheatTrainer (Windows)"
           filename: "MGSPW_CheatTrainer_${{ steps.get-version.outputs.version }}_win-x64.7z"
@@ -113,9 +114,10 @@ jobs:
           update_mod_version: true
 
       - name: Publish Linux to NexusMods
+        if: steps.check-release.outputs.exists == 'false'
         uses: Nexus-Mods/upload-action@v1.0.0-beta.10
         with:
-          api_key: ${{github.secret_source.Actions.NEXUS_API_KEY}}
+          api_key: ${{secrets.NEXUS_API_SECRET}}
           file_id: 7929336
           display_name: "MGSPW CheatTrainer (Linux)"
           filename: "MGSPW_CheatTrainer_${{ steps.get-version.outputs.version }}_linux-x64.7z"
