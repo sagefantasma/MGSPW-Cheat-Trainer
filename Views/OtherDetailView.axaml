@@ -1,0 +1,23 @@
+﻿<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             mc:Ignorable="d" d:DesignWidth="200" d:DesignHeight="110"
+             x:Class="MGSPW_MC_Cheat_Trainer.Views.OtherDetailView">
+    
+    <GroupBox x:Name="GroupBox" BorderBrush="Black">
+        <Grid x:Name="ItemGrid" ColumnDefinitions="1*" RowDefinitions=".5*,.5*">
+            <Image x:Name="ObjectImage" Source="/Assets/ration.png" Stretch="Uniform" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Left"/>
+            <Rectangle x:Name="ImageDarkener" Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" 
+            Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
+            <StackPanel Grid.Row="0" Grid.Column="0" Grid.RowSpan="2" HorizontalAlignment="Center" VerticalAlignment="Top">
+                <CheckBox x:Name="DevelopCheckbox" Content="Develop" FontWeight="Bold" Margin="-5" HorizontalAlignment="Center" VerticalAlignment="Center"  Foreground="White" Click="Enabled_OnClick"/>
+                <StackPanel Orientation="Horizontal">
+                    <NumericUpDown x:Name="StockUpDown" ShowButtonSpinner="False" Minimum="1" Value="100" Maximum="9999" FormatString="0"/>
+                    <Button x:Name="StockButton"  Content="Add" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" Padding="5,2" Click="AddStock_OnClick"/>
+                </StackPanel>
+            </StackPanel>
+        </Grid>
+    </GroupBox>
+    
+</UserControl>

@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using MGSPW_MC_Cheat_Trainer.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using SimplifiedMemoryManager;
 using static MGSPW_MC_Cheat_Trainer.Models.PeaceWalkerApplicationNavigator.PeaceWalkerAoB;
@@ -18,6 +19,7 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
     public Constants.Cheat? CheatType { get; set; } = cheatType;
     private static ILogger? Logger => LogManager.Logger;
     private static List<GameCheat> ActiveCheats { get; set; } = new();
+    private static MemoryManager _memoryManager = App.Services.GetRequiredService<MemoryManager>();
 
     private static class BaseActions
     {
@@ -1301,6 +1303,43 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 MaintainHeight(activate);
             }
         }
+
+        public static void InstantRnD(bool activate)
+        {
+            foreach (var item in Constants.ItemsList)
+            {
+                if (_memoryManager.CheckItemResearchValue(item.Index) == 0x02)
+                {
+                    _memoryManager.SetItemDevelopmentValue(item.Index, 0x63);
+                }
+
+                if (item.UpgradeIndices == null) continue;
+                foreach (var upgradeIndex in item.UpgradeIndices)
+                {
+                    if (_memoryManager.CheckItemResearchValue(upgradeIndex) == 0x02)
+                    {
+                        _memoryManager.SetItemDevelopmentValue(upgradeIndex, 0x63);
+                    }
+                }
+            }
+            
+            foreach (var weapon in Constants.WeaponsList)
+            {
+                if (_memoryManager.CheckWeaponResearchValue(weapon.Index) == 0x02)
+                {
+                    _memoryManager.SetWeaponDevelopmentValue(weapon.Index, 0x63);
+                }
+
+                if (weapon.UpgradeIndices == null) continue;
+                foreach (var upgradeIndex in weapon.UpgradeIndices)
+                {
+                    if (_memoryManager.CheckWeaponResearchValue(upgradeIndex) == 0x02)
+                    {
+                        _memoryManager.SetWeaponDevelopmentValue(upgradeIndex, 0x63);
+                    }
+                }
+            }
+        }
     }
 
     public static class PeaceWalkerCheat
@@ -1346,11 +1385,14 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
         public static GameCheat NoClip { get; internal set; } =
             new(CheatActions.NoClip, null, Constants.Cheat.NoClip);
 
+        public static GameCheat InstantRnD { get; internal set; } =
+            new(CheatActions.InstantRnD, null, Constants.Cheat.InstantRnD);
+
         public static readonly List<GameCheat> CheatList =
         [
             UnlimitedLife, Invulnerable, NoReload,UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche,
             FreezeAi, InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup,
-            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander, NoClip
+            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander, NoClip, InstantRnD
         ];
     }
 }

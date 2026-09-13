@@ -5,12 +5,12 @@ using Avalonia.Markup.Xaml;
 
 namespace MGSPW_MC_Cheat_Trainer.Views;
 
-public partial class ItemsTabView : UserControl
+public partial class OtherTabView : UserControl
 {
     public static event EventHandler<string>? UpdateStatusBar;
-    public static event EventHandler<bool>? ItemsTabActivated;
+    public static event EventHandler<bool>? OtherTabActivated;
     
-    public ItemsTabView()
+    public OtherTabView()
     {
         InitializeComponent();
         MainWindow.TabActivated += OnTabActivated;
@@ -23,14 +23,14 @@ public partial class ItemsTabView : UserControl
     
     private void OnTabActivated(object? sender, Tab e)
     {
-        if (e == Tab.Items)
+        if (e == Tab.Other)
         {
-            LogManager.Logger?.Information("Items tab activated...");
+            LogManager.Logger?.Information("Other tab activated...");
         }
     }
     
     private void ItemTabControl_OnSelectionChanged(object? sender, SelectionChangedEventArgs e)
     {
-        LogManager.Logger?.Information($"Navigated to Items subtab: {(e.AddedItems[0] as TabItem)?.Name}");
+        LogManager.Logger?.Information($"Navigated to Other subtab: {(e.AddedItems[0] as TabItem)?.Name}");
     }
 }

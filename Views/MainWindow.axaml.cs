@@ -37,9 +37,30 @@ public enum Tab
 public partial class MainWindow : Window
 {
     public static event EventHandler<Tab>? TabActivated;
+    public static event EventHandler<bool>? OnMyOuterStage;
     private static ILogger? Logger => LogManager.Logger;
     private readonly MemoryManager _memoryManager;
-    
+
+    public static string? CurrentStage
+    {
+        get;
+        private set
+        {
+            if (field == value) return;
+            field = value;
+            if (value == null) return;
+            if (value.Contains("my_outer"))
+            {
+                Logger?.Information("Stage my_outer, invoking OnMyOuterStage");
+                OnMyOuterStage?.Invoke(null, true);
+            }
+            else
+            {
+                Logger?.Verbose($"Current stage: {value}");
+            }
+        }
+    }
+
     public MainWindow()
     {
         InitializeComponent();
@@ -63,10 +84,11 @@ public partial class MainWindow : Window
         WeaponsTabView.UpdateStatusBar += OnUpdateStatusBar;
         ItemDetailView.WarnUser += OnWarnUser;
         ItemsTabView.UpdateStatusBar += OnUpdateStatusBar;
+        OtherTabView.UpdateStatusBar += OnUpdateStatusBar;
         CheatsTabView.UpdateStatusBar += OnUpdateStatusBar;
         this.Closing += OnClosing;
         Task.Run(CheckForUpdates);
-        PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(1));
+        PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(5));
     }
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
@@ -130,10 +152,11 @@ public partial class MainWindow : Window
     {
         try
         {
-            string currentStage = _memoryManager.GetCurrentStage();
-            if (currentStage.Contains("vs_lobby"))
+            CurrentStage = _memoryManager.GetCurrentStage();
+            if (CurrentStage.Contains("vs_lobby"))
             {
                 //Turn off all cheats and disable their use
+                Logger?.Verbose("Stage is vs_lobby, disabling cheats.");
                 DeactivateAllCheats();
                 return;
             }
@@ -162,6 +185,7 @@ public partial class MainWindow : Window
                         1)[0] != 0x01)
                 {
                     //Turn off all cheats and disable their use
+                    Logger?.Verbose("Co-op max player count > 1; disabling cheats.");
                     DeactivateAllCheats();
                     return;
                 }

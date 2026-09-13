@@ -13,6 +13,7 @@ public partial class CheatsTabView : UserControl
     public CheatsTabView()
     {
         InitializeComponent();
+        MainWindow.TabActivated += OnTabActivated;
         foreach (var control in PlayerCheats.Children)
             if (control is CheckboxCheatViewModel cheatViewModel)
                 cheatViewModel.CheatToggled += RequestStatusBarUpdate;
@@ -25,6 +26,14 @@ public partial class CheatsTabView : UserControl
         foreach (var control in MissionCheats.Children)
             if (control is CheckboxCheatViewModel cheatViewModel)
                 cheatViewModel.CheatToggled += RequestStatusBarUpdate;
+    }
+    
+    private void OnTabActivated(object? sender, Tab e)
+    {
+        if (e == Tab.Cheats)
+        {
+            LogManager.Logger?.Information("Cheats tab activated...");
+        }
     }
     
     private static void RequestStatusBarUpdate(object? obj, string message)

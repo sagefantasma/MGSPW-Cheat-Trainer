@@ -56,16 +56,19 @@
                     </Panel>
                 </TabItem>
                 
+                <TabItem x:Name="OtherTab" Header="R&amp;D Other">
+                    <Panel>
+                        <Image Source="/Assets/rnd other.png" Stretch="UniformToFill"/>
+                        <views:OtherTabView/>
+                    </Panel>
+                </TabItem>
+                
                 <TabItem x:Name="CheatsTab" Header="Cheats">
                     <Panel>
                         <Image Source="/Assets/title_bg.png" Stretch="UniformToFill"/>
                         <Rectangle Fill="Black" Opacity="0.7" IsHitTestVisible="False"/>
                         <views:CheatsTabView x:Name="VisibleCheatsTabView"/>
                     </Panel>
-                </TabItem>
-                
-                <TabItem x:Name="OtherTab" Header="R&amp;D Other">
-                    <TextBlock Text="UNDER CONSTRUCTION" Foreground="DarkGoldenrod" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="50"></TextBlock>
                 </TabItem>
                 
                 <TabItem x:Name="StaffTab" Header="Staff">

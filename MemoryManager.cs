@@ -23,20 +23,28 @@ public class MemoryManager
     {
         get
         {
-            if(_weaponsArrayLocation == nint.MinValue)
+            if(_weaponsArrayLocation == nint.MinValue || _weaponsArrayLocation == PeaceWalkerApplicationNavigator.PeaceWalkerAoB.WeaponsPtrOffset)
             {
                 try
                 {
                     if (MgsPwMonitor.MgsPwProcess == null)
-                        throw new NullReferenceException("Not hooked into PW, cannot set memory.");
+                    {
+                        _weaponsArrayLocation = nint.MinValue;
+                        throw new TrainerException();
+                    }
+
                     lock (MgsPwMonitor.MgsPwProcess)
                     {
-                        using SimpleProcessProxy spp = new(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName); //I'm fucking something up here, idk what though.
+                        using SimpleProcessProxy spp = new(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
                         nint ptrLocation =
                             spp.FollowPointer(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.WeaponsPtrLocation, true);
                         _weaponsArrayLocation = IntPtr.Add(ptrLocation,
                             PeaceWalkerApplicationNavigator.PeaceWalkerAoB.WeaponsPtrOffset);
                     }
+                }
+                catch (TrainerException)
+                {
+                    throw;
                 }
                 catch (Exception e)
                 {
@@ -126,6 +134,10 @@ public class MemoryManager
                 Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Research);
             return SetMemoryAtPointer(desiredPtr, research ? [0x03] : [0x01]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to research {weapon.Name}";
@@ -139,8 +151,13 @@ public class MemoryManager
         try
         {
             return SetMemoryAtPointer(
-                IntPtr.Add(WeaponsArrayLocation, Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research),
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research),
                 research ? [0x03] : [0x01]);
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -159,6 +176,10 @@ public class MemoryManager
                 Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Research);
             return SetMemoryAtPointer(desiredPtr, research ? [0x03] : [0x01]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to research {item.Name}";
@@ -174,6 +195,10 @@ public class MemoryManager
             return SetMemoryAtPointer(
                 IntPtr.Add(ItemsArrayLocation, Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Research),
                 research ? [0x03] : [0x01]);
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -191,6 +216,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research), 1)[0] == 0x03;
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to check research status for weapon index {index}";
@@ -207,9 +236,93 @@ public class MemoryManager
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Research), 1)[0] == 0x03;
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to check research status for item index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+    
+    public byte CheckItemResearchValue(int index)
+    {
+        try
+        {
+            return GetMemoryAtOffset(
+                IntPtr.Add(ItemsArrayLocation,
+                    Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Research), 1)[0];
+        }
+        catch (TrainerException)
+        {
+            return 0xFF;
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to check research status for item index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+
+    public void SetItemDevelopmentValue(int index, byte value)
+    {
+        try
+        {
+            SetMemoryAtPointer(
+                IntPtr.Add(ItemsArrayLocation,
+                    Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Development), [value]);
+        }
+        catch (TrainerException)
+        {
+            //Squelch
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to set development status for item index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+    
+    public byte CheckWeaponResearchValue(int index)
+    {
+        try
+        {
+            return GetMemoryAtOffset(
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Research), 1)[0];
+        }
+        catch (TrainerException)
+        {
+            return 0xFF;
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to check research status for weapon index {index}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+
+    public void SetWeaponDevelopmentValue(int index, byte value)
+    {
+        try
+        {
+            SetMemoryAtPointer(
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Development), [value]);
+        }
+        catch (TrainerException)
+        {
+            //Squelch
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to set development status for weapon index {index}";
             Logger?.Error($"{baseMessage}: {e}");
             throw new AggregateException(baseMessage, e);
         }
@@ -224,6 +337,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Development),
                 develop ? [0x64] : [0x00]);
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -243,6 +360,10 @@ public class MemoryManager
                     Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Development),
                 develop ? [0x64] : [0x00]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to develop weapon index {index}";
@@ -251,13 +372,17 @@ public class MemoryManager
         }
     }
     
-    private bool CheckWeaponDevelopment(int index)
+    public bool CheckWeaponDevelopment(int index)
     {
         try
         {
             return GetMemoryAtOffset(
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (index - 1) + (int)Constants.WeaponMemory.Development), 1)[0] == 0x64;
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -277,6 +402,10 @@ public class MemoryManager
                     Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Development),
                 develop ? [0x64] : [0x00]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to develop {item.Name}";
@@ -295,6 +424,10 @@ public class MemoryManager
                     Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Development),
                 develop ? [0x64] : [0x00]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to develop item index {index}";
@@ -303,13 +436,17 @@ public class MemoryManager
         }
     }
     
-    private bool CheckItemDevelopment(int index)
+    public bool CheckItemDevelopment(int index)
     {
         try
         {
             return GetMemoryAtOffset(
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (index - 1) + (int)Constants.ItemMemory.Development), 1)[0] == 0x64;
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -319,7 +456,7 @@ public class MemoryManager
         }
     }
     
-    private bool UpdateWeaponStock(Constants.Weapon weapon, uint stock)
+    private bool UpdateWeaponStock(Constants.Weapon weapon, int stock)
     {
         //TODO: validate
         //Set 0x0C in the array to desired value
@@ -330,6 +467,10 @@ public class MemoryManager
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Stock),
                 BitConverter.GetBytes(stock));
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update stock for {weapon.Name}";
@@ -338,7 +479,7 @@ public class MemoryManager
         }
     }
     
-    private bool UpdateWeaponStock(int weapon, uint stock)
+    private bool UpdateWeaponStock(int weapon, int stock)
     {
         //TODO: validate
         //Set 0x0C in the array to desired value
@@ -348,6 +489,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.Stock),
                 BitConverter.GetBytes(stock));
+        }
+        catch (TrainerException)
+        {
+            return false;
         }
         catch (Exception e)
         {
@@ -368,6 +513,10 @@ public class MemoryManager
                     Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Stock),
                 BitConverter.GetBytes(stock));
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update stock for {item.Name}";
@@ -387,6 +536,10 @@ public class MemoryManager
                     Constants.ItemSize * (item - 1) + (int)Constants.ItemMemory.Stock),
                 BitConverter.GetBytes(stock));
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update stock for item index {item}";
@@ -405,9 +558,34 @@ public class MemoryManager
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Stock), 4));
         }
+        catch (TrainerException)
+        {
+            return -1;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get stock for {item.Name}";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
+    
+    private int GetWeaponStock(int weapon)
+    {
+        //Set 0x0C in the array to desired value
+        try
+        {
+            return BitConverter.ToInt32(GetMemoryAtOffset(
+                IntPtr.Add(WeaponsArrayLocation,
+                    Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.Stock), 4));
+        }
+        catch (TrainerException)
+        {
+            return -1;
+        }
+        catch (Exception e)
+        {
+            string baseMessage = $"Failed to get stock for weapon index {weapon}";
             Logger?.Error($"{baseMessage}: {e}");
             throw new AggregateException(baseMessage, e);
         }
@@ -422,6 +600,10 @@ public class MemoryManager
             return BitConverter.ToInt32(GetMemoryAtOffset(
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (item - 1) + (int)Constants.ItemMemory.Stock), 4));
+        }
+        catch (TrainerException)
+        {
+            return -1;
         }
         catch (Exception e)
         {
@@ -441,6 +623,10 @@ public class MemoryManager
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.UsageLevel),
                 [usageLevel]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update usage level for {weapon.Name}";
@@ -459,6 +645,10 @@ public class MemoryManager
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.UsageLevel),
                 [usageLevel]);
         }
+        catch (TrainerException)
+        {
+            return false;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to update usage level for weapon index {weapon}";
@@ -467,13 +657,17 @@ public class MemoryManager
         }
     }
 
-    private byte GetWeaponUsageLevel(Constants.Weapon weapon)
+    public byte GetWeaponUsageLevel(Constants.Weapon weapon)
     {
         try
         {
             return GetMemoryAtOffset(
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.UsageLevel), 1)[0];
+        }
+        catch (TrainerException)
+        {
+            return 0xFF;
         }
         catch (Exception e)
         {
@@ -491,6 +685,10 @@ public class MemoryManager
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.UsageLevel), 1)[0];
         }
+        catch (TrainerException)
+        {
+            return 0xFF;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get usage level for weapon index {weapon}";
@@ -499,7 +697,7 @@ public class MemoryManager
         }
     }
 
-    private int GetWeaponRank(Constants.Weapon weapon)
+    public int GetWeaponRank(Constants.Weapon weapon)
     {
         try
         {
@@ -516,6 +714,10 @@ public class MemoryManager
 
             return i;
         }
+        catch (TrainerException)
+        {
+            return -1;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get rank for {weapon.Name}";
@@ -524,7 +726,7 @@ public class MemoryManager
         }
     }
     
-    private int GetItemRank(Constants.Item item)
+    public int GetItemRank(Constants.Item item)
     {
         try
         {
@@ -541,6 +743,10 @@ public class MemoryManager
 
             return i;
         }
+        catch (TrainerException)
+        {
+            return -1;
+        }
         catch (Exception e)
         {
             string baseMessage = $"Failed to get rank for {item.Name}";
@@ -551,20 +757,26 @@ public class MemoryManager
     
     public bool ResearchAndDevelopWeapon(Constants.IPwObject obj, bool research = true)
     {
+        //TODO: also set ammo to 9999 if enabling NODDERS 
         Logger?.Information($"Attempting to {(research ? "research" : "unresearch")} {obj.Name}");
         var weapon = (obj as Constants.Weapon)!;
+        if (research)
+            return ResearchWeapon(weapon, research) && DevelopWeapon(weapon, research) &&
+                   UpdateWeaponUsageLevel(weapon, 1);
         return ResearchWeapon(weapon, research) && DevelopWeapon(weapon, research) &&
-               UpdateWeaponUsageLevel(weapon, research ? (byte)1 : (byte)0);
+               UpdateWeaponUsageLevel(weapon, 0) && ChangeWeaponRank(weapon, research, 0);
     }
 
     public bool ResearchAndDevelopItem(Constants.IPwObject obj, bool research = true)
     {
         Logger?.Information($"Attempting to {(research ? "research" : "unresearch")} {obj.Name}");
         var item = (obj as Constants.Item)!;
-        return ResearchItem(item, research) && DevelopItem(item, research);
+        if (research)
+            return ResearchItem(item, research) && DevelopItem(item, research);
+        return ResearchItem(item, research) && DevelopItem(item, research) && ChangeItemRank(item, research, 0);
     }
 
-    public bool ChangeWeaponLevel(Constants.IPwObject obj, bool increase = true)
+    public bool ChangeWeaponUseLevel(Constants.IPwObject obj, bool increase = true)
     {
         Logger?.Information($"Attempting to level up {obj.Name}");
         Constants.Weapon weapon = (obj as Constants.Weapon)!;
@@ -582,40 +794,90 @@ public class MemoryManager
         foreach (int index in indices)
         {
             byte currentLevel = GetWeaponUsageLevel(index);
+            if (currentLevel == 0xFF)
+                return false;
             if (increase)
             {
                 if (currentLevel < 3)
                     UpdateWeaponUsageLevel(index, (byte)(currentLevel + 1));
+                else
+                {
+                    return false;
+                }
             }
             else
             {
                 if (currentLevel > 0)
                     UpdateWeaponUsageLevel(index, (byte)(currentLevel - 1));
+                else
+                {
+                    return false;
+                }
             }
         }
 
-        return false;
+        return true;
     }
 
-    public bool ChangeWeaponRank(Constants.IPwObject obj, bool increase = true)
+    public bool ChangeWeaponRank(Constants.IPwObject obj, bool increase = true, int? desiredRank = null)
     {
         Logger?.Information($"Attempting to rank up {obj.Name}");
         Constants.Weapon weapon = (obj as Constants.Weapon)!;
+        
         int currentRank = GetWeaponRank(weapon);
-        if (increase)
+        desiredRank ??= increase ? currentRank + 1 : currentRank - 1;
+        while (currentRank != desiredRank)
         {
-            if (currentRank < weapon.UpgradeIndices?.Length)
-                return ResearchWeapon(weapon.UpgradeIndices[currentRank]) &&
-                       DevelopWeapon(weapon.UpgradeIndices[currentRank]);
-        }
-        else
-        {
-            if (currentRank > 0)
-                return ResearchWeapon(weapon.UpgradeIndices![currentRank], false) &&
-                       DevelopWeapon(weapon.UpgradeIndices[currentRank], false);
+            if (increase)
+            {
+                if (currentRank < weapon.UpgradeIndices?.Length)
+                {
+                    ResearchWeapon(weapon.UpgradeIndices[currentRank]);
+                    DevelopWeapon(weapon.UpgradeIndices[currentRank]);
+                    UpdateWeaponUsageLevel(weapon.UpgradeIndices[currentRank], 1);
+                    currentRank++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                currentRank--;
+                if (currentRank >= 0)
+                {
+                    ResearchWeapon(weapon.UpgradeIndices![currentRank], false);
+                    DevelopWeapon(weapon.UpgradeIndices[currentRank], false);
+                }
+            }
         }
 
-        return false;
+        return true;
+    }
+    
+    public bool ChangeWeaponStock(Constants.IPwObject obj, int delta = 100)
+    {
+        Logger?.Information($"Attempting to adjust stock for {obj.Name} by {delta}");
+        Constants.Weapon weapon = (obj as Constants.Weapon)!;
+        int allItemVersions = 1 + (weapon.UpgradeIndices?.Length ?? 0);
+        int[] indices = new int[allItemVersions];
+        indices[0] = weapon.Index;
+        if (weapon.UpgradeIndices != null)
+        {
+            for(int i = 0; i < weapon.UpgradeIndices.Length; i++)
+            {
+                indices[i+1] = weapon.UpgradeIndices[i];
+            }
+        }
+
+        foreach (int index in indices)
+        {
+            int currentLevel = GetWeaponStock(index);
+            UpdateWeaponStock(index, currentLevel + delta);
+        }
+
+        return true;
     }
 
     public bool ChangeItemStock(Constants.IPwObject obj, int delta = 100)
@@ -642,24 +904,39 @@ public class MemoryManager
         return true;
     }
     
-    public bool ChangeItemRank(Constants.IPwObject obj, bool increase = true)
+    public bool ChangeItemRank(Constants.IPwObject obj, bool increase = true, int? desiredRank = null)
     {
         Logger?.Information($"Attempting to rank up {obj.Name}");
         Constants.Item item = (obj as Constants.Item)!;
+        
         int currentRank = GetItemRank(item);
-        if (increase)
+        desiredRank ??= increase ? currentRank + 1 : currentRank - 1;
+        while (currentRank != desiredRank)
         {
-            if (currentRank < item.UpgradeIndices?.Length)
-                return ResearchItem(item.UpgradeIndices[currentRank]) &&
-                       DevelopItem(item.UpgradeIndices[currentRank]);
-        }
-        else
-        {
-            if (currentRank > 0)
-                return ResearchItem(item.UpgradeIndices![currentRank], false) &&
-                       DevelopItem(item.UpgradeIndices[currentRank], false);
+            if (increase)
+            {
+                if (currentRank < item.UpgradeIndices?.Length)
+                {
+                    ResearchItem(item.UpgradeIndices[currentRank]);
+                    DevelopItem(item.UpgradeIndices[currentRank]);
+                    currentRank++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            else
+            {
+                currentRank--;
+                if (currentRank >= 0)
+                {
+                    ResearchItem(item.UpgradeIndices![currentRank], false);
+                    DevelopItem(item.UpgradeIndices[currentRank], false);
+                }
+            }
         }
 
-        return false;
+        return true;
     }
 }
