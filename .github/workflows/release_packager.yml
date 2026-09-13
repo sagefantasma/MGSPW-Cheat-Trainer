@@ -102,7 +102,7 @@ jobs:
       - name: Publish Windows to NexusMods
         uses: Nexus-Mods/upload-action@v1.0.0-beta.10
         with:
-          api-key: ${{secrets.NEXUS_API_KEY}}
+          api_key: ${{secrets.NEXUS_API_KEY}}
           file_id: 7929339
           display_name: "MGSPW CheatTrainer (Windows)"
           filename: "MGSPW_CheatTrainer_${{ steps.get-version.outputs.version }}_win-x64.7z"
@@ -115,7 +115,7 @@ jobs:
       - name: Publish Linux to NexusMods
         uses: Nexus-Mods/upload-action@v1.0.0-beta.10
         with:
-          api-key: ${{secrets.NEXUS_API_KEY}}
+          api_key: ${{secrets.NEXUS_API_KEY}}
           file_id: 7929336
           display_name: "MGSPW CheatTrainer (Linux)"
           filename: "MGSPW_CheatTrainer_${{ steps.get-version.outputs.version }}_linux-x64.7z"
