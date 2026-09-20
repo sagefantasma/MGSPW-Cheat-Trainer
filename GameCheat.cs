@@ -1340,6 +1340,57 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                 }
             }
         }
+
+        public static void ToggleFreezeAiBoardPullTimer(bool activate)
+        {
+            GameCheat activeGameCheat = PeaceWalkerCheat.FreezeAiBoardPullTimer;
+            if (activate)
+            {
+                ActiveCheats.Add(activeGameCheat);
+                if (activeGameCheat.CodeLocation == IntPtr.Zero)
+                {
+                    activeGameCheat.CodeLocation = (nint)AoBCacheManager.CheckCache(activeGameCheat.CheatType.ToString()!);
+                    if (activeGameCheat.CodeLocation == nint.MinValue)
+                    {
+                        activeGameCheat.CodeLocation = BaseActions.ReplaceWithInvalidCode(
+                            FreezeAiBoardPullTimeAoB,
+                            FreezeAiBoardPullTimeOffset,
+                            FreezeAiBoardPullTimeOffset.Length);
+                        Logger?.Debug($"Freeze AI Board Pull Timer AoB found at: {activeGameCheat.CodeLocation}");
+                        AoBCacheManager.SaveToCache(activeGameCheat.CheatType.ToString()!, activeGameCheat.CodeLocation);
+                    }
+                    else
+                    {
+                        Logger?.Information($"Attempting to use cached AoB info for {activeGameCheat.CheatType}...");
+                        try
+                        {
+                            BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, FreezeAiBoardPullTimeOffset,
+                                FreezeAiBoardPullTimeOffset.Length);
+                        }
+                        catch
+                        {
+                            Logger?.Error("Cached AoB value failed, removing from cache and retrying...");
+                            AoBCacheManager.RemoveFromCache(activeGameCheat.CheatType.ToString()!);
+                            ToggleFreezeAiBoardPullTimer(activate);
+                            return;
+                        }
+                    }
+                    PeaceWalkerCheat.FreezeAiBoardPullTimer = activeGameCheat;
+                }
+                else
+                {
+                    BaseActions.ReplaceWithInvalidCode(activeGameCheat.CodeLocation, FreezeAiBoardPullTimeOffset,
+                        FreezeAiBoardPullTimeOffset.Length);
+                }
+            }
+            else
+            {
+                ActiveCheats.Remove(activeGameCheat);
+                BaseActions.ReplaceWithSpecificCode(activeGameCheat.CodeLocation,
+                    activeGameCheat.OriginalBytes ?? throw new InvalidOperationException(),
+                    new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
+            }
+        }
     }
 
     public static class PeaceWalkerCheat
@@ -1384,15 +1435,17 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             new(CheatActions.MaintainHeight, OriginalYPositionBytes, Constants.Cheat.MaintainHeight);
         public static GameCheat NoClip { get; internal set; } =
             new(CheatActions.NoClip, null, Constants.Cheat.NoClip);
-
         public static GameCheat InstantRnD { get; internal set; } =
             new(CheatActions.InstantRnD, null, Constants.Cheat.InstantRnD);
+        public static GameCheat FreezeAiBoardPullTimer { get; internal set; } = new(
+            CheatActions.ToggleFreezeAiBoardPullTimer, OriginalAiBoardPullTimeBytes,
+            Constants.Cheat.FreezeAiBoardPullTimer);
 
         public static readonly List<GameCheat> CheatList =
         [
             UnlimitedLife, Invulnerable, NoReload,UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche,
             FreezeAi, InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup,
-            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander, NoClip, InstantRnD
+            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander, NoClip, InstantRnD, FreezeAiBoardPullTimer
         ];
     }
 }

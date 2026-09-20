@@ -43,6 +43,7 @@
             <ScrollViewer>
                 <StackPanel x:Name="MissionCheats" Spacing="5" HorizontalAlignment="Center">
                     <viewModels:CheckboxCheatViewModel x:Name="NoTimeLimitCheckbox" CheatName="Stop Time Limit Timer" Cheat="NoTimeLimit" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>
+                    <viewModels:CheckboxCheatViewModel x:Name="FreezeAiBoardPullTimerCheckbox" CheatName="Freeze AI Board Pull Timer" Cheat="FreezeAiBoardPullTimer"/>
                     <!--<viewModels:CheckboxCheatViewModel x:Name="FreezeMissionStatsCheckbox" CheatName="Freeze Mission Stats" Cheat="FreezeMissionStats" />
                     <viewModels:CheckboxCheatViewModel x:Name="FreezeMissionTimeCheckbox" CheatName="Freeze Mission Time" Cheat="FreezeMissionTime" Background="DarkGoldenrod" HorizontalAlignment="Stretch"/>-->
                 </StackPanel>
