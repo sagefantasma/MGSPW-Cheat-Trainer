@@ -153,6 +153,8 @@ public partial class MainWindow : Window
         try
         {
             CurrentStage = _memoryManager.GetCurrentStage();
+            if (CurrentStage == null)
+                return;
             if (CurrentStage.Contains("vs_lobby"))
             {
                 //Turn off all cheats and disable their use

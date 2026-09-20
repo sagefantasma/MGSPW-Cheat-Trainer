@@ -177,10 +177,9 @@ public partial class ItemDetailView : UserControl
             {
                 var stockToAdd = (int)StockUpDown.Value;
                 var success = _memoryManager.ChangeItemStock(_item!, stockToAdd);
-                if(success)
-                    SendStatusUpdate($"Added {stockToAdd} {_item.Name} to stock!");
-                else
-                    SendStatusUpdate($"Failed to modify {_item.Name} stock!");
+                SendStatusUpdate(success
+                    ? $"Added up to {stockToAdd} {_item.Name} to stock! (internal cap of 9999)"
+                    : $"Failed to modify {_item.Name} stock!");
             }
             else
             {

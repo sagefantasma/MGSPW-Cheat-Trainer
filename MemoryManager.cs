@@ -103,47 +103,29 @@ public class MemoryManager
         }
     }
 
-    public string GetCurrentStage()
+    public string? GetCurrentStage()
     {
         if (MgsPwMonitor.MgsPwProcess == null)
             return null;
         lock (MgsPwMonitor.MgsPwProcess)
         {
-            using (SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName))
-            {
-                if (_stageLocation == nint.MinValue)
-                {
-                    nint ptrLocation =
-                        spp.FollowPointer(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.StagePtrLocation, true);
-
-                    _stageLocation = IntPtr.Add(ptrLocation,
-                        PeaceWalkerApplicationNavigator.PeaceWalkerAoB.StagePtrOffset);
-                }
-
+            using SimpleProcessProxy spp = new SimpleProcessProxy(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
+            if (_stageLocation != nint.MinValue)
                 return Encoding.UTF8.GetString(spp.GetMemoryFromPointer(_stageLocation, 18));
-            }
+            
+            nint ptrLocation =
+                spp.FollowPointer(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.StagePtrLocation, true);
+
+            _stageLocation = IntPtr.Add(ptrLocation,
+                PeaceWalkerApplicationNavigator.PeaceWalkerAoB.StagePtrOffset);
+
+            return Encoding.UTF8.GetString(spp.GetMemoryFromPointer(_stageLocation, 18));
         }
     }
     
     private bool ResearchWeapon(Constants.Weapon weapon, bool research = true)
     {
-        //Set 0x04 in the array to 3
-        try
-        {
-            IntPtr desiredPtr = IntPtr.Add(WeaponsArrayLocation,
-                Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Research);
-            return SetMemoryAtPointer(desiredPtr, research ? [0x03] : [0x01]);
-        }
-        catch (TrainerException)
-        {
-            return false;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to research {weapon.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return ResearchWeapon(weapon.Index, research);
     }
 
     private bool ResearchWeapon(int index, bool research = true)
@@ -169,23 +151,7 @@ public class MemoryManager
     
     private bool ResearchItem(Constants.Item item, bool research = true)
     {
-        //Set 0x04 in the array to 3
-        try
-        {
-            IntPtr desiredPtr = IntPtr.Add(ItemsArrayLocation,
-                Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Research);
-            return SetMemoryAtPointer(desiredPtr, research ? [0x03] : [0x01]);
-        }
-        catch (TrainerException)
-        {
-            return false;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to research {item.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return ResearchItem(item.Index, research);
     }
 
     private bool ResearchItem(int index, bool research = true)
@@ -330,24 +296,7 @@ public class MemoryManager
     
     private bool DevelopWeapon(Constants.Weapon weapon, bool develop = true)
     {
-        //Set 0x08 in the array to 64
-        try
-        {
-            return SetMemoryAtPointer(
-                IntPtr.Add(WeaponsArrayLocation,
-                    Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Development),
-                develop ? [0x64] : [0x00]);
-        }
-        catch (TrainerException)
-        {
-            return false;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to develop {weapon.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return DevelopWeapon(weapon.Index, develop);
     }
 
     private bool DevelopWeapon(int index, bool develop = true)
@@ -394,24 +343,7 @@ public class MemoryManager
     
     private bool DevelopItem(Constants.Item item, bool develop = true)
     {
-        //Set 0x08 in the array to 64
-        try
-        {
-            return SetMemoryAtPointer(
-                IntPtr.Add(ItemsArrayLocation,
-                    Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Development),
-                develop ? [0x64] : [0x00]);
-        }
-        catch (TrainerException)
-        {
-            return false;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to develop {item.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return DevelopItem(item.Index, develop);
     }
 
     private bool DevelopItem(int index, bool develop = true)
@@ -458,33 +390,20 @@ public class MemoryManager
     
     private bool UpdateWeaponStock(Constants.Weapon weapon, int stock)
     {
-        //TODO: validate
-        //Set 0x0C in the array to desired value
-        try
-        {
-            return SetMemoryAtPointer(
-                IntPtr.Add(WeaponsArrayLocation,
-                    Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.Stock),
-                BitConverter.GetBytes(stock));
-        }
-        catch (TrainerException)
-        {
-            return false;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to update stock for {weapon.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return UpdateWeaponStock(weapon.Index, stock);
     }
     
     private bool UpdateWeaponStock(int weapon, int stock)
     {
-        //TODO: validate
         //Set 0x0C in the array to desired value
         try
         {
+            if (stock > 9999)
+            {
+                Logger?.Debug("Requested stock value is greater than 9999, forcing 9999");
+                stock = 9999;
+            }
+            
             return SetMemoryAtPointer(
                 IntPtr.Add(WeaponsArrayLocation,
                     Constants.WeaponSize * (weapon - 1) + (int)Constants.WeaponMemory.Stock),
@@ -504,33 +423,20 @@ public class MemoryManager
     
     private bool UpdateItemStock(Constants.Item item, int stock)
     {
-        //TODO: validate
-        //Set 0x0C in the array to desired value
-        try
-        {
-            return SetMemoryAtPointer(
-                IntPtr.Add(ItemsArrayLocation,
-                    Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Stock),
-                BitConverter.GetBytes(stock));
-        }
-        catch (TrainerException)
-        {
-            return false;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to update stock for {item.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return UpdateItemStock(item.Index, stock);
     }
     
     private bool UpdateItemStock(int item, int stock)
     {
-        //TODO: validate
         //Set 0x0C in the array to desired value
         try
         {
+            if (stock > 9999)
+            {
+                Logger?.Debug("Requested stock value is greater than 9999, forcing 9999");
+                stock = 9999;
+            }
+
             return SetMemoryAtPointer(
                 IntPtr.Add(ItemsArrayLocation,
                     Constants.ItemSize * (item - 1) + (int)Constants.ItemMemory.Stock),
@@ -550,29 +456,11 @@ public class MemoryManager
     
     private int GetItemStock(Constants.Item item)
     {
-        //TODO: validate
-        //Set 0x0C in the array to desired value
-        try
-        {
-            return BitConverter.ToInt32(GetMemoryAtOffset(
-                IntPtr.Add(ItemsArrayLocation,
-                    Constants.ItemSize * (item.Index - 1) + (int)Constants.ItemMemory.Stock), 4));
-        }
-        catch (TrainerException)
-        {
-            return -1;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to get stock for {item.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return GetItemStock(item.Index);
     }
     
     private int GetWeaponStock(int weapon)
     {
-        //Set 0x0C in the array to desired value
         try
         {
             return BitConverter.ToInt32(GetMemoryAtOffset(
@@ -593,8 +481,6 @@ public class MemoryManager
     
     private int GetItemStock(int item)
     {
-        //TODO: validate
-        //Set 0x0C in the array to desired value
         try
         {
             return BitConverter.ToInt32(GetMemoryAtOffset(
@@ -615,24 +501,7 @@ public class MemoryManager
     
     private bool UpdateWeaponUsageLevel(Constants.Weapon weapon, byte usageLevel)
     {
-        //Set 0x16 in the array to desired value
-        try
-        {
-            return SetMemoryAtPointer(
-                IntPtr.Add(WeaponsArrayLocation,
-                    Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.UsageLevel),
-                [usageLevel]);
-        }
-        catch (TrainerException)
-        {
-            return false;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to update usage level for {weapon.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return UpdateWeaponUsageLevel(weapon.Index, usageLevel);
     }
     
     private bool UpdateWeaponUsageLevel(int weapon, byte usageLevel)
@@ -659,25 +528,10 @@ public class MemoryManager
 
     public byte GetWeaponUsageLevel(Constants.Weapon weapon)
     {
-        try
-        {
-            return GetMemoryAtOffset(
-                IntPtr.Add(WeaponsArrayLocation,
-                    Constants.WeaponSize * (weapon.Index - 1) + (int)Constants.WeaponMemory.UsageLevel), 1)[0];
-        }
-        catch (TrainerException)
-        {
-            return 0xFF;
-        }
-        catch (Exception e)
-        {
-            string baseMessage = $"Failed to get usage level for {weapon.Name}";
-            Logger?.Error($"{baseMessage}: {e}");
-            throw new AggregateException(baseMessage, e);
-        }
+        return GetWeaponUsageLevel(weapon.Index);
     }
     
-    private byte GetWeaponUsageLevel(int weapon)
+    public byte GetWeaponUsageLevel(int weapon)
     {
         try
         {
@@ -757,7 +611,6 @@ public class MemoryManager
     
     public bool ResearchAndDevelopWeapon(Constants.IPwObject obj, bool research = true)
     {
-        //TODO: also set ammo to 9999 if enabling NODDERS 
         Logger?.Information($"Attempting to {(research ? "research" : "unresearch")} {obj.Name}");
         var weapon = (obj as Constants.Weapon)!;
         if (research)
@@ -873,8 +726,8 @@ public class MemoryManager
 
         foreach (int index in indices)
         {
-            int currentLevel = GetWeaponStock(index);
-            UpdateWeaponStock(index, currentLevel + delta);
+            int currentStock = GetWeaponStock(index);
+            UpdateWeaponStock(index, currentStock + delta);
         }
 
         return true;
@@ -883,21 +736,21 @@ public class MemoryManager
     public bool ChangeItemStock(Constants.IPwObject obj, int delta = 100)
     {
         Logger?.Information($"Attempting to adjust stock for {obj.Name} by {delta}");
-        Constants.Item item = (obj as Constants.Item)!;
-        int allItemVersions = 1 + (item.UpgradeIndices?.Length ?? 0);
-        int[] indices = new int[allItemVersions];
+        var item = (obj as Constants.Item)!;
+        var allItemVersions = 1 + (item.UpgradeIndices?.Length ?? 0);
+        var indices = new int[allItemVersions];
         indices[0] = item.Index;
         if (item.UpgradeIndices != null)
         {
-            for(int i = 0; i < item.UpgradeIndices.Length; i++)
+            for(var i = 0; i < item.UpgradeIndices.Length; i++)
             {
                 indices[i+1] = item.UpgradeIndices[i];
             }
         }
 
-        foreach (int index in indices)
+        foreach (var index in indices)
         {
-            int currentLevel = GetItemStock(index);
+            var currentLevel = GetItemStock(index);
             UpdateItemStock(index, currentLevel + delta);
         }
 
