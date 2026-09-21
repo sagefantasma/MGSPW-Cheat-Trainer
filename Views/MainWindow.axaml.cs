@@ -2,6 +2,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalonia;
@@ -88,7 +89,7 @@ public partial class MainWindow : Window
         CheatsTabView.UpdateStatusBar += OnUpdateStatusBar;
         this.Closing += OnClosing;
         Task.Run(CheckForUpdates);
-        PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(5));
+        PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(2));
     }
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
@@ -163,6 +164,7 @@ public partial class MainWindow : Window
                 return;
             }
 
+            if (!CurrentStage.Contains("ms_lobby")) return;
             if (MgsPwMonitor.MgsPwProcess == null)
                 return;
             lock (MgsPwMonitor.MgsPwProcess)
@@ -190,11 +192,15 @@ public partial class MainWindow : Window
                     Logger?.Verbose("Co-op max player count > 1; disabling cheats.");
                     DeactivateAllCheats();
                     return;
+                } //This method is really janky, would love to have a better one.
+                else
+                {
+                    //If not in versus or co-op, enable cheats
+                    EnableCheatUse();
                 }
             }
-            
-            //If not in versus or co-op, enable cheats
-            EnableCheatUse();
+
+
         }
         catch
         {

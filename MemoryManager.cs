@@ -792,4 +792,41 @@ public class MemoryManager
 
         return true;
     }
+
+    public void SetAiBoardPullTimer(int time)
+    {
+        const int secondsToFrameTimeFactor = 300;
+        Logger?.Information($"Attempting to set AI Board Pull Timer to {time} seconds...");
+        time *= secondsToFrameTimeFactor; 
+        
+        try
+        {
+            if (MgsPwMonitor.MgsPwProcess == null)
+            {
+                throw new TrainerException();
+            }
+
+            nint ptrLocation;
+            lock (MgsPwMonitor.MgsPwProcess)
+            {
+                using SimpleProcessProxy spp = new(MgsPwMonitor.MgsPwProcess, MgsPwMonitor.MgsPwProcessName);
+                ptrLocation =
+                    spp.FollowPointer(PeaceWalkerApplicationNavigator.PeaceWalkerAoB.AiPullTimerPtrLocation, true);
+                ptrLocation = IntPtr.Add(ptrLocation,
+                    PeaceWalkerApplicationNavigator.PeaceWalkerAoB.AiPullTimerPtrOffset);
+            }
+
+            SetMemoryAtPointer(ptrLocation, BitConverter.GetBytes(time));
+        }
+        catch (TrainerException)
+        {
+            throw;
+        }
+        catch (Exception e)
+        {
+            string baseMessage = "Failed to set AI Board Pull Timer";
+            Logger?.Error($"{baseMessage}: {e}");
+            throw new AggregateException(baseMessage, e);
+        }
+    }
 }

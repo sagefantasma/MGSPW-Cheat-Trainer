@@ -1391,6 +1391,11 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
                     new MemoryOffset(0, activeGameCheat.OriginalBytes.Length));
             }
         }
+
+        public static void EndAiBoardPullTimer(bool activate)
+        {
+            _memoryManager.SetAiBoardPullTimer(0);
+        }
     }
 
     public static class PeaceWalkerCheat
@@ -1441,11 +1446,15 @@ public class GameCheat(Action<bool> action, byte[]? originalBytes, Constants.Che
             CheatActions.ToggleFreezeAiBoardPullTimer, OriginalAiBoardPullTimeBytes,
             Constants.Cheat.FreezeAiBoardPullTimer);
 
+        public static GameCheat EndAiBoardPullTimer { get; internal set; } = new(CheatActions.EndAiBoardPullTimer,
+            null, Constants.Cheat.EndAiPullTimer);
+
         public static readonly List<GameCheat> CheatList =
         [
             UnlimitedLife, Invulnerable, NoReload,UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche,
             FreezeAi, InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup,
-            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander, NoClip, InstantRnD, FreezeAiBoardPullTimer
+            FreezeMissionTime, FreezeMissionStats, ForceVehicleCommander, NoClip, InstantRnD, FreezeAiBoardPullTimer,
+            EndAiBoardPullTimer
         ];
     }
 }
