@@ -17,7 +17,8 @@ public static class Constants
     {
         UnlimitedLife, Invulnerable, NoReload, UnlimitedAmmo, InfiniteSuppressor, UnlimitedPsyche, FreezeAi,
         InvisibleToAi, MaxCamo, UnlimitedEquipment, NoTimeLimit, MaxStockOnPickup, FreezeMissionTime, FreezeMissionStats,
-        ForceVehicleCommander, NoClip, MaxCamoSub1, MaxCamoSub2, MaintainHeight, WalkThroughWalls, InstantRnD
+        ForceVehicleCommander, NoClip, MaxCamoSub1, MaxCamoSub2, MaintainHeight, WalkThroughWalls, InstantRnD, 
+        FreezeAiBoardPullTimer, EndAiPullTimer
     }
 
     public enum WeaponMemory

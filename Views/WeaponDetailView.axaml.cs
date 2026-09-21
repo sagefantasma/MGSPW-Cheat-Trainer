@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Avalonia;
 using Avalonia.Controls;
@@ -147,7 +149,7 @@ public partial class WeaponDetailView : UserControl
         {
             var enabling = (bool)DevelopCheckbox.IsChecked!;
             _weapon ??= DetermineWeapon(PwObject!);
-            bool success = _memoryManager.ResearchAndDevelopWeapon(_weapon!, enabling);
+            bool success = _memoryManager.ResearchAndDevelopWeapon(_weapon!, enabling); //TODO: also set ammo to 9999 if enabling NODDERS 
             if (success)
             {
                 SendStatusUpdate(enabling ? $"Developed {_weapon.Name}!" : $"Undeveloped {_weapon.Name}!");
@@ -176,15 +178,26 @@ public partial class WeaponDetailView : UserControl
         {
             _weapon ??= DetermineWeapon(PwObject!);
             var increasing = (sender as Control)!.Name == "UsageUpButton";
-            bool success = _memoryManager.ChangeWeaponUseLevel(_weapon!, increasing);
+            var success = _memoryManager.ChangeWeaponUseLevel(_weapon!, increasing);
             if (success)
             {
                 SendStatusUpdate(increasing
                     ? $"Increased usage level for {_weapon.Name}!"
                     : $"Decreased usage level for {_weapon.Name}!");
-                var usageLevel = _memoryManager.GetWeaponUsageLevel(_weapon);
-                UsageDownButton.IsEnabled = usageLevel > 1;
-                UsageUpButton.IsEnabled = usageLevel < 3;
+                List<byte> usageLevels =
+                [
+                    _memoryManager.GetWeaponUsageLevel(_weapon)
+                ];
+
+                if (_weapon.UpgradeIndices != null)
+                {
+                    usageLevels.AddRange(
+                        _weapon.UpgradeIndices.Select(rank => _memoryManager.GetWeaponUsageLevel(rank)));
+                }
+                var enableDecrease = usageLevels.Any(x => x > 1);
+                var enableIncrease = usageLevels.Any(x => x < 3);
+                UsageDownButton.IsEnabled = enableDecrease;
+                UsageUpButton.IsEnabled = enableIncrease;
             }
             else
             {
@@ -248,10 +261,9 @@ public partial class WeaponDetailView : UserControl
             {
                 var stockToAdd = (int)StockUpDown.Value;
                 var success = _memoryManager.ChangeWeaponStock(_weapon!, stockToAdd);
-                if(success)
-                    SendStatusUpdate($"Added {stockToAdd} {_weapon.Name} to stock!");
-                else
-                    SendStatusUpdate($"Failed to change stock for {_weapon.Name}");
+                SendStatusUpdate(success
+                    ? $"Added up to {stockToAdd} {_weapon.Name} to stock! (internal cap of 9999)"
+                    : $"Failed to change stock for {_weapon.Name}");
             }
             else
             {

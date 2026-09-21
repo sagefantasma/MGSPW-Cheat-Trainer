@@ -15,17 +15,40 @@ public partial class CheatsTabView : UserControl
         InitializeComponent();
         MainWindow.TabActivated += OnTabActivated;
         foreach (var control in PlayerCheats.Children)
-            if (control is CheckboxCheatViewModel cheatViewModel)
-                cheatViewModel.CheatToggled += RequestStatusBarUpdate;
+        {
+            if (control is CheckboxCheatViewModel checkboxCheat)
+                checkboxCheat.CheatToggled += RequestStatusBarUpdate;
+            if (control is ButtonCheatViewModel buttonCheat)
+                buttonCheat.CheatToggled += RequestStatusBarUpdate;
+        }
         foreach (var control in EquipmentCheats.Children)
-            if (control is CheckboxCheatViewModel cheatViewModel)
-                cheatViewModel.CheatToggled += RequestStatusBarUpdate;
+        {
+            if (control is CheckboxCheatViewModel checkboxCheat)
+                checkboxCheat.CheatToggled += RequestStatusBarUpdate;
+            if (control is ButtonCheatViewModel buttonCheat)
+                buttonCheat.CheatToggled += RequestStatusBarUpdate;
+        }
         foreach (var control in EnemyCheats.Children)
-            if (control is CheckboxCheatViewModel cheatViewModel)
-                cheatViewModel.CheatToggled += RequestStatusBarUpdate;
+        {
+            if (control is CheckboxCheatViewModel checkboxCheat)
+                checkboxCheat.CheatToggled += RequestStatusBarUpdate;
+            if (control is ButtonCheatViewModel buttonCheat)
+                buttonCheat.CheatToggled += RequestStatusBarUpdate;
+        }
         foreach (var control in MissionCheats.Children)
-            if (control is CheckboxCheatViewModel cheatViewModel)
-                cheatViewModel.CheatToggled += RequestStatusBarUpdate;
+        {
+            if (control is CheckboxCheatViewModel checkboxCheat)
+                checkboxCheat.CheatToggled += RequestStatusBarUpdate;
+            if (control is ButtonCheatViewModel buttonCheat)
+                buttonCheat.CheatToggled += RequestStatusBarUpdate;
+        }
+        foreach (var control in MotherbaseCheats.Children)
+        {
+            if (control is CheckboxCheatViewModel checkboxCheat)
+                checkboxCheat.CheatToggled += RequestStatusBarUpdate;
+            if (control is ButtonCheatViewModel buttonCheat)
+                buttonCheat.CheatToggled += RequestStatusBarUpdate;
+        }
     }
     
     private void OnTabActivated(object? sender, Tab e)

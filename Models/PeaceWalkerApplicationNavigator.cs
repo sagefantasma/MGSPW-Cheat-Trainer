@@ -143,6 +143,19 @@ public class PeaceWalkerApplicationNavigator
         internal static MemoryOffset NoClipOffset = new(0x04, 05);
         internal static byte[] NoClipBytes = [0xEB, 0x38];
         #endregion
+        
+        #region Freeze AI Board Pull Time
+
+        internal static string FreezeAiBoardPullTimeAoB = "44 89 4B 70 45 85 C9";
+        internal static byte[] OriginalAiBoardPullTimeBytes = [0x44, 0x89, 0x4B, 0x70, 0x45, 0x85, 0xC9];
+        internal static MemoryOffset FreezeAiBoardPullTimeOffset = new(0x00, 0x03);
+        #endregion
+        #endregion
+        
+        #region End AI Board Pull Time
+
+        public static nint AiPullTimerPtrLocation = 0x014D1A08;
+        public static int AiPullTimerPtrOffset = 0x70;
         #endregion
         
         #region Weapons, Items & Other R&D
