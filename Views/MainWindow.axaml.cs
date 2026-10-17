@@ -77,6 +77,8 @@ public partial class MainWindow : Window
                 $"We tried to start a debuglog, but something went wrong. Is {LogManager.LogLocation} a valid directory on your PC?");
             msgBox.ShowAsync();
         }
+
+        ShowChangelog();
         _memoryManager = App.Services.GetRequiredService<MemoryManager>();
         StatusLabel.Text = "Searching for active Peace Walker instance...";
         MgsPwMonitor.EnableMonitor(new CancellationToken());
@@ -90,6 +92,25 @@ public partial class MainWindow : Window
         this.Closing += OnClosing;
         Task.Run(CheckForUpdates);
         PeriodicTask.Run(ScanForMultiplayer, TimeSpan.FromSeconds(2));
+    }
+
+    private void ShowChangelog(bool force = false)
+    {
+        var versionCache = "versionCache";
+        if (!File.Exists(versionCache))
+        {
+            File.WriteAllText(versionCache, "lastChangelogShown:");
+        }
+        
+        var text = File.ReadAllText(versionCache);
+        if (text.Contains(Program.AppVersion) && !force)
+        {
+            return;
+        }
+
+        var changelog = "Changes since last build:\n\n\t- Added changelog feature\n\t- Improved app stability\n\t- Updated AutoUpdater";
+        ShowPopupMessage($"Changelog for v{Program.AppVersion}", changelog);
+        File.WriteAllText(versionCache, $"lastChangelogShown:{Program.AppVersion}");
     }
 
     private void OnClosing(object? sender, WindowClosingEventArgs e)
@@ -294,43 +315,35 @@ public partial class MainWindow : Window
         OnUpdateStatusBar(sender, "Peace Walker found and hooked! Ready to go.");
     }
 
-    private void OnWarnUser(object? sender, string warning)
+    private void ShowPopupMessage(string title, string text)
     {
-        Logger?.Information("Warning user about enabling specific item");
         Dispatcher.UIThread.Post(() =>
         {
             try
             {
                 IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
-                    "Achievement Warning!",
-                    warning, ButtonEnum.Ok, windowStartupLocation: WindowStartupLocation);
+                    title,
+                    text, windowStartupLocation: WindowStartupLocation);
                 msgBox.ShowAsPopupAsync(GetMainWindow());
             }
             catch (Exception e)
             {
-                Logger?.Error($"Failed to inform user of warning: {e}");
+                Logger?.Error($"Failed to show popup with title {title}: {e}");
             }
         });
+    }
+
+    private void OnWarnUser(object? sender, string warning)
+    {
+        Logger?.Information("Warning user about enabling specific item");
+        ShowPopupMessage("Achievement Warning!", warning);
     }
     
     private void OnInvalidVersionDetected(object? sender, string msg)
     {
         Logger?.Error($"Incompatible game version detected: {msg}");
         OnUpdateStatusBar(null, "Incompatible game version detected - expect issues if you try to use this trainer.");
-        Dispatcher.UIThread.Post(() =>
-        {
-            try
-            {
-                IMsBox<ButtonResult> msgBox = MessageBoxManager.GetMessageBoxStandard(
-                    "Incompatible game version detected!",
-                    msg, windowStartupLocation: WindowStartupLocation);
-                msgBox.ShowAsPopupAsync(GetMainWindow());
-            }
-            catch (Exception e)
-            {
-                Logger?.Error($"Failed to inform user of invalid version: {e}");
-            }
-        });
+        ShowPopupMessage("Incompatible game version detected!", msg);
     }
 
     private void ViewLogsMenuItem_OnClick(object? sender, RoutedEventArgs e)
@@ -409,5 +422,10 @@ public partial class MainWindow : Window
     {
         OnUpdateStatusBar(null, "Opening GitHub repo in your browser...");
         OpenUrl("https://github.com/sagefantasma/MGSPW-Cheat-Trainer/");
+    }
+
+    private void ViewChangeLogMenuItem_OnClick(object? sender, RoutedEventArgs e)
+    {
+        ShowChangelog(true);
     }
 }
