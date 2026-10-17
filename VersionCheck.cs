@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using Octokit;
@@ -137,12 +138,26 @@ namespace MGSPW_MC_Cheat_Trainer
                 {
                     fileToStart = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName,
                         "AutoUpdater.exe");
+                    var checksum = SHA256.HashData(File.ReadAllBytes(fileToStart));
+                    if (!string.Equals(Convert.ToHexStringLower(checksum), 
+                            "2b40788cd36202586ba6bbd790b2f05541c34ae3b924a6b1f79acb54d0cf78d2")) //SHA256 for Win v1.1
+                    {
+                        File.Delete(fileToStart);
+                        DownloadAutoUpdater();
+                    }
                     processStartInfo = new ProcessStartInfo { FileName = fileToStart, Arguments = args };
                 }
                 else
                 {
                     fileToStart = Path.Combine(Directory.GetParent(Environment.CurrentDirectory)!.FullName,
                         "AutoUpdater");
+                    var checksum = SHA256.HashData(File.ReadAllBytes(fileToStart));
+                    if (!string.Equals(Convert.ToHexStringLower(checksum),
+                            "e818378623a00fb407ec6e7afd176427cae8ab83726ed39786c47329906db56a")) //SHA256 for Linux v1.1
+                    {
+                        File.Delete(fileToStart);
+                        DownloadAutoUpdater();
+                    }
                     processStartInfo = new ProcessStartInfo { FileName = "setsid", Arguments = $"\"{fileToStart}\" {args}" };
                     UnixFileMode currentMode = File.GetUnixFileMode(fileToStart);
                     File.SetUnixFileMode(fileToStart,

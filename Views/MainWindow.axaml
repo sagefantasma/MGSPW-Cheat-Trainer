@@ -26,6 +26,7 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="Help"> 
                     <MenuItem Header="View Logs" x:Name="ViewLogsMenuItem" Click="ViewLogsMenuItem_OnClick"/>
+                    <MenuItem Header="View Changelog" x:Name="ViewChangeLogMenuItem" Click="ViewChangeLogMenuItem_OnClick"/>
                     <MenuItem Header="Open Install Location" Click="OpenInstallLocationMenuItem_Click"/>
                     <MenuItem Header="Download AutoUpdater" Click="DownloadAutoUpdaterMenuItem_Click"/>
                     <MenuItem Header="Visit GitHub Repo" Click="VisitGithubRepoMenuItem_Click"/>
