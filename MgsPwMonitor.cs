@@ -64,43 +64,20 @@ public static class MgsPwMonitor
                             process = Process.GetProcessesByName(MgsPwProcessName).FirstOrDefault();
                         else
                         {
-                            Process[] processes = Process.GetProcessesByName("METAL");
-                            if (processes.Length == 1)
-                                process = processes[0];
-                            else if (processes.Length == 0)
-                                processes = Process.GetProcesses();
-
-                            var test = processes.FirstOrDefault(x => x.MainWindowTitle.Contains("Peace Walker"));
-
-                            if (process is null)
+                            process = Process.GetProcesses().FirstOrDefault(p =>
                             {
-                                foreach (Process p in processes)
+                                try
                                 {
-                                    //if (!p.ProcessName.Contains("METAL")) continue;
-                                    try
-                                    {
-                                        using SimpleProcessProxy spp = new SimpleProcessProxy(p, MgsPwProcessName);
-                                        nint signifyingMemory = 0x1595501;
-                                        string determinantString = "METAL GEAR SOLID PEACE WALKER";
-                                        long bytesToRead = determinantString.Length;
-                                        try
-                                        {
-                                            byte[] memory = spp.ReadProcessOffset(signifyingMemory, bytesToRead);
-                                            string decodedString = Encoding.UTF8.GetString(memory);
-                                            if (determinantString.Equals(decodedString))
-                                                process = p;
-                                        }
-                                        catch(Exception ex)
-                                        {
-                                            // ignored
-                                        }
-                                    }
-                                    catch
-                                    {
-                                        //ignored
-                                    }
+                                    return File.ReadLines($"/proc/{p.Id}/maps")
+                                        .Any(line => line.Contains(
+                                            "METAL GEAR SOLID PEACE WALKER.exe",
+                                            StringComparison.OrdinalIgnoreCase));
                                 }
-                            }
+                                catch
+                                {
+                                    return false;
+                                }
+                            });
                         }
 
                         if (process != null)
